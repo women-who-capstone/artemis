@@ -19,3 +19,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+secrets.js
+scrap.js
+notes.txt
+podcastResponse.json
+episodeResponse.json
+genres.json

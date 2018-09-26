@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
-// const compression = require('compression')
+const compression = require('compression')
 //const session = require('express-session');
 // const passport = require('passport')
 // const SequelizeStore = require('connect-session-sequelize')(session.Store)
@@ -38,8 +38,8 @@ const createApp = () => {
 	app.use(express.json());
 	app.use(express.urlencoded({ extended: true }));
 
-	// // compression middleware
-	// app.use(compression())
+	// compression middleware
+	app.use(compression())
 
 	// session middleware with passport
 	// app.use(
@@ -67,6 +67,8 @@ const createApp = () => {
 		}
 	});
 
+  app.use('/api', require('./api'))
+
 	// sends index.html
 	app.use('*', (req, res) => {
 		res.sendFile(path.join(__dirname, '..', 'public/index.html'));
@@ -89,11 +91,11 @@ const startListening = () => {
 	// require('./socket')(io)
 };
 
-// const syncDb = () => db.sync();
+const syncDb = () => db.sync();
 
 async function bootApp() {
 	// await sessionStore.sync()
-	// await syncDb();
+	await syncDb();
 	await createApp();
 	await startListening();
 }

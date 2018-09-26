@@ -8,13 +8,17 @@
 		"morgan": "^1.9.1",
 		"react": "^16.5.2",
 		"react-dom": "^16.5.2",
-		"react-scripts": "1.1.5"
+		"react-scripts": "1.1.5",
+		"sequelize": "^4.39.0"
 	},
 	"scripts": {
-		"start": "react-scripts start",
-		"server": "node server/index",
+		"start": "node ./server/index",
+		"start-dev": "nodemon ./server/index",
 		"build": "react-scripts build",
 		"test": "react-scripts test --env=jsdom",
 		"eject": "react-scripts eject"
+	},
+	"devDependencies": {
+		"nodemon": "^1.18.4"
 	}
 }

@@ -6,7 +6,7 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scripts": "1.1.5",
-    "retext-keywords": "^4.0.1"
+    "wordpos": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

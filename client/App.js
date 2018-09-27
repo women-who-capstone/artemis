@@ -1,10 +1,5 @@
 import React, { Component } from 'react'
-<<<<<<< HEAD:src/App.js
-import logo from './logo.svg'
-import './App.css'
-import PodcastPlayer from './client/components/PodcastPlayer'
-=======
->>>>>>> dev:client/App.js
+import PodcastPlayer from './components/PodcastPlayer'
 
 class App extends Component {
   render() {

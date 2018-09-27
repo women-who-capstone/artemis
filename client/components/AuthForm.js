@@ -2,6 +2,9 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import { connect } from 'react-redux'
+import classNames from 'classnames'
 
 const styles = theme => ({
   button: {
@@ -30,11 +33,11 @@ const styles = theme => ({
 })
 
 const AuthForm = props => {
-  const { classes, name, displayName, handleSubmit } = props
+  const { name, displayName, handleSubmit, error } = props
   return (
     <Grid container spacing={8}>
       <form
-        className={classes.container}
+        className={styles.container}
         noValidate
         autoComplete="off"
         onSubmit={handleSubmit}
@@ -44,24 +47,29 @@ const AuthForm = props => {
           required
           id="outlined-email-input"
           label="Email"
-          className={classes.textField}
+          className={styles.textField}
           type="email"
           name="email"
           autoComplete="email"
           margin="normal"
-          variant="outlined"
+          size="small"
         />
         <TextField
           required
           id="outlined-password-input"
           label="Password"
-          className={classes.textField}
+          className={styles.textField}
           type="password"
           autoComplete="current-password"
           margin="normal"
-          variant="outlined"
+          size="small"
         />
-        <Button variant="outlined" color="secondary" className={classes.button}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          size="small"
+          className={styles.button}
+        >
           {props.displayName}
         </Button>
       </form>
@@ -72,14 +80,16 @@ const AuthForm = props => {
 const mapLogin = state => {
   return {
     name: 'login',
-    displayName: 'Login'
+    displayName: 'Login',
+    error: state.user.error
   }
 }
 
 const mapSignup = state => {
   return {
     name: 'signup',
-    displayName: 'Sign Up'
+    displayName: 'Sign Up',
+    error: state.user.error
   }
 }
 

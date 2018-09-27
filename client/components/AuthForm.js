@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
+import { auth } from '../store'
 
 const styles = theme => ({
   button: {
@@ -35,45 +36,45 @@ const styles = theme => ({
 const AuthForm = props => {
   const { name, displayName, handleSubmit, error } = props
   return (
-    <Grid container spacing={8}>
-      <form
-        className={styles.container}
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit}
-        name={name}
+    <form
+      className={styles.container}
+      autoComplete="off"
+      onSubmit={handleSubmit}
+      name={name}
+    >
+      <TextField
+        required
+        id="outlined-email-input"
+        label="Email"
+        className={styles.textField}
+        type="email"
+        name="email"
+        autoComplete="email"
+        margin="normal"
+        size="small"
+      />
+      <TextField
+        required
+        id="outlined-password-input"
+        label="Password"
+        className={styles.textField}
+        type="password"
+        name="password"
+        autoComplete="current-password"
+        margin="normal"
+        size="small"
+      />
+      <Button
+        variant="outlined"
+        color="secondary"
+        className={styles.button}
+        type="submit"
+        name=""
       >
-        <TextField
-          required
-          id="outlined-email-input"
-          label="Email"
-          className={styles.textField}
-          type="email"
-          name="email"
-          autoComplete="email"
-          margin="normal"
-          size="small"
-        />
-        <TextField
-          required
-          id="outlined-password-input"
-          label="Password"
-          className={styles.textField}
-          type="password"
-          autoComplete="current-password"
-          margin="normal"
-          size="small"
-        />
-        <Button
-          variant="outlined"
-          color="secondary"
-          size="small"
-          className={styles.button}
-        >
-          {props.displayName}
-        </Button>
-      </form>
-    </Grid>
+        {props.displayName}
+      </Button>
+      {error && error.response && <div> {error.response.data} </div>}
+    </form>
   )
 }
 
@@ -105,13 +106,16 @@ const mapDispatch = dispatch => {
   }
 }
 
-export const Login = connect(
-  mapLogin,
-  mapDispatch
-)(AuthForm)
-export const Signup = connect(
-  mapSignup,
-  mapDispatch
-)(AuthForm)
+export const Login = withStyles(styles)(
+  connect(
+    mapLogin,
+    mapDispatch
+  )(AuthForm)
+)
 
-export default withStyles(styles)(AuthForm)
+export const Signup = withStyles(styles)(
+  connect(
+    mapSignup,
+    mapDispatch
+  )(AuthForm)
+)

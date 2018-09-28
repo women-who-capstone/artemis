@@ -22,7 +22,7 @@
 		"seed": "node script/seed.js",
 		"start-server": "nodemon server -e html,js,scss --ignore public --ignore client",
 		"build": "react-scripts build",
-		"test": "react-scripts test --env=jsdom",
+		"test": "mocha -w \"./recommendations/**/*.spec.js\"",
 		"eject": "react-scripts eject"
 	},
 	"devDependencies": {
@@ -41,6 +41,7 @@
 		"@babel/preset-react": "^7.0.0-beta.55",
 		"@babel/register": "^7.0.0-beta.55",
 		"babel-loader": "^8.0.2",
+		"chai": "^4.2.0",
 		"nodemon": "^1.18.4",
 		"webpack": "^4.20.2",
 		"webpack-cli": "^3.1.1"

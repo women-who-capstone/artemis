@@ -9,7 +9,7 @@ class Recommender {
   getDistanceBetweenTwoVectors(vector1, vector2) {
     return Math.sqrt(vector1
     .map((point, index) => {
-      return Math.pow((point - vector2[index]), 2)
+      return Math.pow((point || 0.5 - vector2[index] || 0.5), 2)
     })
     .reduce((accum, curr) => {
       return accum + curr

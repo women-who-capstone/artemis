@@ -17,7 +17,7 @@ class Recommender {
   }
 
   getDistancesBetweenUserChannelAndAllOtherChannels() {
-    return allOtherChannels.map(channel => {
+    return this.allOtherChannels.map(channel => {
       return { id: channel.id, distance: this.getDistanceBetweenTwoVectors(this.userChannel.vector, channel.vector) }
     })
   }
@@ -28,8 +28,8 @@ class Recommender {
   }
 
   getClosestNChannels(n) {
-    const distances = getDistancesBetweenUserChannelAndAllOtherChannels()
-    const sortedDistances = sortChannelsByDistance(distances)
+    const distances = this.getDistancesBetweenUserChannelAndAllOtherChannels()
+    const sortedDistances = this.sortChannelsByDistance(distances)
     return sortedDistances.slice(0, n)
   }
 }

@@ -1,11 +1,12 @@
 class ChannelVector {
-  constructor(channel) {
+  constructor(channelTags) {
+    //console.log('channelTags', channelTags)
     const vector = []
-    for (let i = 0; i < channel.tags.length; i++) {
-      vector[channel.tagId] = channel.score
+    for (let i = 0; i < channelTags.length; i++) {
+      vector[channelTags[i].tagId] = channelTags[i].score
     }
 
-    this.id = channel.channel.id
+    this.id = channelTags[0].channelId
     this.vector = vector
   }
 
@@ -17,3 +18,12 @@ class ChannelVector {
 module.exports = {
   ChannelVector
 }
+
+
+// tags [ channelTag {
+//     dataValues:
+//      { score: null,
+//        createdAt: 2018-09-28T16:55:34.240Z,
+//        updatedAt: 2018-09-28T16:55:34.240Z,
+//        channelId: 1,
+//        tagId: 1 },

@@ -3,15 +3,38 @@ import { withStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
-import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
-import PlayArrowIcon from '@material-ui/icons/PlayArrow'
-import SkipNextIcon from '@material-ui/icons/SkipNext'
-import ThumbUp from '@material-ui/icons/ThumbUp'
-import ThumbDown from '@material-ui/icons/ThumbDown'
+import IconButton from '@material-ui/core/IconButton'
+import PlayArrow from '@material-ui/icons/PlayArrow'
+import Pause from '@material-ui/icons/Pause'
 import CardActions from '@material-ui/core/CardActions'
-import Slider from '@material-ui/lab/Slider'
+import PlayPause from './PlayPause'
+import {
+  Media,
+  Player,
+  controls,
+  utils,
+  withMediaProps
+} from 'react-media-player'
+const {
+  MuteUnmute,
+  CurrentTime,
+  Progress,
+  SeekBar,
+  Duration,
+  Volume,
+  Fullscreen
+} = controls
 import episode from './tempEpisode.js'
+
+const { formatTime } = utils
+
+const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+const panner = audioContext.createPanner()
+
+panner.setPosition(0, 0, 1)
+panner.panningModel = 'equalpower'
+panner.connect(audioContext.destination)
 
 const styles = theme => ({
   card: {
@@ -44,34 +67,28 @@ const styles = theme => ({
     alignItems: 'center'
   },
   actions: {
-    display: 'flex',
-    width: 400,
-    justifyContent: 'space-between'
+    width: '90%'
   },
-  slider: {
-    width: 380
+  playerMenu: {
+    width: '100%',
+    display: 'flex'
+  },
+  seekBar: {
+    width: '100%'
   }
 })
 
 class PodcastPlayer extends Component {
-  constructor() {
-    super()
-    this.state = {
-      value: 0,
-      playing: false,
-      isFetching: false
-    }
-
-    this.handleChange = this.handleChange.bind(this)
-  }
-
-  handleChange = (event, value) => {
-    this.setState({ value })
+  componentDidMount() {
+    const source = audioContext.createMediaElementSource(this._player.instance)
+    source.connect(panner)
+    panner.connect(audioContext.destination)
   }
 
   render() {
-    const { value } = this.state
+    // const { value } = this.state
     const { classes } = this.props
+
     return (
       <Card className={classes.card}>
         <CardMedia
@@ -85,40 +102,37 @@ class PodcastPlayer extends Component {
             {episode.podcast.title}
           </Typography>
         </CardContent>
-        <Slider
-          value={value}
-          aria-labelledby="label"
-          onChange={this.handleChange}
-          className={classes.slider}
-        />
+
         <CardActions className={classes.actions}>
-          <div className={classes.play}>
-            <IconButton aria-label="Play/pause">
-              <PlayArrowIcon className={classes.playIcon} />
-            </IconButton>
-            <IconButton aria-label="Next">
-              <SkipNextIcon />
-            </IconButton>
-          </div>
-          <div className={classes.like}>
-            <IconButton aria-label="Play more like this">
-              <ThumbUp />
-            </IconButton>
-            <IconButton aria-label="Don't play more like this">
-              <ThumbDown />
-            </IconButton>
-          </div>
+          <Media>
+            <div>
+              <Player
+                ref={c => (this._player = c)}
+                crossOrigin="anonymous"
+                src={episode.audio}
+                useAudioObject
+              />
+              <div className="media-controls">
+                <PlayPause />
+                <CurrentTime className="media-control media-control--current-time" />
+                <SeekBar className="media-control media-control--volume-range" />
+                <Duration className="media-control media-control--duration" />
+                <MuteUnmute className="media-control media-control--mute-unmute" />
+                <Volume className="media-control media-control--volume" />
+              </div>
+            </div>
+          </Media>
         </CardActions>
       </Card>
-      // <Card className={classes.card}>
-      //   <audio
-      //     id="episode"
-      //     controls
-      //     src="http://downloads.newyorker.com/mp3/comment/20161226_comment.mp3"
-      //   >
-      //     Your browser does not support the <code>audio</code> element.
-      //   </audio>
-      // </Card>
+      /* <Card className={classes.card}>
+         <audio 
+           id="episode"
+           controls
+         src="http://downloads.newyorker.com/mp3/comment/20161226_comment.mp3"
+         >
+           Your browser does not support the <code>audio</code> element.
+         </audio>
+       </Card>*/
     )
   }
 }

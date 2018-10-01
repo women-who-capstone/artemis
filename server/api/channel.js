@@ -37,4 +37,13 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+router.post("/", async (req, res, next) => {
+  try {
+    const newChannel = await Channel.create(req.body);
+    res.status(200).send(newChannel);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

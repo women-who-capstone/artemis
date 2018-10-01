@@ -1,6 +1,6 @@
-import React from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import Card from '@material-ui/core/Card'
+import React from "react";
+import { withStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
 // import CardContent from '@material-ui/core/CardContent'
 // import CardMedia from '@material-ui/core/CardMedia'
 // import IconButton from '@material-ui/core/IconButton'
@@ -10,22 +10,22 @@ import Card from '@material-ui/core/Card'
 
 const styles = theme => ({
   card: {
-    display: 'flex'
+    display: "flex"
   },
   details: {
-    display: 'flex',
-    flexDirection: 'column'
+    display: "flex",
+    flexDirection: "column"
   },
   content: {
-    flex: '1 0 auto'
+    flex: "1 0 auto"
   },
   cover: {
     width: 151,
     height: 151
   },
   controls: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
     paddingLeft: theme.spacing.unit,
     paddingBottom: theme.spacing.unit
   },
@@ -33,22 +33,18 @@ const styles = theme => ({
     height: 38,
     width: 38
   }
-})
+});
 
 function PodcastPlayer(props) {
-  const { classes, theme } = props
+  const { classes, theme, audioSource } = props;
 
   return (
     <Card className={classes.card}>
-      <audio
-        id="episode"
-        controls
-        src="http://downloads.newyorker.com/mp3/comment/20161226_comment.mp3"
-      >
+      <audio id="episode" controls src={audioSource}>
         Your browser does not support the <code>audio</code> element.
       </audio>
     </Card>
-  )
+  );
 }
 
-export default withStyles(styles, { withTheme: true })(PodcastPlayer)
+export default withStyles(styles, { withTheme: true })(PodcastPlayer);

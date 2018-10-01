@@ -2,6 +2,7 @@ import React from "react";
 import PodcastPlayer from "./PodcastPlayer";
 import { connect } from "react-redux";
 import axios from "axios";
+import ChannelList from './ChannelList'
 
 class SingleChannel extends React.Component {
   constructor() {
@@ -38,7 +39,12 @@ class SingleChannel extends React.Component {
   }
   render() {
     console.log("AUDIO URL", this.state.episode.audio);
-    return <PodcastPlayer audioSource={this.state.episode.audio} />;
+    return (
+      <div>
+        <PodcastPlayer audioSource={this.state.episode.audio} />
+        <ChannelList />
+      </div>
+    )
   }
 }
 

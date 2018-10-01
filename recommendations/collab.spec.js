@@ -5,6 +5,7 @@ const Tag = db.model('tag')
 const ChannelTag = db.model('channelTag')
 const User = db.model('user')
 const { ChannelVector } = require('./utilities')
+const Recommender = require('./collab')
 
 describe.only('Collab', () => {
   beforeEach(() => {
@@ -43,7 +44,7 @@ describe.only('Collab', () => {
       await tag3.setChannels([channel1])
     })
 
-    xdescribe('whether I am writing the relevant Sequelize queries correctly', () => {
+    describe('whether I am writing the relevant Sequelize queries correctly', () => {
       beforeEach(async () => {
         channelTag = await ChannelTag.findAll({
           where: {
@@ -60,9 +61,9 @@ describe.only('Collab', () => {
       it('has all the tags added', () => {
         expect(channelTag.length).to.equal(3)
       })
-    }) // end describe('whether I am writing the relevant Sequelize queries correctly')
+    })
 
-    xdescribe('ChannelVector constructor', () => {
+    describe('ChannelVector constructor', () => {
       beforeEach(async () => {
         channelTag = await ChannelTag.findAll({
           where: {
@@ -85,65 +86,44 @@ describe.only('Collab', () => {
         expect(vector.vector[2]).to.equal(0.2)
         expect(vector.vector[3]).to.equal(0.3)
       })
-    }) // end describe('ChannelVector constructor')
+    })
 
     describe('getClosestNChannels', () => {
-      let tags
-        let chanTags
-        let updatedChanTags
-        let chanTagsWithScores
-        let userChannelTag
-        let userChannelVector
-        let otherChannelsVectors
-        const otherChanTagsWithScores = []
-
-      beforeEach(async () => {
-        const otherChannels = await Channel.bulkCreate([
-          {name: 'channel2'},
-          {name: 'channel3'},
-          {name: 'channel4'},
-          {name: 'channel5'},
-          {name: 'channel6'},
-          {name: 'channel7'},
-          {name: 'channel8'},
-          {name: 'channel9'}
-        ])
-
-        for (let i = 0; i < otherChannels.length; i++) {
-          tags = await Tag.bulkCreate([
-            { name: 'css', channelId: otherChannels[i].id},
-            { name: 'responsive', channelId: otherChannels[i].id},
-            { name: 'wireframes', channelId: otherChannels[i].id}
-          ])
-          chanTags = await ChannelTag.findAll({
-            where: {
-              channelId: otherChannels[i].id
-            }
-          })
-          updatedChanTags = chanTags.map((chanTag, index) => chanTag.update({score: (index + 1 + i) / 10}))
-          chanTagsWithScores = await Promise.all(updatedChanTags)
-          otherChanTagsWithScores.push(chanTagsWithScores)
+      it(`returns the n channels closest to the user's channel`, () => {
+        const userChannel = {
+          id: 1,
+          vector: [null, 0.1, 0.2, 0.3]
         }
-        channelTag = await ChannelTag.findAll({
-          where: {
-            channelId: channel1.id
-          }
-        })
-        userChannelTag = await ChannelTag.findAll({
-          where: {
-            channelId: channel1.id
-          }
-        })
-        const updatedTags = channelTag.map(elem => elem.update({ score: elem.tagId / 10 }))
-        await Promise.all(updatedTags)
 
+        const otherChannels = [
+          { id: 2, vector: [null, 0.2, 0.3, 0.4] },
+          { id: 3, vector: [null, 0.3, 0.4, 0.5] },
+          { id: 4, vector: [null, 0.4, 0.5, 0.6] },
+          { id: 5, vector: [null, 0.5, 0.6, 0.7] },
+        ]
+        const recommender = new Recommender(userChannel, otherChannels)
+        const closestChannels = recommender.getClosestNChannels(2)
+        expect(closestChannels.length).to.equal(2)
+        expect(closestChannels[0].id).to.equal(2)
       })
 
-      it(`returns the ids of the channels closest to the user's channel`, () => {
-        console.log('otherChanTagsWithScores', otherChanTagsWithScores)
-        userChannelVector = new ChannelVector(userChannelTag)
-        otherChannelsVectors = otherChanTagsWithScores.map(chanTag => new ChannelVector(chanTag))
+      it(`returns the correct distances`, () => {
+        const userChannel = {
+          id: 1,
+          vector: [null, 0.1, 0.2, 0.3]
+        }
+
+        const otherChannels = [
+          { id: 2, vector: [null, 0.2, 0.3, 0.4] },
+          { id: 3, vector: [null, 0.3, 0.4, 0.5] },
+          { id: 4, vector: [null, 0.4, 0.5, 0.6] },
+          { id: 5, vector: [null, 0.5, 0.6, 0.7] },
+        ]
+        const recommender = new Recommender(userChannel, otherChannels)
+        const closestChannels = recommender.getClosestNChannels(2)
+        expect(closestChannels[0].distance.toFixed(2)).to.equal('0.17')
+        expect(closestChannels[1].distance.toFixed(2)).to.equal('0.35')
       })
-    })
+    })// end describe('GetClosestNChannels')
   }) // end describe('Collab methods')
 }) // end describe('Collab')

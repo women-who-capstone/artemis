@@ -1,5 +1,5 @@
 import React from 'react'
-import PodcastPlayer from './index'
+import PodcastPlayer from './PodcastPlayer'
 import { connect } from 'react-redux'
 import axios from 'axios'
 

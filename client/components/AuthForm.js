@@ -1,25 +1,25 @@
-import React from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
-import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
-import { connect } from 'react-redux'
-import classNames from 'classnames'
-import { auth } from '../store'
+import React from "react";
+import { withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import { connect } from "react-redux";
+import classNames from "classnames";
+import { auth } from "../reducers/user";
 
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit
   },
   input: {
-    display: 'none'
+    display: "none"
   },
   root: {
     flexGrow: 1
   },
   container: {
-    display: 'flex',
-    flexWrap: 'wrap'
+    display: "flex",
+    flexWrap: "wrap"
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -31,10 +31,10 @@ const styles = theme => ({
   menu: {
     width: 200
   }
-})
+});
 
 const AuthForm = props => {
-  const { name, displayName, handleSubmit, error } = props
+  const { name, displayName, handleSubmit, error } = props;
   return (
     <form
       className={styles.container}
@@ -75,47 +75,47 @@ const AuthForm = props => {
       </Button>
       {error && error.response && <div> {error.response.data} </div>}
     </form>
-  )
-}
+  );
+};
 
 const mapLogin = state => {
   return {
-    name: 'login',
-    displayName: 'Login',
+    name: "login",
+    displayName: "Login",
     error: state.user.error
-  }
-}
+  };
+};
 
 const mapSignup = state => {
   return {
-    name: 'signup',
-    displayName: 'Sign Up',
+    name: "signup",
+    displayName: "Sign Up",
     error: state.user.error
-  }
-}
+  };
+};
 
 const mapDispatch = dispatch => {
   return {
     handleSubmit(evt) {
-      evt.preventDefault()
-      const formName = evt.target.name
-      const email = evt.target.email.value
-      const password = evt.target.password.value
-      dispatch(auth(email, password, formName))
+      evt.preventDefault();
+      const formName = evt.target.name;
+      const email = evt.target.email.value;
+      const password = evt.target.password.value;
+      dispatch(auth(email, password, formName));
     }
-  }
-}
+  };
+};
 
 export const Login = withStyles(styles)(
   connect(
     mapLogin,
     mapDispatch
   )(AuthForm)
-)
+);
 
 export const Signup = withStyles(styles)(
   connect(
     mapSignup,
     mapDispatch
   )(AuthForm)
-)
+);

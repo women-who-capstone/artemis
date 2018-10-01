@@ -3,7 +3,8 @@ import PlayArrow from '@material-ui/icons/PlayArrow'
 import Pause from '@material-ui/icons/Pause'
 import IconButton from '@material-ui/core/IconButton'
 import { withMediaProps } from 'react-media-player'
-class PlayPause extends Component {
+
+class Volume extends Component {
   shouldComponentUpdate({ media }) {
     return this.props.media.isPlaying !== media.isPlaying
   }
@@ -22,4 +23,4 @@ class PlayPause extends Component {
   }
 }
 
-export default withMediaProps(PlayPause)
+export default withMediaProps(Volume)

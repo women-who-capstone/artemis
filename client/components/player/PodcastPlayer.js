@@ -5,8 +5,7 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
-import PlayArrow from '@material-ui/icons/PlayArrow'
-import Pause from '@material-ui/icons/Pause'
+
 import CardActions from '@material-ui/core/CardActions'
 import PlayPause from './PlayPause'
 import {
@@ -25,7 +24,7 @@ const {
   Volume,
   Fullscreen
 } = controls
-import episode from './tempEpisode.js'
+import episode from '../tempEpisode'
 
 const { formatTime } = utils
 
@@ -54,27 +53,8 @@ const styles = theme => ({
     width: 400,
     height: 400
   },
-  play: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingLeft: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit
-  },
-  like: {
-    display: 'flex',
-    paddingLeft: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    alignItems: 'center'
-  },
-  actions: {
-    width: '90%'
-  },
-  playerMenu: {
-    width: '100%',
-    display: 'flex'
-  },
-  seekBar: {
-    width: '100%'
+  media-controls: {
+    
   }
 })
 
@@ -108,15 +88,19 @@ class PodcastPlayer extends Component {
             <div>
               <Player
                 ref={c => (this._player = c)}
-                crossOrigin="anonymous"
                 src={episode.audio}
+                crossOrigin="anonymous"
                 useAudioObject
               />
               <div className="media-controls">
-                <PlayPause />
-                <CurrentTime className="media-control media-control--current-time" />
+                <PlayPause className="media-control media-control--play-pause" />
+                <Typography>
+                  <CurrentTime className="media-control media-control--current-time" />
+                </Typography>
                 <SeekBar className="media-control media-control--volume-range" />
-                <Duration className="media-control media-control--duration" />
+                <Typography>
+                  <Duration className="media-control media-control--duration" />
+                </Typography>
                 <MuteUnmute className="media-control media-control--mute-unmute" />
                 <Volume className="media-control media-control--volume" />
               </div>

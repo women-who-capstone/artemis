@@ -4,19 +4,13 @@ const algorithmia = require('algorithmia');
 
 router.get('/', async (req, res, next) => {
 	try {
-		const input = req.query.input;
+		let input = req.query.input;
+		input = input.map((e) => JSON.parse(e));
 		console.log('req', input);
 		algorithmia
 			.client('simnhp22YPfc8yIG9tLnwcbOj+J1')
 			.algo('nlp/KeywordsForDocumentSet/0.1.7')
-			.pipe([
-				[
-					'badger badger buffalo mushroom mushroom mushroom mushroom mushroom mushroom mushroom',
-					'antelope buffalo mushroom',
-					'bannana'
-				],
-				2
-			])
+			.pipe(input)
 			.then(function(output) {
 				if (output.error) {
 					console.log(output.error);

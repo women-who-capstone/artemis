@@ -10,13 +10,13 @@ const sessionStore = new SequelizeStore({ db })
 const PORT = process.env.PORT || 8080
 const app = express()
 
-module.exports = app
+module.exports = app;
 
 if (process.env.NODE_ENV === 'test') {
   after('close the session store', () => sessionStore.stopExpiringSessions())
 }
 
-if (process.env.NODE_ENV !== 'production') require('../secrets')
+if (process.env.NODE_ENV !== "production") require("../secrets");
 
 // passport registration
 passport.serializeUser((user, done) => done(null, user.id))
@@ -32,14 +32,14 @@ passport.deserializeUser(async (id, done) => {
 
 const createApp = () => {
   // logging middleware
-  app.use(morgan('dev'))
+  app.use(morgan("dev"));
 
   // body parsing middleware
-  app.use(express.json())
-  app.use(express.urlencoded({ extended: true }))
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   // compression middleware
-  app.use(compression())
+  app.use(compression());
 
   // session middleware with passport
   app.use(
@@ -54,34 +54,34 @@ const createApp = () => {
   app.use(passport.session())
 
   // static file-serving middleware
-  app.use(express.static(path.join(__dirname, '..', 'public')))
+  app.use(express.static(path.join(__dirname, "..", "public")));
 
   // any remaining requests with an extension (.js, .css, etc.) send 404
   app.use((req, res, next) => {
     if (path.extname(req.path).length) {
-      const err = new Error('Not found')
-      err.status = 404
-      next(err)
+      const err = new Error("Not found");
+      err.status = 404;
+      next(err);
     } else {
-      next()
+      next();
     }
-  })
+  });
 
   app.use('/api', require('./api'))
   app.use('/auth', require('./auth'))
 
   // sends index.html
-  app.use('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public/index.html'))
-  })
+  app.use("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "public/index.html"));
+  });
 
   // error handling endware
   app.use((err, req, res, next) => {
-    console.error(err)
-    console.error(err.stack)
-    res.status(err.status || 500).send(err.message || 'Internal server error.')
-  })
-}
+    console.error(err);
+    console.error(err.stack);
+    res.status(err.status || 500).send(err.message || "Internal server error.");
+  });
+};
 
 const startListening = () => {
   // start listening (and create a 'server' object representing our server)
@@ -94,9 +94,9 @@ const startListening = () => {
   // set up our socket control center
   // const io = socketio(server)
   // require('./socket')(io)
-}
+};
 
-const syncDb = () => db.sync()
+const syncDb = () => db.sync();
 
 async function bootApp() {
   await sessionStore.sync()
@@ -106,7 +106,7 @@ async function bootApp() {
 }
 
 if (require.main === module) {
-  bootApp()
+  bootApp();
 } else {
-  createApp()
+  createApp();
 }

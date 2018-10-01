@@ -11,6 +11,7 @@ const ChannelTag = require("./channelTag");
 const ChannelGenre = require("./channelGenre");
 const ChannelPodcast = require("./channelPodcast");
 const ChannelHost = require("./channelHost");
+const ChannelEpisode = require("./channelEpisode");
 
 //Tag-Channel Model created to associate Channel Ids with Tag Ids (score as already set attribute)
 Channel.belongsToMany(Tag, { through: ChannelTag });
@@ -33,9 +34,9 @@ Channel.hasMany(ChannelHost);
 Host.belongsToMany(Channel, { through: ChannelHost });
 
 //Channel-Episodes CREATES new own table to associates Channel Ids with it's played Episode Ids
-Channel.belongsToMany(Episode, { through: "ChannelEpisode" });
-// Channel.hasMany(ChannelEpisode);
-Episode.belongsToMany(Channel, { through: "ChannelEpisode" });
+Channel.belongsToMany(Episode, { through: ChannelEpisode });
+Episode.belongsToMany(Channel, { through: ChannelEpisode });
+Episode.hasMany(ChannelEpisode);
 
 //Bookmarks CREATES new own table to associates User Ids with Episode Ids
 User.belongsToMany(Episode, { through: "Bookmark" });
@@ -58,5 +59,6 @@ module.exports = {
   ChannelGenre,
   ChannelHost,
   ChannelPodcast,
-  ChannelTag
+  ChannelTag,
+  ChannelEpisode
 };

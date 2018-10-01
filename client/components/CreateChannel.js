@@ -180,10 +180,10 @@ class IntegrationAutosuggest extends React.Component {
             let res = await axios.get(`/api/podcast?id=${genreId}`);
             let channelList = res.data;
             // console.log("Channels", channelList.channels);
-            let randomEpisode =
+            let randomPodcast =
               channelList.channels[Math.floor(Math.random() * 20 + 1)];
-            console.log("RANDOM EPISODE", randomEpisode);
-            this.props.setSinglePodcast(randomEpisode);
+            // console.log("RANDOM EPISODE", randomPodcast);
+            this.props.setSinglePodcast(randomPodcast);
             this.props.setPodcastList(channelList.channels);
             const createdChannel = await axios.post("/api/channel", {
               name: searchInput

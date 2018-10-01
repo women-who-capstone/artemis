@@ -12,29 +12,28 @@ class SingleChannel extends React.Component {
     this.setEpisode = this.setEpisode.bind(this);
   }
 
-  setEpisode = async function() {
+  setEpisode = async function(episodeId) {
     const channelId = this.props.match.params.channelId;
     console.log(channelId);
-    const res = await axios.get(
-      `/api/episode/apiEpisode?id=${this.props.episodeId}`
-    );
+    const res = await axios.get(`/api/episode/apiEpisode?id=${episodeId}`);
     const episode = res.data.episodes[0];
     episode.channelId = channelId;
-    console.log("EPISODE", episode);
+    // console.log("EPISODE", episode);
     this.setState({
       episode
     });
     await axios.post("/api/episode", episode);
   };
 
-  // setTags = async function(){
-  //   const
-  // }
+  setTags = async function() {
+    const description = this.state.episode.description;
+  };
 
   //when Next, Dislike or Like is clicked => have function that updates the store with new episode relating to tags.
 
   componentDidMount() {
-    this.setEpisode();
+    const episodeId = this.props.episodeId;
+    this.setEpisode(episodeId);
     //this.setTags()
   }
   render() {

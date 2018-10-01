@@ -48,7 +48,8 @@ export const fetchUserChannels = userId => {
 const initialState = {
   userChannels: [],
   userChannelsError: false,
-  userChannelsLoading: false
+  userChannelsLoading: false,
+  selectedChannel: {}
 }
 
 const reducer = (state = initialState, action) => {

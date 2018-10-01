@@ -37,22 +37,25 @@ panner.panningModel = 'equalpower'
 panner.connect(audioContext.destination)
 
 const styles = theme => ({
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    maxWidth: 640
-  },
-  details: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  content: {
-    flex: '1 0 auto'
-  },
+  // card: {
+  //   display: 'flex',
+  //   flexDirection: 'column',
+  //   alignItems: 'center',
+  //   maxWidth: 640
+  // },
+  // details: {
+  //   display: 'flex',
+  //   flexDirection: 'column'
+  // },
+  // content: {
+  //   flex: '1 0 auto'
+  // },
   cover: {
     width: '100%',
     height: 320
+  },
+  actions: {
+    display: 'block'
   }
 })
 
@@ -68,7 +71,7 @@ class PodcastPlayer extends Component {
     const { classes } = this.props
 
     return (
-      <Card className={classes.card}>
+      <Card className={`${classes.card} `}>
         <CardMedia
           className={classes.cover}
           image={episode.image ? episode.image : episode.podcast.image}

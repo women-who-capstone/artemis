@@ -1,5 +1,6 @@
 @import './mixins/range.scss';
 
+/* DEFAULT STYLES FROM REACT-MEDIA-PLAYER - DO NOT TOUCH*/
 * {
   box-sizing: border-box;
 }
@@ -255,4 +256,14 @@ input[type='range'] {
   &.is-active {
     color: #8bb955;
   }
+}
+
+/* CUSTOM */
+.media-controls {
+  background-color: white;
+}
+
+.media-controls time {
+  width: 80px;
+  text-align: center;
 }

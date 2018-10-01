@@ -19,11 +19,3 @@ module.exports = {
   ChannelVector
 }
 
-
-// tags [ channelTag {
-//     dataValues:
-//      { score: null,
-//        createdAt: 2018-09-28T16:55:34.240Z,
-//        updatedAt: 2018-09-28T16:55:34.240Z,
-//        channelId: 1,
-//        tagId: 1 },

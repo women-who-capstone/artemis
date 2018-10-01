@@ -15,7 +15,7 @@ const setUserChannels = userChannels => {
 
 const setUserChannelsErrorStatus = status => {
   return {
-    type:  SET_USER_CHANNELS_ERROR,
+    type:  SET_USER_CHANNELS_ERROR_STATUS,
     status
   }
 }
@@ -28,11 +28,11 @@ const setUserChannelsLoadingStatus = status => {
 }
 
 // THUNK CREATORS
-const fetchUserChannels = userId => {
+export const fetchUserChannels = userId => {
   return async dispatch => {
     dispatch(setUserChannelsLoadingStatus(true))
     try {
-      const { data: userChannels } = await axios.get(`/api/channels/user`)
+      const { data: userChannels } = await axios.get(`/api/channel/user`)
       dispatch(setUserChannels(userChannels))
       dispatch(setUserChannelsLoadingStatus(false))
       dispatch(setUserChannelsErrorStatus(false))
@@ -68,5 +68,9 @@ const reducer = (state = initialState, action) => {
         ...state,
         userChannelsError: action.status
       }
+    default:
+      return state
   }
 }
+
+export default reducer

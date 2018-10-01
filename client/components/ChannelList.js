@@ -1,32 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import ChannelListItem from './ChannelListItem'
 import List from "@material-ui/core/List";
-  const channels = [
-{
-id: 1820,
-name: "Comedy",
-createdAt: "2018-10-01T19:26:34.373Z",
-updatedAt: "2018-10-01T19:26:34.373Z",
-userId: 1001
-},
-{
-id: 1821,
-name: "Food",
-createdAt: "2018-10-01T19:57:38.494Z",
-updatedAt: "2018-10-01T19:57:38.494Z",
-userId: 1001
-},
-{
-id: 1822,
-name: "Music",
-createdAt: "2018-10-01T19:59:31.610Z",
-updatedAt: "2018-10-01T19:59:31.610Z",
-userId: 1001
-}
-]
+import { fetchUserChannels } from '../reducers/channel'
 
 class ChannelList extends Component {
+  componentDidMount() {
+    this.props.fetchUserChannels(this.props.userId)
+  }
+
   render() {
+    const { channels } = this.props
     return (
       <div>
         <List>
@@ -37,4 +21,17 @@ class ChannelList extends Component {
   }
 }
 
-export default ChannelList
+const mapState = state => {
+  return {
+    channels: state.channels.userChannels,
+    userId: state.user.id
+  }
+}
+
+const mapDispatch = dispatch => {
+  return {
+    fetchUserChannels: (userId) => dispatch(fetchUserChannels(userId))
+  }
+}
+
+export default connect(mapState, mapDispatch)(ChannelList)

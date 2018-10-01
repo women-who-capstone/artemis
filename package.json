@@ -35,7 +35,7 @@
     "start-dev": "NODE_ENV='development' npm run build-client-watch & npm run start-server",
     "start-server": "nodemon server -e html,js,scss --ignore public --ignore client",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "mocha -w \"./recommendations/**/*.spec.js\"",
     "eject": "react-scripts eject"
   },
   "devDependencies": {

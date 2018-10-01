@@ -11,6 +11,7 @@
     "express-session": "^1.15.6",
     "history": "^4.7.2",
     "morgan": "^1.9.1",
+    "passport": "^0.4.0",
     "pg": "^7.4.3",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",

@@ -31,10 +31,11 @@ class SingleChannel extends React.Component {
   //   const
   // }
 
-  //when Next, Dislike or Like clicked have function that updates the store with new episode realting to tags.
+  //when Next, Dislike or Like is clicked => have function that updates the store with new episode relating to tags.
 
   componentDidMount() {
     this.setEpisode();
+    //this.setTags()
   }
   render() {
     console.log("AUDIO URL", this.state.episode.audio);

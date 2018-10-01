@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import registerServiceWorker from "./registerServiceWorker";
-import { HashRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
-import history from "./history";
+import { Router } from "react-router-dom";
 import store from "./store";
+import history from "./history";
+import registerServiceWorker from "./registerServiceWorker";
 
 ReactDOM.render(
   <Provider store={store}>

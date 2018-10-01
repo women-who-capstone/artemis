@@ -41,7 +41,7 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    maxWidth: 400
+    maxWidth: 640
   },
   details: {
     display: 'flex',
@@ -51,8 +51,8 @@ const styles = theme => ({
     flex: '1 0 auto'
   },
   cover: {
-    width: 400,
-    height: 400
+    width: '100%',
+    height: 320
   }
 })
 
@@ -106,15 +106,6 @@ class PodcastPlayer extends Component {
           </Media>
         </CardActions>
       </Card>
-      /* <Card className={classes.card}>
-         <audio 
-           id="episode"
-           controls
-         src="http://downloads.newyorker.com/mp3/comment/20161226_comment.mp3"
-         >
-           Your browser does not support the <code>audio</code> element.
-         </audio>
-       </Card>*/
     )
   }
 }

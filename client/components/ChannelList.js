@@ -5,6 +5,25 @@ import List from "@material-ui/core/List";
 import { fetchUserChannels } from '../reducers/channel'
 
 class ChannelList extends Component {
+  constructor() {
+    super()
+    this.state = {
+      differentChannelSelected: false,
+      selectedChannelId: -1
+    }
+
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  handleClick(channelId) {
+    if (this.props.match.params.channelId !== channelId) {
+      this.setState({
+        selectedChannelId: channelId
+        differentChannelSelected: true
+      })
+    }
+  }
+
   componentDidMount() {
     this.props.fetchUserChannels(this.props.userId)
   }
@@ -12,11 +31,15 @@ class ChannelList extends Component {
   render() {
     const { channels } = this.props
     return (
-      <div>
-        <List>
-          {channels.map(channel => <ChannelListItem key={channel.id} channel={channel} />)}
-        </List>
-      </div>
+      {this.state.differentChannelSelected ?
+        <Redirect to=`channel/{this.state.selectedChannelId}`
+      :
+        <div>
+          <List>
+            {channels.map(channel => <ChannelListItem key={channel.id} channel={channel} handleClick={() => this.handleClick(channel.id)}/>)}
+          </List>
+        </div>
+      }
     );
   }
 }

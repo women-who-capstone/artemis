@@ -4,19 +4,8 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.1.1",
-<<<<<<< HEAD
     "@material-ui/icons": "^3.0.1",
     "@material-ui/lab": "^3.0.0-alpha.17",
-    "body-parser": "^1.18.3",
-    "express": "^4.16.3",
-    "morgan": "^1.9.1",
-    "pg": "^7.4.3",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-media-player": "^0.7.3",
-    "react-scripts": "1.1.5",
-    "sequelize": "^4.39.0",
-=======
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
@@ -30,6 +19,8 @@
     "react": "^16.5.2",
     "react-autosuggest": "^9.4.2",
     "react-dom": "^16.5.2",
+    "react-media-player": "^0.7.3",
+    "react-motion-ui-pack": "^0.10.3",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
@@ -39,7 +30,6 @@
     "redux-thunk": "^2.3.0",
     "sequelize": "^4.39.0",
     "unirest": "^0.5.1",
->>>>>>> ad9d62778ebf745a37061066cdf80eda6586a748
     "wordpos": "^1.2.0"
   },
   "scripts": {
@@ -47,13 +37,9 @@
     "build-client-watch": "webpack -w",
     "start": "node ./server",
     "start-dev": "NODE_ENV='development' npm run build-client-watch & npm run start-server",
-<<<<<<< HEAD
-    "seed": "node script/seed.js",
-=======
->>>>>>> ad9d62778ebf745a37061066cdf80eda6586a748
     "start-server": "nodemon server -e html,js,scss --ignore public --ignore client",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "mocha -w \"./recommendations/**/*.spec.js\"",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
@@ -72,16 +58,12 @@
     "@babel/preset-react": "^7.0.0-beta.55",
     "@babel/register": "^7.0.0-beta.55",
     "babel-loader": "^8.0.2",
-<<<<<<< HEAD
     "css-loader": "^1.0.0",
     "node-sass": "^4.9.3",
     "mini-css-extract-plugin": "^0.4.3",
     "nodemon": "^1.18.4",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.0",
-=======
-    "nodemon": "^1.18.4",
->>>>>>> ad9d62778ebf745a37061066cdf80eda6586a748
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.1"
   }

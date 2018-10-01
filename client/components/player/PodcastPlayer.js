@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton'
 
 import CardActions from '@material-ui/core/CardActions'
 import PlayPause from './PlayPause'
+import MuteUnmute from './MuteUnmute'
 import {
   Media,
   Player,
@@ -15,8 +16,8 @@ import {
   utils,
   withMediaProps
 } from 'react-media-player'
+
 const {
-  MuteUnmute,
   CurrentTime,
   Progress,
   SeekBar,
@@ -24,7 +25,7 @@ const {
   Volume,
   Fullscreen
 } = controls
-import episode from '../tempEpisode'
+import episode from '../tempEpisode' //TEMP
 
 const { formatTime } = utils
 
@@ -52,9 +53,6 @@ const styles = theme => ({
   cover: {
     width: 400,
     height: 400
-  },
-  media-controls: {
-    
   }
 })
 

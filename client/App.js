@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import PodcastPlayer from './components/PodcastPlayer'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import { Login, Signup, Logout } from "./components";
-import Routes from "./routes";
-import Button from "@material-ui/core/Button";
+import { PodcastPlayer, Login, Signup, Logout } from './components'
+import Routes from './routes'
+import Button from '@material-ui/core/Button'
 
 class App extends Component {
   render() {
@@ -23,4 +22,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default App

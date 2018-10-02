@@ -1,20 +1,19 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter, Route, Switch } from "react-router-dom";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withRouter, Route, Switch } from 'react-router-dom'
 // import PropTypes from 'prop-types'
-import PodcastPlayer from "./components/PodcastPlayer";
-import CreateChannel from "./components/CreateChannel";
-import Channel from "./components/Channel";
-import { Login, Signup } from "./components/AuthForm";
-import { me } from "./reducers/user";
+import CreateChannel from './components/CreateChannel'
+import Channel from './components/Channel'
+import { Login, Signup, PodcastPlayer } from './components'
+import { me } from './reducers/user'
 
 class Routes extends Component {
   componentDidMount() {
-    this.props.loadInitialData();
+    this.props.loadInitialData()
   }
 
   render() {
-    const { isLoggedIn } = this.props;
+    const { isLoggedIn } = this.props
 
     return (
       <Switch>
@@ -31,7 +30,7 @@ class Routes extends Component {
         {/* Displays our Login component as a fallback */}
         <Route component={Login} />
       </Switch>
-    );
+    )
   }
 }
 
@@ -43,16 +42,16 @@ const mapState = state => {
     // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
     // Otherwise, state.user will be an empty object, and state.user.id will be falsey
     isLoggedIn: !!state.user.id
-  };
-};
+  }
+}
 
 const mapDispatch = dispatch => {
   return {
     loadInitialData() {
-      dispatch(me());
+      dispatch(me())
     }
-  };
-};
+  }
+}
 
 // The `withRouter` wrapper makes sure that updates are not blocked
 // when the url changes
@@ -61,7 +60,7 @@ export default withRouter(
     mapState,
     mapDispatch
   )(Routes)
-);
+)
 
 /**
  * PROP TYPES

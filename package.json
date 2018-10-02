@@ -13,6 +13,7 @@
     "connect-session-sequelize": "^5.2.2",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "fast-csv": "^2.4.1",
     "history": "^4.7.2",
     "material-ui-icons": "^1.0.0-beta.36",
     "morgan": "^1.9.1",

@@ -16,6 +16,7 @@ class ChannelList extends Component {
   }
 
   handleClick(channelId) {
+    //TODO: Implement a check for whether the user is already on the channel selected
     console.log('Clicked')
 
   }

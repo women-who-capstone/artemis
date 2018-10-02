@@ -31,8 +31,8 @@ class SingleChannel extends React.Component {
 
   //when Next, Dislike or Like is clicked => have function that updates the store with new episode relating to tags.
 
-  componentDidMount() {
-    const episodeId = this.props.episodeId;
+  async componentDidMount() {
+    const episodeId = await this.props.episodeId;
     this.setEpisode(episodeId);
     //this.setTags()
   }

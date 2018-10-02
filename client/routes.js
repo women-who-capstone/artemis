@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter, Route, Switch } from "react-router-dom";
 // import PropTypes from 'prop-types'
-import PodcastPlayer from "./components/PodcastPlayer";
+import PodcastPlayer from "./components/player/PodcastPlayer";
 import CreateChannel from "./components/CreateChannel";
 import Channel from "./components/Channel";
 import { Login, Signup } from "./components/AuthForm";
 import { me } from "./reducers/user";
+import Keywords from "./components/Keywords";
 
 class Routes extends Component {
   componentDidMount() {
@@ -21,6 +22,7 @@ class Routes extends Component {
         {/* Routes placed here are available to all visitors */}
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
+        <Route path="/keywords" component={Keywords} />
         {isLoggedIn && (
           <Switch>
             <Route path="/podcastplayer" component={PodcastPlayer} />
@@ -38,6 +40,7 @@ class Routes extends Component {
 /**
  * CONTAINER
  */
+
 const mapState = state => {
   return {
     // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.

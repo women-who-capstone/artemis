@@ -39,6 +39,7 @@ class SingleChannel extends React.Component {
   render() {
     console.log(this.props.episodeId);
     console.log("AUDIO URL", this.state.episode.audio);
+
     if (this.state.episode.audio) {
       return <PodcastPlayer episode={this.state.episode} />;
     }

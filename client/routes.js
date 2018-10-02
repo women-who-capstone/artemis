@@ -1,40 +1,40 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter, Route, Switch } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter, Route, Switch } from "react-router-dom";
 // import PropTypes from 'prop-types'
-import PodcastPlayer from './components/PodcastPlayer';
-import CreateChannel from './components/CreateChannel';
-import Channel from './components/Channel';
-import { Login, Signup } from './components/AuthForm';
-import { me } from './reducers/user';
-import Keywords from './components/Keywords';
+import PodcastPlayer from "./components/player/PodcastPlayer";
+import CreateChannel from "./components/CreateChannel";
+import Channel from "./components/Channel";
+import { Login, Signup } from "./components/AuthForm";
+import { me } from "./reducers/user";
+import Keywords from "./components/Keywords";
 
 class Routes extends Component {
-	componentDidMount() {
-		this.props.loadInitialData();
-	}
+  componentDidMount() {
+    this.props.loadInitialData();
+  }
 
-	render() {
-		const { isLoggedIn } = this.props;
+  render() {
+    const { isLoggedIn } = this.props;
 
-		return (
-			<Switch>
-				{/* Routes placed here are available to all visitors */}
-				<Route path="/login" component={Login} />
-				<Route path="/signup" component={Signup} />
-				<Route path="/keywords" component={Keywords} />
-				{isLoggedIn && (
-					<Switch>
-						<Route path="/podcastplayer" component={PodcastPlayer} />
-						<Route path="/createchannel" component={CreateChannel} />
-						<Route exact path="/channel/:channelId" component={Channel} />
-					</Switch>
-				)}
-				{/* Displays our Login component as a fallback */}
-				<Route component={Login} />
-			</Switch>
-		);
-	}
+    return (
+      <Switch>
+        {/* Routes placed here are available to all visitors */}
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/keywords" component={Keywords} />
+        {isLoggedIn && (
+          <Switch>
+            <Route path="/podcastplayer" component={PodcastPlayer} />
+            <Route path="/createchannel" component={CreateChannel} />
+            <Route exact path="/channel/:channelId" component={Channel} />
+          </Switch>
+        )}
+        {/* Displays our Login component as a fallback */}
+        <Route component={Login} />
+      </Switch>
+    );
+  }
 }
 
 /**
@@ -46,16 +46,16 @@ const mapState = state => {
     // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
     // Otherwise, state.user will be an empty object, and state.user.id will be falsey
     isLoggedIn: !!state.user.id
-  }
-}
+  };
+};
 
 const mapDispatch = dispatch => {
   return {
     loadInitialData() {
-      dispatch(me())
+      dispatch(me());
     }
-  }
-}
+  };
+};
 
 // The `withRouter` wrapper makes sure that updates are not blocked
 // when the url changes
@@ -64,7 +64,7 @@ export default withRouter(
     mapState,
     mapDispatch
   )(Routes)
-)
+);
 
 /**
  * PROP TYPES

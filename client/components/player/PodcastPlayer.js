@@ -1,21 +1,21 @@
-import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
-import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
 
-import CardActions from '@material-ui/core/CardActions'
-import PlayPause from './PlayPause'
-import MuteUnmute from './MuteUnmute'
+import CardActions from "@material-ui/core/CardActions";
+import PlayPause from "./PlayPause";
+import MuteUnmute from "./MuteUnmute";
 import {
   Media,
   Player,
   controls,
   utils,
   withMediaProps
-} from 'react-media-player'
+} from "react-media-player";
 
 const {
   CurrentTime,
@@ -24,51 +24,54 @@ const {
   Duration,
   Volume,
   Fullscreen
-} = controls
-import episode from '../tempEpisode' //TEMP
+} = controls;
+// import episode from "../tempEpisode";
 
-const { formatTime } = utils
+const { formatTime } = utils;
 
-const audioContext = new (window.AudioContext || window.webkitAudioContext)()
-const panner = audioContext.createPanner()
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const panner = audioContext.createPanner();
 
-panner.setPosition(0, 0, 1)
-panner.panningModel = 'equalpower'
-panner.connect(audioContext.destination)
+panner.setPosition(0, 0, 1);
+panner.panningModel = "equalpower";
+panner.connect(audioContext.destination);
 
 const styles = theme => ({
-  // card: {
-  //   display: 'flex',
-  //   flexDirection: 'column',
-  //   alignItems: 'center',
-  //   maxWidth: 640
-  // },
-  // details: {
-  //   display: 'flex',
-  //   flexDirection: 'column'
-  // },
-  // content: {
-  //   flex: '1 0 auto'
-  // },
+  card: {
+    display: "flex",
+    flexDirection: "column",
+    // alignItems: "center",
+    maxWidth: "auto",
+    height: "80%"
+  },
+  details: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  content: {
+    flex: "1 0 auto"
+  },
   cover: {
-    width: '100%',
-    height: 320
+    width: "auto",
+    height: "100%"
   },
   actions: {
-    display: 'block'
+    display: "block"
   }
-})
+});
 
 class PodcastPlayer extends Component {
   componentDidMount() {
-    const source = audioContext.createMediaElementSource(this._player.instance)
-    source.connect(panner)
-    panner.connect(audioContext.destination)
+    const source = audioContext.createMediaElementSource(this._player.instance);
+    source.connect(panner);
+    panner.connect(audioContext.destination);
   }
 
   render() {
     // const { value } = this.state
-    const { classes } = this.props
+    const { classes } = this.props;
+    const episode = this.props.episode;
+    console.log("EPSIODE", episode);
 
     return (
       <Card className={`${classes.card} `}>
@@ -80,10 +83,14 @@ class PodcastPlayer extends Component {
         <CardContent className={classes.content}>
           <Typography variant="headline">{episode.title}</Typography>
           <Typography variant="subheading" color="textSecondary">
-            {episode.podcast.title}
+            {episode.title}
           </Typography>
         </CardContent>
-
+        {/* <CardMedia
+          className={classes.cover}
+          image={episode.image}
+          title={episode.title}
+        /> */}
         <CardActions className={classes.actions}>
           <Media>
             <div>
@@ -109,8 +116,8 @@ class PodcastPlayer extends Component {
           </Media>
         </CardActions>
       </Card>
-    )
+    );
   }
 }
 
-export default withStyles(styles, { withTheme: true })(PodcastPlayer)
+export default withStyles(styles, { withTheme: true })(PodcastPlayer);

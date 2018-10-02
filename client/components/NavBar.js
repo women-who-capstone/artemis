@@ -13,6 +13,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Logout from "./Logout";
+import Routes from "../routes";
 
 const drawerWidth = 240;
 
@@ -21,12 +22,14 @@ const styles = theme => ({
     flexGrow: 1
   },
   appFrame: {
-    height: 430,
+    height: 800,
     zIndex: 1,
-    overflow: "hidden",
+    // overflow: "hidden",
     position: "relative",
     display: "flex",
-    width: "100%"
+    width: "100%",
+    // alignItems: "center",
+    justifyContent: "center"
   },
   appBar: {
     position: "absolute",
@@ -121,6 +124,7 @@ class PersistentDrawer extends React.Component {
 
     const drawer = (
       <Drawer
+        style={{ height: "100px" }}
         variant="persistent"
         anchor={anchor}
         open={open}
@@ -187,6 +191,7 @@ class PersistentDrawer extends React.Component {
             )}
           >
             <div className={classes.drawerHeader} />
+            <Routes style={styles.drawerPaper} />
           </main>
           {after}
         </div>

@@ -15,16 +15,9 @@ const Logout = props => {
   const { handleClick, isLoggedIn } = props;
 
   return isLoggedIn ? (
-    <div>
-      {" "}
-      {/* Remove this div and just return button when design is done */}
-      <Button color="secondary" className={styles.button} onClick={handleClick}>
-        Logout
-      </Button>
-      <Typography variant="body1" gutterBottom align="right">
-        (Testing location. Put Logout component in right place later.)
-      </Typography>
-    </div>
+    <Button className={styles.button} onClick={handleClick}>
+      Logout
+    </Button>
   ) : (
     ""
   );

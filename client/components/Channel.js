@@ -1,5 +1,5 @@
 import React from "react";
-import PodcastPlayer from "./PodcastPlayer";
+import PodcastPlayer from "./player/PodcastPlayer";
 import { connect } from "react-redux";
 import axios from "axios";
 
@@ -18,7 +18,7 @@ class SingleChannel extends React.Component {
     const res = await axios.get(`/api/episode/apiEpisode?id=${episodeId}`);
     const episode = res.data.episodes[0];
     episode.channelId = channelId;
-    // console.log("EPISODE", episode);
+    console.log("EPISODE", episode);
     this.setState({
       episode
     });
@@ -37,12 +37,13 @@ class SingleChannel extends React.Component {
     //this.setTags()
   }
   render() {
+    console.log(this.props.episodeId);
     console.log("AUDIO URL", this.state.episode.audio);
-    return (
-      <div>
-        <PodcastPlayer audioSource={this.state.episode.audio} />
-      </div>
-    )
+
+    if (this.state.episode.audio) {
+      return <PodcastPlayer episode={this.state.episode} />;
+    }
+    return <div />;
   }
 }
 

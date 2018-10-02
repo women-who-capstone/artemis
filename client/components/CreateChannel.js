@@ -151,6 +151,26 @@ class IntegrationAutosuggest extends React.Component {
     fetchAPIGenres();
   }
 
+  createAndRenderChannel = () => async event => {
+    event.preventDefault();
+    let searchInput = this.state.single;
+    let matchingId = suggestions.filter(sugg => sugg.label === searchInput);
+    let genreId = matchingId[0].id;
+    let res = await axios.get(`/api/podcast?id=${genreId}`);
+    let channelList = res.data;
+    let randomPodcast =
+      channelList.channels[Math.floor(Math.random() * 20 + 1)];
+    this.props.setSinglePodcast(randomPodcast);
+    this.props.setPodcastList(channelList.channels);
+    const createdChannel = await axios.post("/api/channel", {
+      name: searchInput
+    });
+    this.setState({
+      id: createdChannel.data.id,
+      reDirect: true
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -169,31 +189,7 @@ class IntegrationAutosuggest extends React.Component {
 
     return (
       <div className={classes.root}>
-        <form
-          onSubmit={async event => {
-            event.preventDefault();
-            let searchInput = this.state.single;
-            let matchingId = suggestions.filter(
-              sugg => sugg.label === searchInput
-            );
-            let genreId = matchingId[0].id;
-            let res = await axios.get(`/api/podcast?id=${genreId}`);
-            let channelList = res.data;
-            // console.log("Channels", channelList.channels);
-            let randomPodcast =
-              channelList.channels[Math.floor(Math.random() * 20 + 1)];
-            // console.log("RANDOM EPISODE", randomPodcast);
-            this.props.setSinglePodcast(randomPodcast);
-            this.props.setPodcastList(channelList.channels);
-            const createdChannel = await axios.post("/api/channel", {
-              name: searchInput
-            });
-            this.setState({
-              id: createdChannel.data.id,
-              reDirect: true
-            });
-          }}
-        >
+        <form onSubmit={this.createAndRenderChannel()}>
           <Autosuggest
             {...autosuggestProps}
             inputProps={{

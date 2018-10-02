@@ -17,6 +17,8 @@ import {
   withMediaProps
 } from "react-media-player";
 
+import AudioPlayer from './AudioPlayer'
+
 const {
   CurrentTime,
   Progress,
@@ -61,11 +63,6 @@ const styles = theme => ({
 });
 
 class PodcastPlayer extends Component {
-  componentDidMount() {
-    const source = audioContext.createMediaElementSource(this._player.instance);
-    source.connect(panner);
-    panner.connect(audioContext.destination);
-  }
 
   render() {
     // const { value } = this.state
@@ -74,6 +71,7 @@ class PodcastPlayer extends Component {
     console.log("EPSIODE", episode);
 
     return (
+      <div>
       <Card className={`${classes.card} `}>
         <CardMedia
           className={classes.cover}
@@ -92,30 +90,11 @@ class PodcastPlayer extends Component {
           title={episode.title}
         /> */}
         <CardActions className={classes.actions}>
-          <Media>
-            <div>
-              <Player
-                ref={c => (this._player = c)}
-                src={episode.audio}
-                crossOrigin="anonymous"
-                useAudioObject
-              />
-              <div className="media-controls">
-                <PlayPause className="media-control media-control--play-pause" />
-                <Typography>
-                  <CurrentTime className="media-control media-control--current-time" />
-                </Typography>
-                <SeekBar className="media-control media-control--volume-range" />
-                <Typography>
-                  <Duration className="media-control media-control--duration" />
-                </Typography>
-                <MuteUnmute className="media-control media-control--mute-unmute" />
-                <Volume className="media-control media-control--volume" />
-              </div>
-            </div>
-          </Media>
+          <AudioPlayer audio={episode.audio} />
         </CardActions>
+
       </Card>
+      </div>
     );
   }
 }

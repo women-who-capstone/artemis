@@ -153,22 +153,31 @@ class IntegrationAutosuggest extends React.Component {
 
   createAndRenderChannel = () => async event => {
     event.preventDefault();
-    let searchInput = this.state.single;
-    let matchingId = suggestions.filter(sugg => sugg.label === searchInput);
-    let genreId = matchingId[0].id;
-    let res = await axios.get(`/api/podcast?id=${genreId}`);
-    let channelList = res.data;
-    let randomPodcast =
-      channelList.channels[Math.floor(Math.random() * 20 + 1)];
-    this.props.setSinglePodcast(randomPodcast);
-    this.props.setPodcastList(channelList.channels);
-    const createdChannel = await axios.post("/api/channel", {
-      name: searchInput
-    });
-    this.setState({
-      id: createdChannel.data.id,
-      reDirect: true
-    });
+    try {
+      let searchInput = this.state.single;
+      let matchingId = suggestions.filter(sugg => sugg.label === searchInput);
+      let genreId = matchingId[0].id;
+      let res = await axios.get(`/api/podcast?id=${genreId}`);
+      let channelList = res.data;
+
+      if (channelList.channels === undefined) throw new Error('channelList is undefined')
+      console.log('channelList length', channelList.channels.length)
+      console.log('channelList.channels', channelList.channels)
+      let randomPodcast =
+        channelList.channels[Math.floor(Math.random() * channelList.channels.length + 1)];
+      if (randomPodcast === undefined) throw new Error('randomPodcast is undefined')
+      this.props.setSinglePodcast(randomPodcast);
+      this.props.setPodcastList(channelList.channels);
+      const createdChannel = await axios.post("/api/channel", {
+        name: searchInput
+      });
+      this.setState({
+        id: createdChannel.data.id,
+        reDirect: true
+      });
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   render() {

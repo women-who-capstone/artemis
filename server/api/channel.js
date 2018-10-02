@@ -18,6 +18,20 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.get('/user', async (req, res, next) => {
+  const userId = req.session.passport.user
+  try {
+    const channels = await Channel.findAll({
+      where: {
+        userId
+      }
+    })
+    res.status(200).send(channels)
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.get("/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -39,7 +53,9 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const newChannel = await Channel.create(req.body);
+    let channelObj = req.body;
+    channelObj.userId = req.user.id;
+    const newChannel = await Channel.create(channelObj);
     res.status(200).send(newChannel);
   } catch (error) {
     next(error);

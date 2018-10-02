@@ -75,22 +75,22 @@ class PodcastPlayer extends Component {
 
     return (
       <Card className={`${classes.card} `}>
-        {/* <CardMedia
+        <CardMedia
           className={classes.cover}
           image={episode.image ? episode.image : episode.podcast.image}
           title={episode.title}
-        /> */}
+        />
         <CardContent className={classes.content}>
           <Typography variant="headline">{episode.title}</Typography>
           <Typography variant="subheading" color="textSecondary">
             {episode.title}
           </Typography>
         </CardContent>
-        <CardMedia
+        {/* <CardMedia
           className={classes.cover}
           image={episode.image}
           title={episode.title}
-        />
+        /> */}
         <CardActions className={classes.actions}>
           <Media>
             <div>

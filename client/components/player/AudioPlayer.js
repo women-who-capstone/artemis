@@ -1,25 +1,53 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import IconButton from "@material-ui/core/IconButton";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import PauseIcon from "@material-ui/icons/Pause";
 
-// class AudioPlayer extends Component {
+let episodeAudio = document.createElement('audio')
+class AudioPlayer extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isPlaying: false,
+      audioLength: 0,
+      audioTimeElapsed: 0,
+      audioHasEnded: false
+    };
+    this.play = this.play.bind(this);
+    this.pause = this.pause.bind(this);
+  }
 
-//   const episodeAudio = new Audio(this.props.audio)
-//   episodeAudio.controls = true
-//   render() {
-//     return (
-//       <div>
-//         {episodeAudio}
-//       </div>
-//     );
-//   }
-// }
+  componentDidMount() {
+    episodeAudio.src = this.props.audio
+  }
 
-const AudioPlayer = (props) => {
-  const episodeAudio = new Audio(props.audio)
-  episodeAudio.controls = true
-  //episodeAudio.preload = "auto"
-  return (
-    episodeAudio
-  )
+  play() {
+    episodeAudio.play();
+    this.setState({
+      isPlaying: true
+    });
+  }
+
+  async pause() {
+    console.log('episodeAudio')
+    await episodeAudio.pause();
+    this.setState({
+      isPlaying: false
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <IconButton>
+          <PlayArrowIcon onClick={this.play} />
+        </IconButton>
+        <IconButton>
+          <PauseIcon onClick={this.pause} />
+        </IconButton>
+      </div>
+    );
+  }
 }
 
-export default AudioPlayer
+export default AudioPlayer;

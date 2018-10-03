@@ -31,12 +31,12 @@ const {
 
 const { formatTime } = utils;
 
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-const panner = audioContext.createPanner();
+// const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+// const panner = audioContext.createPanner();
 
-panner.setPosition(0, 0, 1);
-panner.panningModel = "equalpower";
-panner.connect(audioContext.destination);
+// panner.setPosition(0, 0, 1);
+// panner.panningModel = "equalpower";
+// panner.connect(audioContext.destination);
 
 const styles = theme => ({
   card: {
@@ -55,7 +55,7 @@ const styles = theme => ({
   },
   cover: {
     width: "auto",
-    height: "100%"
+    height: 300
   },
   actions: {
     display: "block"
@@ -63,12 +63,14 @@ const styles = theme => ({
 });
 
 class PodcastPlayer extends Component {
+  componentDidMount() {
+  }
 
   render() {
     // const { value } = this.state
     const { classes } = this.props;
     const episode = this.props.episode;
-    console.log("EPSIODE", episode);
+    console.log("EPISODE", episode);
 
     return (
       <div>
@@ -77,6 +79,7 @@ class PodcastPlayer extends Component {
           className={classes.cover}
           image={episode.image ? episode.image : episode.podcast.image}
           title={episode.title}
+
         />
         <CardContent className={classes.content}>
           <Typography variant="headline">{episode.title}</Typography>
@@ -90,9 +93,9 @@ class PodcastPlayer extends Component {
           title={episode.title}
         /> */}
         <CardActions className={classes.actions}>
+          <AudioPlayer audio={episode.audio}/>
         </CardActions>
       </Card>
-        <AudioPlayer audio={episode.audio} />
       </div>
     );
   }

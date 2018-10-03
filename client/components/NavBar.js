@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Redirect } from "react-router";
+import { Redirect, Switch } from "react-router";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -17,6 +17,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Logout from "./Logout";
 import Routes from "../routes";
+import history from "../history";
 import Channellist from "./ChannelList";
 
 const drawerWidth = 240;
@@ -159,11 +160,12 @@ class PersistentDrawer extends React.Component {
         <List>
           <ListItem
             button
-            onClick={() =>
-              this.setState({
-                pageSelected: "allchannels",
-                redirect: true
-              })
+            onClick={
+              () => history.push("/allchannels")
+              //   this.setState({
+              //     pageSelected: "allchannels",
+              //     redirect: true
+              //   })
             }
           >
             <ListItemText primary="Channels" />
@@ -216,11 +218,11 @@ class PersistentDrawer extends React.Component {
             )}
           >
             <div className={classes.drawerHeader} />
-            {this.state.redirect ? (
-              <Channellist />
-            ) : (
-              <Routes style={styles.drawerPaper} />
-            )}
+            {/* {this.state.redirect ? (
+              <Redirect to={"/channellist"} />
+            ) : ( */}
+            <Routes style={styles.drawerPaper} />
+            {/* )} */}
           </main>
           {after}
         </div>

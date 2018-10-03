@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -12,8 +13,11 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 import Logout from "./Logout";
 import Routes from "../routes";
+import Channellist from "./ChannelList";
 
 const drawerWidth = 240;
 
@@ -101,7 +105,9 @@ const styles = theme => ({
 class PersistentDrawer extends React.Component {
   state = {
     open: false,
-    anchor: "left"
+    anchor: "left",
+    pageSelected: "",
+    redirect: false
   };
 
   handleDrawerOpen = () => {
@@ -118,13 +124,21 @@ class PersistentDrawer extends React.Component {
     });
   };
 
+  //   handleDrawerSelect = event => {
+  //     console.log("handleDrawerSelect");
+  //     console.log(event.target.value);
+  //     this.setState({
+  //       pageSelected: event.target.value
+  //     });
+  //   };
+
   render() {
     const { classes, theme } = this.props;
     const { anchor, open } = this.state;
 
     const drawer = (
       <Drawer
-        style={{ height: "100px" }}
+        style={{ height: "100%" }}
         variant="persistent"
         anchor={anchor}
         open={open}
@@ -142,8 +156,19 @@ class PersistentDrawer extends React.Component {
           </IconButton>
         </div>
         <Divider />
-        <List>Channels</List>
-        <List>Bookmarks</List>
+        <List>
+          <ListItem
+            button
+            onClick={() =>
+              this.setState({
+                pageSelected: "allchannels",
+                redirect: true
+              })
+            }
+          >
+            <ListItemText primary="Channels" />
+          </ListItem>
+        </List>
       </Drawer>
     );
 
@@ -191,7 +216,11 @@ class PersistentDrawer extends React.Component {
             )}
           >
             <div className={classes.drawerHeader} />
-            <Routes style={styles.drawerPaper} />
+            {this.state.redirect ? (
+              <Channellist />
+            ) : (
+              <Routes style={styles.drawerPaper} />
+            )}
           </main>
           {after}
         </div>

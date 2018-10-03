@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const { Channel, Tag, Genre } = require("../db/models");
+const { Channel, Tag, Genre, Episode } = require("../db/models");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -29,6 +29,17 @@ router.get('/user', async (req, res, next) => {
     res.status(200).send(channels)
   } catch (err) {
     next(err)
+  }
+})
+
+router.get('/:id/episodes', async (req, res, next) => {
+  try {
+    const channelWithEpisodes = await Channel.findById(req.params.id, {
+      include: [{model: Episode}]
+    })
+    res.send('channel with episodes', channelWithEpisodes)
+  } catch (error) {
+    next(error)
   }
 })
 

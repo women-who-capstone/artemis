@@ -1,12 +1,24 @@
 const router = require("express").Router();
 
-const { Channel, Tag, Genre } = require("../db/models");
+const {
+  Channel,
+  Tag,
+  Genre,
+  Episode,
+  ChannelEpisode
+} = require("../db/models");
 
 router.get("/", async (req, res, next) => {
   try {
     if (req.query) {
       const channels = await Channel.findAll({
-        where: req.query
+        where: req.query,
+        include: [
+          {
+            model: Episode,
+            through: ChannelEpisode
+          }
+        ]
       });
       res.status(200).send(channels);
     } else {
@@ -18,19 +30,19 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get('/user', async (req, res, next) => {
-  const userId = req.session.passport.user
+router.get("/user", async (req, res, next) => {
+  const userId = req.session.passport.user;
   try {
     const channels = await Channel.findAll({
       where: {
         userId
       }
-    })
-    res.status(200).send(channels)
+    });
+    res.status(200).send(channels);
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 
 router.get("/:id", async (req, res, next) => {
   try {

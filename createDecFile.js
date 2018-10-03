@@ -6,34 +6,49 @@ var natural = require('natural');
 var TfIdf = natural.TfIdf;
 var tfidf = new TfIdf();
 
-var stream = fs.createReadStream(path.join(__dirname, 'podcasts.csv'));
-const headers = [ , , , , , , , , 'Description' ];
+// csv
+// 	.fromStream(stream, { headers: headers })
+// 	.on('data', function(data) {
+// 		descriptions.push('Descriptions');
+// 	})
+// 	.on('end', function() {
+// 		var file = fs.createWriteStream('descriptions.js');
+// 		file.on('error', function(err) {
+// 			console.log('error handle', err.message);
+// 		});
+const init = async () => {
+	let descriptions = [];
+	var stream = await fs.createReadStream(path.join(__dirname, 'podcasts.csv'));
+	const headers = [ , , , , , , , , 'Description' ];
+	csv
+		.fromStream(stream, { headers })
+		.on('data', function(data) {
+			descriptions.push(data['Description']);
+		})
+		.on('end', async function() {
+			var file = await fs.createWriteStream('descriptions.js');
+			file.on('error', function(err) {
+				console.log('error handle', err.message);
+			});
+			var file = await fs.createWriteStream('descriptions.js');
+			await file.on('error', function(err) {
+				console.log('error handle', err.message);
+			});
+			// console.log('SKJDBFLJSDKBFOADJLKBVEJK V', Array.isArray(descriptions));
+			// descriptions = [ 'one', 'two', '紹介して参ります。時には車の' ];
+			await file.write('let descriptions = [');
+			// const arrDescriptions = JSON.stringify(descriptions);
+			descriptions.forEach(async (item) => await file.write(`\`${item}\`, `));
 
-let descriptions = [];
+			// console.log('ARRDESCRIPTIONS', arrDescriptions);
+			// await file.write(arrDescriptions);
 
-csv
-	.fromStream(stream, { headers: headers })
-	.on('data', function(data) {
-		// if (descriptions.length < 10) {
-		descriptions.push(data['Description']);
-		// } else {
-		// 	return;
-		// }
-	})
-	.on('end', function() {
-		var file = fs.createWriteStream('descriptions.js');
-		file.on('error', function(err) {
-			console.log('error handle', err.message);
+			await file.write('];\nmodule.exports = descriptions;');
 		});
-		const arrDescriptions = JSON.stringify(descriptions);
-		file.write(arrDescriptions.toString());
-		// descriptions.forstringify(v) {
-		// 	file.write(v.toString() + '\n');
-		// });
+};
+init();
 
-		file.on('finish', function() {
-			console.log('finished');
-		});
-	});
-
-// fs.writeFileSync(__dirname + 'descriptions.js', descriptions.toString());
+// file.on('finish', function() {
+// 	console.log('finished');
+// });
+// });

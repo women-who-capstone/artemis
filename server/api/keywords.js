@@ -2,8 +2,11 @@ const router = require('express').Router();
 const unirest = require('unirest');
 const algorithmia = require('algorithmia');
 var timeout = require('connect-timeout');
-let descriptions = require('./descriptions');
+let descriptions = require('../../descriptions');
 //let sw = require('stopword');
+const str = `skjdzlfna
+azdlksf
+alsdfj`
 
 console.log('length of des', descriptions.length);
 // const fs = require('fs');
@@ -69,6 +72,7 @@ router.get('/', async (req, res, next) => {
 		// 		}
 		// 	});
 		// res.send(result);
+		res.send('THIS WORKS!!');
 	} catch (err) {
 		next(err);
 	}

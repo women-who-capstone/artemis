@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter, Route, Switch } from "react-router-dom";
 // import PropTypes from 'prop-types'
+import ChannelList from "./components/ChannelList";
 import PodcastPlayer from "./components/player/PodcastPlayer";
 import CreateChannel from "./components/CreateChannel";
 import Channel from "./components/Channel";
@@ -25,8 +26,9 @@ class Routes extends Component {
         <Route path="/keywords" component={Keywords} />
         {isLoggedIn && (
           <Switch>
-            <Route path="/podcastplayer" component={PodcastPlayer} />
-            <Route path="/createchannel" component={CreateChannel} />
+            <Route exact path="/allchannels" component={ChannelList} />
+            <Route exact path="/podcastplayer" component={PodcastPlayer} />
+            <Route exact path="/createchannel" component={CreateChannel} />
             <Route exact path="/channel/:channelId" component={Channel} />
           </Switch>
         )}

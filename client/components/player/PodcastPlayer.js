@@ -23,8 +23,12 @@ const styles = theme => ({
     flex: "1 0 auto"
   },
   cover: {
+    display: "flex",
+    alignItems: "center",
     width: "auto",
+
     height: 300
+    maxWidth: "400px"
   },
   actions: {
     display: "block"

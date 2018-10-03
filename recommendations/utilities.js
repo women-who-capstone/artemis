@@ -62,11 +62,3 @@ module.exports = {
   ChannelVector,
   ChannelEpisodeGetter
 }
-
-const getter = new ChannelEpisodeGetter(1952)
-
-const main = async () => {
-  console.log(await getter.getRandomEpisode())
-}
-
-main()

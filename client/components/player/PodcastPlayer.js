@@ -5,7 +5,6 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-
 import CardActions from "@material-ui/core/CardActions";
 import PlayPause from "./PlayPause";
 import MuteUnmute from "./MuteUnmute";
@@ -25,7 +24,6 @@ const {
   Volume,
   Fullscreen
 } = controls;
-// import episode from "../tempEpisode";
 
 const { formatTime } = utils;
 
@@ -74,13 +72,12 @@ class PodcastPlayer extends Component {
     // const { value } = this.state
     const { classes } = this.props;
     const episode = this.props.episode;
-    console.log("EPSIODE", episode);
 
     return (
       <Card className={`${classes.card} `}>
         <CardMedia
           className={classes.cover}
-          image={episode.image ? episode.image : episode.podcast.image}
+          image={episode.image ? episode.image : episode.imageURL}
           title={episode.title}
         />
         <CardContent className={classes.content}>
@@ -89,17 +86,12 @@ class PodcastPlayer extends Component {
             {episode.title}
           </Typography>
         </CardContent>
-        {/* <CardMedia
-          className={classes.cover}
-          image={episode.image}
-          title={episode.title}
-        /> */}
         <CardActions className={classes.actions}>
           <Media>
             <div>
               <Player
                 ref={c => (this._player = c)}
-                src={episode.audio}
+                src={episode.audio ? episode.audio : episode.audioURL}
                 crossOrigin="anonymous"
                 useAudioObject
               />

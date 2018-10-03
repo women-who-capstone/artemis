@@ -5,7 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
-import AudioPlayer from './AudioPlayer'
+import AudioPlayer from "./AudioPlayer";
 
 const styles = theme => ({
   card: {
@@ -26,8 +26,7 @@ const styles = theme => ({
     display: "flex",
     alignItems: "center",
     width: "auto",
-
-    height: 300
+    height: 300,
     maxWidth: "400px"
   },
   actions: {
@@ -36,39 +35,32 @@ const styles = theme => ({
 });
 
 class PodcastPlayer extends Component {
-  componentDidMount() {
-  }
 
   render() {
     // const { value } = this.state
     const { classes } = this.props;
     const episode = this.props.episode;
-    console.log('EPISODE', episode);
 
     return (
       <div>
-      <Card className={`${classes.card} `}>
-        <CardMedia
-          className={classes.cover}
-          image={episode.image ? episode.image : episode.podcast.image}
-          title={episode.title}
-
-        />
-        <CardContent className={classes.content}>
-          <Typography variant="headline">{episode.title}</Typography>
-          <Typography variant="subheading" color="textSecondary">
-            {episode.title}
-          </Typography>
-        </CardContent>
-        {/* <CardMedia
-          className={classes.cover}
-          image={episode.image}
-          title={episode.title}
-        /> */}
-        <CardActions className={classes.actions}>
-          <AudioPlayer audio={episode.audio} />
-        </CardActions>
-      </Card>
+        <Card className={`${classes.card} `}>
+          <CardMedia
+            className={classes.cover}
+            image={episode.image ? episode.image : episode.imageURL}
+            title={episode.title}
+          />
+          <CardContent className={classes.content}>
+            <Typography variant="headline">{episode.title}</Typography>
+            <Typography variant="subheading" color="textSecondary">
+              {episode.title}
+            </Typography>
+          </CardContent>
+          <CardActions className={classes.actions}>
+            <AudioPlayer
+              audio={episode.audio ? episode.audio : episode.audioURL}
+            />
+          </CardActions>
+        </Card>
       </div>
     );
   }

@@ -2,9 +2,7 @@ const fs = require('fs');
 const csv = require('fast-csv');
 const path = require('path');
 
-var natural = require('natural');
-var TfIdf = natural.TfIdf;
-var tfidf = new TfIdf();
+
 
 // csv
 // 	.fromStream(stream, { headers: headers })

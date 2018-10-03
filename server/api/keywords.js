@@ -3,75 +3,45 @@ const unirest = require('unirest');
 const algorithmia = require('algorithmia');
 var timeout = require('connect-timeout');
 let descriptions = require('../../descriptions');
-//let sw = require('stopword');
-const str = `skjdzlfna
-azdlksf
-alsdfj`
+const Tag = require('../db/models/tag');
+
+var natural = require('natural');
+var TfIdf = natural.TfIdf;
+var tfidf = new TfIdf();
 
 console.log('length of des', descriptions.length);
-// const fs = require('fs');
-// const csv = require('fast-csv');
-// const path = require('path');
-
-// var natural = require('natural');
-// var TfIdf = natural.TfIdf;
-// var tfidf = new TfIdf();
-
-// var stream = fs.createReadStream(path.join(__dirname, 'podcasts.csv'));
-// const headers = [ , , , , , , , , 'Description' ];
-
-// let descriptions = [];
-
-// csv
-// 	.fromStream(stream, { headers: headers })
-// 	.on('data', function(data) {
-// 		// if (descriptions.length < 10) {
-// 		descriptions.push(data['Description']);
-// 		// } else {
-// 		// 	return;
-// 		// }
-// 	})
-// 	.on('end', function() {
-// 		console.log('done');
-// 	});
-// fs.writeFile('./descriptions.js', descriptions, function() {
-// 	console.log('write in file');
-// });
 
 router.get('/', async (req, res, next) => {
 	try {
-		// let input = req.query.input;
-		//input = input.map(e => JSON.parse(e));
-		//console.log('length', descriptions.length);
-		//let input = descriptions.join(' ');
-		// let old = inputeded.split(' ');
-		// let newss = sw.removeStopwords(old);
-		// let input = newss.join(' ');
-		//	console.log('this is input', input);
-		//	tfidf.addDocument(input);
+		// let input = req.query.input
+		let input = [ 'the', 'History', 'technology' ];
 		console.log('node--------------');
-		// tfidf.tfidfs('health', function(i, measure) {
-		// 	console.log('document # ' + i + ' is ' + measure);
-		// });
+		let descriptionsArr = descriptions.slice(0, 10);
+		descriptionsArr.forEach((each) => {
+			tfidf.addDocument(each);
+		});
 
-		// tfidf.listTerms(0 /*document index*/).forEach(function(item) {
-		// 	console.log(item.term + ': ' + item.tfidf);
-		// });
+		//let inputArr = input.split(' ')
+		input.forEach((each) => {
+			let allDes = 0;
+			let currentTag;
 
-		// algorithmia
-		// 	.client(process.env.apiKey)
-		// 	.algo('nlp/KeywordsForDocumentSet/0.1.7')
-		// 	.pipe(input)
-		// 	.then(function(output) {
-		// 		if (output.error) {
-		// 			console.log(output.error);
-		// 			result = output.error;
-		// 		} else {
-		// 			console.log(output.get());
-		// 			result = output.get();
-		// 		}
-		// 	});
-		// res.send(result);
+			tfidf.tfidfs(each, function(i, measure) {
+				currentTag = each;
+				allDes += measure;
+				console.log(`document# ${i} is ${measure}`);
+			});
+			let tagRating = allDes / descriptionsArr.length;
+			if (tagRating > 0) {
+				Tag.findOrCreate({
+					where: {
+						name: currentTag
+					}
+				});
+			}
+			console.log('tagRating', tagRating);
+		});
+
 		res.send('THIS WORKS!!');
 	} catch (err) {
 		next(err);

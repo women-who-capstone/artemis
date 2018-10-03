@@ -11,8 +11,7 @@ class AudioPlayer extends Component {
     this.state = {
       isPlaying: false,
       audioLength: 0,
-      audioTimeElapsed: 0,
-      audioHasEnded: false
+      audioTimeElapsed: 0
     };
     this.play = this.play.bind(this);
     this.pause = this.pause.bind(this);

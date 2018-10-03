@@ -4,39 +4,8 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-
 import CardActions from "@material-ui/core/CardActions";
-import PlayPause from "./PlayPause";
-import MuteUnmute from "./MuteUnmute";
-import {
-  Media,
-  Player,
-  controls,
-  utils,
-  withMediaProps
-} from "react-media-player";
-
 import AudioPlayer from './AudioPlayer'
-
-const {
-  CurrentTime,
-  Progress,
-  SeekBar,
-  Duration,
-  Volume,
-  Fullscreen
-} = controls;
-// import episode from "../tempEpisode";
-
-const { formatTime } = utils;
-
-// const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-// const panner = audioContext.createPanner();
-
-// panner.setPosition(0, 0, 1);
-// panner.panningModel = "equalpower";
-// panner.connect(audioContext.destination);
 
 const styles = theme => ({
   card: {
@@ -70,7 +39,7 @@ class PodcastPlayer extends Component {
     // const { value } = this.state
     const { classes } = this.props;
     const episode = this.props.episode;
-    console.log("EPISODE", episode);
+    console.log('EPISODE', episode);
 
     return (
       <div>
@@ -93,7 +62,7 @@ class PodcastPlayer extends Component {
           title={episode.title}
         /> */}
         <CardActions className={classes.actions}>
-          <AudioPlayer audio={episode.audio}/>
+          <AudioPlayer audio={episode.audio} />
         </CardActions>
       </Card>
       </div>

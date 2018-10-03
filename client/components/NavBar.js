@@ -159,6 +159,12 @@ class PersistentDrawer extends React.Component {
           <ListItem button onClick={() => history.push("/allchannels")}>
             <ListItemText primary="Channels" />
           </ListItem>
+          <ListItem button onClick={() => history.push("/createchannel")}>
+            <ListItemText primary="Create Channel" />
+          </ListItem>
+          <ListItem button onClick={() => history.push("/bookmarks")}>
+            <ListItemText primary="Bookmarks" />
+          </ListItem>
         </List>
       </Drawer>
     );

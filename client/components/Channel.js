@@ -14,11 +14,9 @@ class SingleChannel extends React.Component {
 
   setEpisode = async function(episodeId) {
     const channelId = this.props.match.params.channelId;
-    console.log(channelId);
     const res = await axios.get(`/api/episode/apiEpisode?id=${episodeId}`);
     const episode = res.data.episodes[0];
     episode.channelId = channelId;
-    console.log("EPISODE", episode);
     this.setState({
       episode
     });
@@ -33,14 +31,30 @@ class SingleChannel extends React.Component {
 
   async componentDidMount() {
     const episodeId = await this.props.episodeId;
-    this.setEpisode(episodeId);
-    //this.setTags()
-  }
-  render() {
-    console.log(this.props.episodeId);
-    console.log("AUDIO URL", this.state.episode.audio);
+    if (episodeId !== undefined) {
+      this.setEpisode(episodeId);
 
-    if (this.state.episode.audio) {
+      //this.setTags()
+    } else {
+      let res = await axios.get(
+        `/api/channel?id=${this.props.match.params.channelId}`
+      );
+      let playedEpisodes = res.data[0].episodes;
+      let episodeDates = playedEpisodes.map(episode =>
+        new Date(episode.date).getTime()
+      );
+      let currentEpisodeDate = Math.max(...episodeDates);
+      let currentEpisode = playedEpisodes.find(
+        episode => new Date(episode.date).getTime() === currentEpisodeDate
+      );
+      this.setState({
+        episode: currentEpisode
+      });
+    }
+  }
+
+  render() {
+    if (this.state.episode.audio || this.state.episode.audioURL) {
       return <PodcastPlayer episode={this.state.episode} />;
     }
     return <div />;

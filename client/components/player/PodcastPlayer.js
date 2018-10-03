@@ -90,10 +90,9 @@ class PodcastPlayer extends Component {
           title={episode.title}
         /> */}
         <CardActions className={classes.actions}>
-          <AudioPlayer audio={episode.audio} />
         </CardActions>
-
       </Card>
+        <AudioPlayer audio={episode.audio} />
       </div>
     );
   }

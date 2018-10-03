@@ -1,24 +1,25 @@
 import React, { Component } from 'react';
 
-class AudioPlayer extends Component {
-  // async componentDidMount() {
-  //   try {
-  //     const episodeAudio = new Audio(this.props.audio)
-  //     episodeAudio.controls = true
-  //     await episodeAudio.play()
-  //     console.log(episodeAudio)
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
+// class AudioPlayer extends Component {
 
-  render() {
-    return (
-      <div>
+//   const episodeAudio = new Audio(this.props.audio)
+//   episodeAudio.controls = true
+//   render() {
+//     return (
+//       <div>
+//         {episodeAudio}
+//       </div>
+//     );
+//   }
+// }
 
-      </div>
-    );
-  }
+const AudioPlayer = (props) => {
+  const episodeAudio = new Audio(props.audio)
+  episodeAudio.controls = true
+  //episodeAudio.preload = "auto"
+  return (
+    episodeAudio
+  )
 }
 
 export default AudioPlayer

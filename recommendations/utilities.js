@@ -1,3 +1,5 @@
+const axios = require('axios')
+
 class ChannelVector {
   constructor(channelTags) {
     //console.log('channelTags', channelTags)

@@ -11,6 +11,7 @@
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "connect-session-sequelize": "^5.2.2",
+    "eslint": "^5.6.1",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "history": "^4.7.2",
@@ -36,6 +37,7 @@
   "scripts": {
     "build-client": "webpack",
     "build-client-watch": "webpack -w",
+    "deploy": "./script/deploy",
     "start": "node ./server",
     "start-dev": "NODE_ENV='development' npm run build-client-watch & npm run start-server",
     "start-server": "nodemon server -e html,js,scss --ignore public --ignore client",
@@ -60,6 +62,7 @@
     "@babel/register": "^7.0.0-beta.55",
     "babel-loader": "^8.0.2",
     "css-loader": "^1.0.0",
+    "eslint-config-fullstack": "^6.0.0",
     "mini-css-extract-plugin": "^0.4.3",
     "node-sass": "^4.9.3",
     "nodemon": "^1.18.4",

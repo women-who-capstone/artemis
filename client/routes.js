@@ -9,6 +9,7 @@ import Channel from "./components/Channel";
 import { Login, Signup } from "./components/AuthForm";
 import { me } from "./reducers/user";
 import Keywords from "./components/Keywords";
+import Bookmark from "./components/Bookmark";
 
 class Routes extends Component {
   componentDidMount() {
@@ -30,6 +31,7 @@ class Routes extends Component {
             <Route exact path="/podcastplayer" component={PodcastPlayer} />
             <Route exact path="/createchannel" component={CreateChannel} />
             <Route exact path="/channel/:channelId" component={Channel} />
+            <Route exact path="/bookmarks" component={Bookmark} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}

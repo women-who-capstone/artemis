@@ -10,8 +10,12 @@ class PlayPause extends Component {
     return this.props.media.isPlaying !== media.isPlaying
   }
 
-  _handlePlayPause = () => {
-    this.props.media.playPause()
+  _handlePlayPause = async () => {
+    try {
+      await this.props.media.playPause()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   render() {

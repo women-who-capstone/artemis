@@ -1,4 +1,4 @@
-const axios = require('axios')
+const { Channel, Episode } = require('../server/db/models')
 
 class ChannelVector {
   constructor(channelTags) {
@@ -17,7 +17,56 @@ class ChannelVector {
   }
 }
 
-module.exports = {
-  ChannelVector
+class ChannelEpisodeGetter {
+  constructor(channelId) {
+    this.channelId = channelId
+  }
+
+  _getRandomIndex(length) {
+    return Math.floor((Math.random() * length))
+  }
+
+  async _getEpisodes() {
+    try {
+      const channel = await Channel.findById(this.channelId, {
+        include: [{model: Episode}]
+      })
+      return channel.episodes // returns promise for array of episodes
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async getMostRecentEpisode() {
+    try {
+      let episodes = await this._getEpisodes()
+      episodes.sort((a, b) => b.date - a.date)
+      return episodes[0]
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async getRandomEpisode() {
+    try {
+      const episodes = await this._getEpisodes()
+      const randomIndex = this._getRandomIndex(episodes.length)
+      return episodes[randomIndex]
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
 
+module.exports = {
+  ChannelVector,
+  ChannelEpisodeGetter
+}
+
+const getter = new ChannelEpisodeGetter(1952)
+
+const main = async () => {
+  console.log(await getter.getRandomEpisode())
+}
+
+main()

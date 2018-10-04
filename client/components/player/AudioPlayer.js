@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import IconButton from "@material-ui/core/IconButton";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import PauseIcon from "@material-ui/icons/Pause";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
-import ThumbUpIcon from "@material-ui/icons/ThumbUp";
-import ThumbDownIcon from "@material-ui/icons/ThumbDown";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
-import axios from "axios";
+import React, { Component } from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PauseIcon from '@material-ui/icons/Pause';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
+import axios from 'axios';
 
-let episodeAudio = document.createElement("audio");
+let episodeAudio = document.createElement('audio');
 class AudioPlayer extends Component {
   constructor() {
     super();
@@ -22,19 +22,22 @@ class AudioPlayer extends Component {
     this.pause = this.pause.bind(this);
     this.handleSliderChange = this.handleSliderChange.bind(this);
     this.bookmark = this.bookmark.bind(this);
+    this.like = this.like.bind(this);
+    this.dislike = this.dislike.bind(this);
   }
 
   async componentDidMount() {
     try {
       episodeAudio.src = await this.props.audio;
-      episodeAudio.preload = "metadata";
-      episodeAudio.addEventListener("loadedmetadata", () => {
+      episodeAudio.preload = 'metadata';
+      episodeAudio.addEventListener('loadedmetadata', () => {
         this.setState({
-          audioLength: episodeAudio.duration
+          audioLength: episodeAudio.duration,
+          episode: this.props.episode
         });
       });
     } catch (error) {
-      throw new Error("There was an audio error");
+      throw new Error('There was an audio error');
     }
   }
 
@@ -65,7 +68,36 @@ class AudioPlayer extends Component {
 
   async bookmark() {
     let episode = this.props.episode;
-    await axios.post("/api/bookmarks", { episodeId: episode.id });
+    await axios.post('/api/bookmarks', { episodeId: episode.id });
+  }
+
+  async like() {
+    let episode = this.state.episode;
+    let channelId = episode.channelEpisode.channelId;
+    const { data: tags } = await axios.put(`/api/channel/${channelId}`, {
+      id: channelId,
+      method: 'like',
+      tags: episode.tags
+    });
+    this.setState({
+      episode: { tags }
+    });
+  }
+
+  async dislike() {
+    let episode = this.state.episode;
+    episode.method = 'dislike';
+    let channelId = episode.channelEpisode.channelId;
+    const { data: tags } = await axios.put(`/api/channel/${channelId}`, {
+      id: channelId,
+      method: 'like',
+      tags: episode.tags
+    });
+    this.setState({
+      episode: {
+        tags
+      }
+    });
   }
 
   render() {
@@ -84,10 +116,10 @@ class AudioPlayer extends Component {
           <SkipNextIcon />
         </IconButton>
         <IconButton>
-          <ThumbUpIcon />
+          <ThumbUpIcon onClick={this.like} />
         </IconButton>
         <IconButton>
-          <ThumbDownIcon />
+          <ThumbDownIcon onClick={this.dislike} />
         </IconButton>
         <IconButton>
           <BookmarkIcon onClick={this.bookmark} />

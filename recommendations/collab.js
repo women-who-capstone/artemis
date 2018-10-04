@@ -1,3 +1,5 @@
+const { ChannelEpisodeGetter } = require('./utilities')
+
 class Recommender {
   // userChannel is object containing an id and an array {id, vector},
   // allOtherChannels is array of arrays with the same shape as userChannel
@@ -31,6 +33,15 @@ class Recommender {
     const distances = this.getDistancesBetweenUserChannelAndAllOtherChannels()
     const sortedDistances = this.sortChannelsByDistance(distances)
     return sortedDistances.slice(0, n)
+  }
+
+  async getRecommendedEpisode() {
+    try {
+      const getter = new ChannelEpisodeGetter(this.getClosestNChannels(1)[0].id)
+      return await getter.getMostRecentEpisode()
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 

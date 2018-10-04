@@ -4,11 +4,13 @@ import { getRandomNonRepeatingIndices } from '../utilities'
 const SET_PODCAST = "SET_PODCAST";
 const SET_PODCAST_LIST = "SET_PODCAST_LIST";
 const SET_BEST_CATEGORY_PODCASTS = 'SET_BEST_CATEGORY_PODCASTS'
+const SET_CURRENT_EPISODE = 'SET_CURRENT_EPISODE'
 
 const initState = {
   podcast: {},
   podcastList: [],
-  bestCategoryPodcasts: []
+  bestCategoryPodcasts: [],
+  recommendedEpisodes: []
 };
 
 export const setSinglePodcast = podcast => ({
@@ -22,7 +24,7 @@ export const setBestCategoryPodcasts = podcasts => ({
 });
 
 // THUNK CREATORS
-const fetchBestCategoryPodcasts = podcastsWithoutEpisodeData => {
+export const fetchBestCategoryPodcasts = podcastsWithoutEpisodeData => {
   async dispatch => {
     const numEpisodesDesired = 5
     const indices = getRandomNonRepeatingIndices(numEpisodesDesired)
@@ -53,8 +55,10 @@ export default function(state = initState, action) {
         PodcastList: action.podcastList
       };
     case SET_BEST_CATEGORY_PODCASTS:
-      return ...state,
-      bestCategoryPodcasts: action.podcasts
+      return {
+        ...state,
+        bestCategoryPodcasts: action.podcasts
+      }
     default:
       return state;
   }

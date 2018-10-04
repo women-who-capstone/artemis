@@ -164,11 +164,11 @@ class IntegrationAutosuggest extends React.Component {
 
       this.fetchCategoryPodcastsEpisodeData(channelList.channels)
 
-      let randomPodcast =
-        channelList.channels[Math.floor(Math.random() * channelList.channels.length + 1)];
-      if (randomPodcast === undefined) throw new Error('randomPodcast is undefined')
-      this.props.setSinglePodcast(randomPodcast);
-      this.props.setPodcastList(channelList.channels);
+      // let randomPodcast =
+      //   channelList.channels[Math.floor(Math.random() * channelList.channels.length + 1)];
+      // if (randomPodcast === undefined) throw new Error('randomPodcast is undefined')
+      // this.props.setSinglePodcast(randomPodcast);
+      // this.props.setPodcastList(channelList.channels);
 
       const createdChannel = await axios.post("/api/channel", {
         name: searchInput
@@ -231,8 +231,8 @@ class IntegrationAutosuggest extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSinglePodcast: podcast => dispatch(setSinglePodcast(podcast)),
-    setPodcastList: podcasts => dispatch(setPodcastList(podcasts)),
+    // setSinglePodcast: podcast => dispatch(setSinglePodcast(podcast)),
+    // setPodcastList: podcasts => dispatch(setPodcastList(podcasts)),
     fetchBestCategoryPodcasts: podcasts => dispatch(fetchBestCategoryPodcasts(podcasts))
   };
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import PodcastPlayer from './player/PodcastPlayer';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { getRandomIndex, convertPlayedEpisodeArrayToObject } from '../utilities'
+import { getRandomIndex, convertPlayedEpisodesArrayToObject } from '../utilities'
 
 class SingleChannel extends React.Component {
 
@@ -10,7 +10,8 @@ class SingleChannel extends React.Component {
     super();
     this.state = {
       episode: {},
-      playedEpisodes: {}
+      playedEpisodes: {},
+      unfinishedEpisode: {}
     };
     this.setEpisode = this.setEpisode.bind(this);
     this.handleEpisodeEnd = this.handleEpisodeEnd
@@ -37,20 +38,12 @@ class SingleChannel extends React.Component {
     this.setState({
       playedEpisodes
     })
+    const newEpisode = this.getNewEpisode()
 
-    const podcastId = await this.props.podcastId;
-    if (podcastId !== undefined) {
-      const newEpisode = this.setEpisode(podcastId);
-      this.setState({
-        episode: newEpisode
-      });
-      //this.setTags()
-    } else {
-      const mostRecentlyPlayedEpisode = this.extractMostRecentlyPlayedEpisode()
-      this.setState({
-        episode: mostRecentlyPlayedEpisode
-      });
-    }
+    this.setState({
+      episode: newEpisode,
+      unfinishedEpisode: newEpisode
+    });
   }
 
   async fetchPlayedEpisodes() {
@@ -58,7 +51,7 @@ class SingleChannel extends React.Component {
       `/api/channel?id=${this.props.match.params.channelId}`
     );
     let playedEpisodes = res.data[0].episodes;
-    return convertPlayedEpisodeArrayToObject(playedEpisodes)
+    return convertPlayedEpisodesArrayToObject(playedEpisodes)
   }
 
   extractMostRecentlyPlayedEpisode() {
@@ -71,22 +64,47 @@ class SingleChannel extends React.Component {
     );
   }
 
-  extractNewPodcastFromPodcastList() {
-    const { podcastList } = this.props
-    const randomIndex = getRandomIndex(podcastList.length)
-    return podcastList[randomIndex]
+  getNewEpisodeFromCategoryPodcast() {
+    const { bestCategoryPodcasts } = this.props
+    let counter = 0
+
+    while (episodeHasNotBeenPlayed(episode)) {
+      let podcastIndex, podcast, episodeIndex, episode
+
+      podcastIndex = getRandomIndex(bestCategoryPodcasts.length)
+      podcast = bestCategoryPodcasts[podcastIndex]
+
+      episodeIndex = getRandomIndex(podcast.episodes.length)
+      episode = podcast.episodes[episodeIndex]
+
+      counter++
+      if (counter > 25) {
+        break
+      }
+    }
+    return episode
   }
 
-  getNewEpisodeFromPodcast(podcast) {
-
+  episodeHasNotBeenPlayed(episode) {
+    if (episode === undefined) {
+      return false
+    }
+    return playedEpisodes[episode.id]
   }
 
-  episodeHasNotBeenPlayed() {
-
+  getNewEpisode() {
+    let newEpisode
+    if (this.props.recommendedEpisodes.length === 0) {
+      newEpisode = this.getNewEpisodeFromCategoryPodcast();
+      //this.setTags()
+    } else if (this.state.unfinishedEpisode.id) {
+      newEpisode = this.extractMostRecentlyPlayedEpisode()
+    }
+    return newEpisode
   }
 
   handleEpisodeEnd() {
-    //get new podcast from podcastList podcasts
+    getNewEpisode()
   }
 
   render() {
@@ -99,8 +117,10 @@ class SingleChannel extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		podcastId: state.podcast.podcast.id,
-    podcastList: state.podcast.podcastList
+    bestCategoryPodcasts: state.podcast.bestCategoryPodcasts,
+    recommendedEpisodes: state.podcast.recommendedEpisodes
+		// podcastId: state.podcast.podcast.id,
+  //   podcastList: state.podcast.podcastList
 	};
 };
 

@@ -4,10 +4,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 const BookmarkItem = props => {
   const episode = props.episode;
+  console.log(episode);
   return (
     <div>
       <ListItem>
-        <ListItemText>episode</ListItemText>
+        <ListItemText>{episode.id}</ListItemText>
       </ListItem>
     </div>
   );

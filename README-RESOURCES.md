@@ -18,3 +18,5 @@ https://en.wikipedia.org/wiki/Tf%E2%80%93idf
 Node TF-IDF library
 https://github.com/NaturalNode/natural#tf-idf
 
+Podcasts-database
+https://github.com/odenizgiz/Podcasts-Data/blob/master/df_popular_podcasts.csv

@@ -1,9 +1,10 @@
-import React from "react";
-import PodcastPlayer from "./player/PodcastPlayer";
-import { connect } from "react-redux";
-import axios from "axios";
+import React from 'react';
+import PodcastPlayer from './player/PodcastPlayer';
+import { connect } from 'react-redux';
+import axios from 'axios';
 
 class SingleChannel extends React.Component {
+
   constructor() {
     super();
     this.state = {
@@ -61,10 +62,10 @@ class SingleChannel extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    episodeId: state.podcast.podcast.id
-  };
+const mapStateToProps = (state) => {
+	return {
+		episodeId: state.podcast.podcast.id
+	};
 };
 
 // const mapDispatchToProps = dispatch => {
@@ -74,7 +75,4 @@ const mapStateToProps = state => {
 //   };
 // };
 
-export default connect(
-  mapStateToProps,
-  null
-)(SingleChannel);
+export default connect(mapStateToProps, null)(SingleChannel);

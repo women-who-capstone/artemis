@@ -37,6 +37,19 @@ router.get("/apiEpisode", async (req, res, next) => {
   }
 });
 
+router.get('/channelepisode/:channelId', async (req, res, next) => {
+  try {
+    const channelEpisodes = await ChannelEpisode.findAll({
+      where: {
+        channelId: req.params.channelId
+      }
+    })
+    res.send(channelEpisodes)
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.post("/", async (req, res, next) => {
   const episodeObj = {
     title: req.body.title,

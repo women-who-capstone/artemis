@@ -2,6 +2,7 @@ import React from 'react';
 import PodcastPlayer from './player/PodcastPlayer';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { getRandomIndex, convertPlayedEpisodeArrayToObject } from '../utilities'
 
 class SingleChannel extends React.Component {
 
@@ -9,7 +10,7 @@ class SingleChannel extends React.Component {
     super();
     this.state = {
       episode: {},
-      playedEpisodes: []
+      playedEpisodes: {}
     };
     this.setEpisode = this.setEpisode.bind(this);
     this.handleEpisodeEnd = this.handleEpisodeEnd
@@ -22,9 +23,7 @@ class SingleChannel extends React.Component {
     episode.channelId = channelId;
     let req = await axios.post("/api/episode", episode);
     let newEpisode = req.data;
-    this.setState({
-      episode: newEpisode
-    });
+    return newEpisode
   };
 
   setTags = async function() {
@@ -34,32 +33,60 @@ class SingleChannel extends React.Component {
   //when Next, Dislike or Like is clicked => have function that updates the store with new episode relating to tags.
 
   async componentDidMount() {
+    const playedEpisodes = this.fetchPlayedEpisodes()
+    this.setState({
+      playedEpisodes
+    })
+
     const podcastId = await this.props.podcastId;
     if (podcastId !== undefined) {
-      this.setEpisode(podcastId);
-
+      const newEpisode = this.setEpisode(podcastId);
+      this.setState({
+        episode: newEpisode
+      });
       //this.setTags()
     } else {
-      let res = await axios.get(
-        `/api/channel?id=${this.props.match.params.channelId}`
-      );
-      let playedEpisodes = res.data[0].episodes;
-      let episodeDates = playedEpisodes.map(episode =>
-        new Date(episode.date).getTime()
-      );
-      let currentEpisodeDate = Math.max(...episodeDates);
-      let currentEpisode = playedEpisodes.find(
-        episode => new Date(episode.date).getTime() === currentEpisodeDate
-      );
+      const mostRecentlyPlayedEpisode = this.extractMostRecentlyPlayedEpisode()
       this.setState({
-        episode: currentEpisode,
-        playedEpisodes
+        episode: mostRecentlyPlayedEpisode
       });
     }
   }
 
-  handleEpisodeEnd() {
+  async fetchPlayedEpisodes() {
+    let res = await axios.get(
+      `/api/channel?id=${this.props.match.params.channelId}`
+    );
+    let playedEpisodes = res.data[0].episodes;
+    return convertPlayedEpisodeArrayToObject(playedEpisodes)
+  }
 
+  extractMostRecentlyPlayedEpisode() {
+    let episodeDates = playedEpisodes.map(episode =>
+      new Date(episode.date).getTime()
+    );
+    let currentEpisodeDate = Math.max(...episodeDates);
+    let currentEpisode = playedEpisodes.find(
+      episode => new Date(episode.date).getTime() === currentEpisodeDate
+    );
+  }
+
+  extractNewPodcastFromPodcastList() {
+    const { podcastList } = this.props
+    const randomIndex = getRandomIndex(podcastList.length)
+    return podcastList[randomIndex]
+  }
+
+  getNewEpisodeFromPodcast(podcast) {
+
+  }
+
+  episodeHasNotBeenPlayed() {
+
+  }
+
+  handleEpisodeEnd() {
+    //get new podcast from podcastList podcasts
   }
 
   render() {
@@ -72,7 +99,8 @@ class SingleChannel extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		podcastId: state.podcast.podcast.id
+		podcastId: state.podcast.podcast.id,
+    podcastList: state.podcast.podcastList
 	};
 };
 

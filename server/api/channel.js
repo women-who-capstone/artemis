@@ -1,4 +1,4 @@
-const router = require("express").Router();
+const router = require('express').Router();
 
 const {
   Channel,
@@ -61,17 +61,18 @@ router.get("/:id", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+
 });
 
-router.post("/", async (req, res, next) => {
-  try {
-    let channelObj = req.body;
-    channelObj.userId = req.user.id;
-    const newChannel = await Channel.create(channelObj);
-    res.status(200).send(newChannel);
-  } catch (error) {
-    next(error);
-  }
+router.post('/', async (req, res, next) => {
+	try {
+		let channelObj = req.body;
+		channelObj.userId = req.user.id;
+		const newChannel = await Channel.create(channelObj);
+		res.status(200).send(newChannel);
+	} catch (error) {
+		next(error);
+	}
 });
 
 module.exports = router;

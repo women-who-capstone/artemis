@@ -7,7 +7,7 @@ const BookmarkItem = props => {
   return (
     <div>
       <ListItem>
-        <ListItemText>{episode}</ListItemText>
+        <ListItemText>episode</ListItemText>
       </ListItem>
     </div>
   );

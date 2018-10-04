@@ -8,9 +8,11 @@ class SingleChannel extends React.Component {
   constructor() {
     super();
     this.state = {
-      episode: {}
+      episode: {},
+      playedEpisodes: []
     };
     this.setEpisode = this.setEpisode.bind(this);
+    this.handleEpisodeEnd = this.handleEpisodeEnd
   }
 
   setEpisode = async function(podcastId) {
@@ -50,14 +52,19 @@ class SingleChannel extends React.Component {
         episode => new Date(episode.date).getTime() === currentEpisodeDate
       );
       this.setState({
-        episode: currentEpisode
+        episode: currentEpisode,
+        playedEpisodes
       });
     }
   }
 
+  handleEpisodeEnd() {
+
+  }
+
   render() {
     if (this.state.episode.audio || this.state.episode.audioURL) {
-      return <PodcastPlayer episode={this.state.episode} />;
+      return <PodcastPlayer episode={this.state.episode} handleEpisodeEnd={this.handleEpisodeEnd}/>;
     }
     return <div />;
   }

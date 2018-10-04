@@ -37,6 +37,8 @@ Host.belongsToMany(Channel, { through: ChannelHost });
 Channel.belongsToMany(Episode, { through: ChannelEpisode });
 Episode.belongsToMany(Channel, { through: ChannelEpisode });
 Episode.hasMany(ChannelEpisode);
+Channel.hasMany(ChannelEpisode);
+// ChannelEpisode.hasMany(Episode);
 
 //Bookmarks CREATES new own table to associates User Ids with Episode Ids
 User.belongsToMany(Episode, { through: "Bookmark" });

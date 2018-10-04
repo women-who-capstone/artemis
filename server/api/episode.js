@@ -43,7 +43,8 @@ router.post("/", async (req, res, next) => {
     date: Date.now(),
     imageURL: req.body.image,
     audioURL: req.body.audio,
-    length: req.body.audio_length
+    length: req.body.audio_length,
+    description: req.body.description
   };
   try {
     const episode = await Episode.create(episodeObj);

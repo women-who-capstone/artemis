@@ -18,10 +18,11 @@ class SingleChannel extends React.Component {
     const res = await axios.get(`/api/episode/apiEpisode?id=${episodeId}`);
     const episode = res.data.episodes[0];
     episode.channelId = channelId;
+    let req = await axios.post("/api/episode", episode);
+    let newEpisode = req.data;
     this.setState({
-      episode
+      episode: newEpisode
     });
-    await axios.post("/api/episode", episode);
   };
 
   setTags = async function() {

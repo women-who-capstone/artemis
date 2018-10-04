@@ -7,6 +7,7 @@ router.use("/podcast", require("./podcast"));
 router.use("/users", require("./users"));
 router.use("/keywords", require("./keywords"));
 router.use("/channelepisodes", require("./channelEpisode"));
+router.use("/bookmarks", require("./bookmark"));
 
 router.use((req, res, next) => {
   const error = new Error("Not Found");

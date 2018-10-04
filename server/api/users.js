@@ -1,14 +1,27 @@
-const router = require('express').Router()
-const { User } = require('../db/models')
-module.exports = router
+const router = require("express").Router();
+const { User, Episode, Bookmark, bookmarks } = require("../db/models");
+module.exports = router;
 
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    const users = await User.findAll({
-      attributes: ['id', 'email']
-    })
-    res.json(users)
+    if (req.query) {
+      const users = await User.findAll({
+        attributes: ["id"],
+        where: req.query,
+        include: [
+          {
+            model: Bookmark
+          }
+        ]
+      });
+      res.status(200).send(users);
+    } else {
+      const users = await User.findAll({
+        attributes: ["id"]
+      });
+      res.json(users);
+    }
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});

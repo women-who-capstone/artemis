@@ -74,7 +74,7 @@ class AudioPlayer extends Component {
   async like() {
     let episode = this.state.episode;
     let channelId = episode.channelEpisode.channelId;
-    const { data: tags } = await axios.put(`/api/channel/${channelId}`, {
+    const { data: tags } = await axios.put(`/api/channel/${channelId}/tags`, {
       id: channelId,
       method: 'like',
       tags: episode.tags
@@ -86,11 +86,10 @@ class AudioPlayer extends Component {
 
   async dislike() {
     let episode = this.state.episode;
-    episode.method = 'dislike';
     let channelId = episode.channelEpisode.channelId;
-    const { data: tags } = await axios.put(`/api/channel/${channelId}`, {
+    const { data: tags } = await axios.put(`/api/channel/${channelId}/tags`, {
       id: channelId,
-      method: 'like',
+      method: 'dislike',
       tags: episode.tags
     });
     this.setState({

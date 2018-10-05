@@ -4,7 +4,8 @@ import PodcastPlayer from './player/PodcastPlayer';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { getRandomIndex, convertPlayedEpisodesArrayToObject, getGenreIdFromGenreName } from '../utilities'
-import { genres } from '../genreList'
+import { setSinglePodcast, setPodcastList, fetchCategoryPodcastsEpisodeData } from "../reducers/podcast";
+import genres from '../genreList'
 class SingleChannel extends React.Component {
 
   constructor() {
@@ -60,12 +61,13 @@ class SingleChannel extends React.Component {
   }
 
   async getGenrePodcasts() {
+    console.log('genres', genres)
     const { data: channel } = await axios.get(`/api/channel/${this.props.match.params.channelId}`)
-    const genreId = getGenreIdFromGenreName(channel.name)
+    const genreId = getGenreIdFromGenreName(channel.name, genres)
     const { data: podcastsWithoutData } = await axios.get(`/api/podcast?id=${genreId}`)
-    this.props.fetchCategoryPrecodcastsEpisodeData(channelList.channels)
+    this.props.fetchCategoryPodcastsEpisodeData(podcastsWithoutData)
   }
-
+//
   async fetchPlayedEpisodes() {
     let res = await axios.get(
       `/api/channel?id=${this.props.match.params.channelId}`
@@ -187,11 +189,12 @@ const mapStateToProps = (state) => {
 	};
 };
 
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     setSinglePodcast: episode => dispatch(setSinglePodcast(episode)),
-//     setPodcastList: episodes => dispatch(setPodcastList(episodes))
-//   };
-// };
+const mapDispatchToProps = dispatch => {
+  return {
+    // setSinglePodcast: podcast => dispatch(setSinglePodcast(podcast)),
+    // setPodcastList: podcasts => dispatch(setPodcastList(podcasts)),
+    fetchCategoryPodcastsEpisodeData: podcasts => dispatch(fetchCategoryPodcastsEpisodeData(podcasts))
+  };
+};
 
-export default withRouter(connect(mapStateToProps, null)(SingleChannel));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleChannel));

@@ -16,7 +16,9 @@ class AudioPlayer extends Component {
       isPlaying: false,
       audioLength: 0,
       audioTimeElapsed: 0,
-      episode: {}
+      episode: {},
+      epTags: [],
+      chanTags: []
     };
     this.play = this.play.bind(this);
     this.pause = this.pause.bind(this);
@@ -33,7 +35,8 @@ class AudioPlayer extends Component {
       episodeAudio.addEventListener('loadedmetadata', () => {
         this.setState({
           audioLength: episodeAudio.duration,
-          episode: this.props.episode
+          episode: this.props.episode,
+          epTags: this.props.tags
         });
       });
     } catch (error) {
@@ -73,30 +76,35 @@ class AudioPlayer extends Component {
 
   async like() {
     let episode = this.state.episode;
+    let epTags = this.state.epTags;
+    console.log('EPISODE from like()', episode);
+    console.log('TAGS from like()', epTags);
     let channelId = episode.channelEpisode.channelId;
-    const { data: tags } = await axios.put(`/api/channel/${channelId}/tags`, {
-      id: channelId,
-      method: 'like',
-      tags: episode.tags
-    });
-    this.setState({
-      episode: { tags }
-    });
+    const { data: chanTags } = await axios.put(
+      `/api/channel/${channelId}/tags`,
+      {
+        id: channelId,
+        method: 'like',
+        tags: epTags
+      }
+    );
+    this.setState(chanTags);
+    console.log('EPISODE from like()', episode);
   }
 
   async dislike() {
     let episode = this.state.episode;
+    let epTags = this.state.epTags;
     let channelId = episode.channelEpisode.channelId;
-    const { data: tags } = await axios.put(`/api/channel/${channelId}/tags`, {
-      id: channelId,
-      method: 'dislike',
-      tags: episode.tags
-    });
-    this.setState({
-      episode: {
-        tags
+    const { data: chanTags } = await axios.put(
+      `/api/channel/${channelId}/tags`,
+      {
+        id: channelId,
+        method: 'dislike',
+        tags: epTags
       }
-    });
+    );
+    this.setState(chanTags);
   }
 
   render() {

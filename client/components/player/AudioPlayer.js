@@ -20,6 +20,7 @@ class AudioPlayer extends Component {
     };
     this.play = this.play.bind(this);
     this.pause = this.pause.bind(this);
+    this.skip = this.skip.bind(this)
     this.handleSliderChange = this.handleSliderChange.bind(this);
     this.bookmark = this.bookmark.bind(this);
   }
@@ -28,11 +29,17 @@ class AudioPlayer extends Component {
     try {
       episodeAudio.src = await this.props.audio;
       episodeAudio.preload = "metadata";
+
       episodeAudio.addEventListener("loadedmetadata", () => {
         this.setState({
           audioLength: episodeAudio.duration
         });
       });
+      episodeAudio.addEventListener('timeupdate', () => {
+        if ((episodeAudio.duration - episodeAudio.currentTime) < 300) {
+
+        }
+      })
     } catch (error) {
       throw new Error("There was an audio error");
     }
@@ -63,6 +70,11 @@ class AudioPlayer extends Component {
     });
   }
 
+  skip() {
+    this.pause()
+    this.props.handleSkip()
+  }
+
   async bookmark() {
     let episode = this.props.episode;
     await axios.post("/api/bookmarks", { episodeId: episode.id });
@@ -80,7 +92,7 @@ class AudioPlayer extends Component {
             <PlayArrowIcon onClick={this.play} />
           </IconButton>
         )}
-        <IconButton>
+        <IconButton onClick={this.skip}>
           <SkipNextIcon />
         </IconButton>
         <IconButton>

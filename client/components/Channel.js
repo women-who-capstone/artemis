@@ -1,9 +1,10 @@
 import React from 'react';
+import { withRouter } from 'react-router'
 import PodcastPlayer from './player/PodcastPlayer';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { getRandomIndex, convertPlayedEpisodesArrayToObject } from '../utilities'
-
+import { getRandomIndex, convertPlayedEpisodesArrayToObject, getGenreIdFromGenreName } from '../utilities'
+import { genres } from '../genreList'
 class SingleChannel extends React.Component {
 
   constructor() {
@@ -11,10 +12,13 @@ class SingleChannel extends React.Component {
     this.state = {
       episode: {},
       playedEpisodes: {},
-      unfinishedEpisode: {}
+      unfinishedEpisode: {},
+      episodeQueue: []
     };
     this.setEpisode = this.setEpisode.bind(this);
-    this.handleEpisodeEnd = this.handleEpisodeEnd
+    this.getEpisodeFromQueue = this.getEpisodeFromQueue.bind(this)
+    this.handleSkip = this.handleSkip.bind(this)
+
   }
 
   setEpisode = async function(podcastId) {
@@ -34,16 +38,32 @@ class SingleChannel extends React.Component {
   //when Next, Dislike or Like is clicked => have function that updates the store with new episode relating to tags.
 
   async componentDidMount() {
-    const playedEpisodes = this.fetchPlayedEpisodes()
+    //get channel name
+    //get genre id
+    //get episodes
+    //${this.props.match.params.id}
+    console.log(this.props)
+    await this.getGenrePodcasts()
+    const playedEpisodes = await this.fetchPlayedEpisodes()
+    console.log('playedEpisodes', playedEpisodes)
+    const episodeQueue = this.getEpisodeQueue(5)
     this.setState({
-      playedEpisodes
+      episodeQueue,
+      playedEpisodes,
     })
-    const newEpisode = this.getNewEpisode()
 
+    const newEpisode = this.getEpisodeFromQueue()
     this.setState({
       episode: newEpisode,
       unfinishedEpisode: newEpisode
-    });
+    })
+  }
+
+  async getGenrePodcasts() {
+    const { data: channel } = await axios.get(`/api/channel/${this.props.match.params.channelId}`)
+    const genreId = getGenreIdFromGenreName(channel.name)
+    const { data: podcastsWithoutData } = await axios.get(`/api/podcast?id=${genreId}`)
+    this.props.fetchCategoryPrecodcastsEpisodeData(channelList.channels)
   }
 
   async fetchPlayedEpisodes() {
@@ -51,7 +71,9 @@ class SingleChannel extends React.Component {
       `/api/channel?id=${this.props.match.params.channelId}`
     );
     let playedEpisodes = res.data[0].episodes;
-    return convertPlayedEpisodesArrayToObject(playedEpisodes)
+
+    const episodesObject = convertPlayedEpisodesArrayToObject(playedEpisodes)
+    return episodesObject
   }
 
   extractMostRecentlyPlayedEpisode() {
@@ -67,19 +89,20 @@ class SingleChannel extends React.Component {
   getNewEpisodeFromCategoryPodcast() {
     const { bestCategoryPodcasts } = this.props
     let counter = 0
-
-    while (episodeHasNotBeenPlayed(episode)) {
-      let podcastIndex, podcast, episodeIndex, episode
+    let podcastIndex, podcast, episodeIndex, episode
+    console.log('been played', this.episodeHasNotBeenPlayed(episode))
+    while (!this.episodeHasNotBeenPlayed(episode)) {
 
       podcastIndex = getRandomIndex(bestCategoryPodcasts.length)
       podcast = bestCategoryPodcasts[podcastIndex]
 
       episodeIndex = getRandomIndex(podcast.episodes.length)
       episode = podcast.episodes[episodeIndex]
-
+      console.log('episode', episode)
       counter++
       if (counter > 25) {
         break
+        //we should get new episodes at this point
       }
     }
     return episode
@@ -89,7 +112,10 @@ class SingleChannel extends React.Component {
     if (episode === undefined) {
       return false
     }
-    return playedEpisodes[episode.id]
+    if (this.state.playedEpisodes[episode.id]) {
+      return false
+    }
+    return true
   }
 
   getNewEpisode() {
@@ -97,20 +123,57 @@ class SingleChannel extends React.Component {
     if (this.props.recommendedEpisodes.length === 0) {
       newEpisode = this.getNewEpisodeFromCategoryPodcast();
       //this.setTags()
+
     } else if (this.state.unfinishedEpisode.id) {
       newEpisode = this.extractMostRecentlyPlayedEpisode()
     }
+
     return newEpisode
   }
 
+  getEpisodeQueue(numDesiredEpisodes) {
+    const queue = []
+
+    for (let i = 0; i < numDesiredEpisodes; i++) {
+      queue.push(this.getNewEpisode())
+    }
+
+    return queue
+  }
+
+  getEpisodeFromQueue() {
+    const queueCopy = this.state.episodeQueue.slice(0)
+    const episode = queueCopy.shift()
+    this.setState({
+      episodeQueue: queueCopy
+    })
+    return episode
+  }
+
+  handleEpisodeNearEnd() {
+    //add episode to queue
+  }
+
   handleEpisodeEnd() {
-    getNewEpisode()
+    //add current episode to played episode
+    //get episode from queue
+  }
+
+  handleSkip() {
+    const newEpisode  = this.getEpisodeFromQueue()
+    this.setState({
+      episode: newEpisode
+    })
+    //add current episode to played episode
   }
 
   render() {
-    if (this.state.episode.audio || this.state.episode.audioURL) {
-      return <PodcastPlayer episode={this.state.episode} handleEpisodeEnd={this.handleEpisodeEnd}/>;
+
+    if ((this.state.episode.audio || this.state.episode.audioURL)) {
+      //
+      return <PodcastPlayer episode={this.state.episode} episodeQueue={this.state.episodeQueue} handleSkip={this.handleSkip}/>;
     }
+    console.log('bestCategory', this.props.bestCategoryPodcasts)
     return <div />;
   }
 }
@@ -131,4 +194,4 @@ const mapStateToProps = (state) => {
 //   };
 // };
 
-export default connect(mapStateToProps, null)(SingleChannel);
+export default withRouter(connect(mapStateToProps, null)(SingleChannel));

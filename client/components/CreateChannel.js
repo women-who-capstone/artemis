@@ -12,7 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import Channel from "./Channel";
 import { withStyles } from "@material-ui/core/styles";
-import { setSinglePodcast, setPodcastList, fetchBestCategoryPodcasts } from "../reducers/podcast";
+import { setSinglePodcast, setPodcastList, fetchCategoryPodcastsEpisodeData } from "../reducers/podcast";
 import { connect } from "react-redux";
 
 let suggestions = [];
@@ -162,7 +162,7 @@ class IntegrationAutosuggest extends React.Component {
 
       if (channelList.channels === undefined) throw new Error('channelList is undefined')
 
-      this.fetchCategoryPodcastsEpisodeData(channelList.channels)
+      this.props.fetchCategoryPodcastsEpisodeData(channelList.channels)
 
       // let randomPodcast =
       //   channelList.channels[Math.floor(Math.random() * channelList.channels.length + 1)];
@@ -233,7 +233,7 @@ const mapDispatchToProps = dispatch => {
   return {
     // setSinglePodcast: podcast => dispatch(setSinglePodcast(podcast)),
     // setPodcastList: podcasts => dispatch(setPodcastList(podcasts)),
-    fetchBestCategoryPodcasts: podcasts => dispatch(fetchBestCategoryPodcasts(podcasts))
+    fetchCategoryPodcastsEpisodeData: podcasts => dispatch(fetchCategoryPodcastsEpisodeData(podcasts))
   };
 };
 

@@ -1,17 +1,28 @@
 import axios from "axios";
-import { getRandomNonRepeatingIndices } from '../utilities'
+import { getRandomNonRepeatingIndices, setLocalStorage } from '../utilities'
 
 const SET_PODCAST = "SET_PODCAST";
 const SET_PODCAST_LIST = "SET_PODCAST_LIST";
 const SET_BEST_CATEGORY_PODCASTS = 'SET_BEST_CATEGORY_PODCASTS'
 const SET_CURRENT_EPISODE = 'SET_CURRENT_EPISODE'
 
+// if (localStorage.getItem('podcastState') === null) {
+//     localStorage.setItem('podcastState', JSON.stringify({
+//     podcast: {},
+//     podcastList: [],
+//     bestCategoryPodcasts: [],
+//     recommendedEpisodes: []
+//   }))
+// }
+
+// const initState = JSON.parse(localStorage.getItem('podcastState'))
+
 const initState = {
   podcast: {},
   podcastList: [],
   bestCategoryPodcasts: [],
   recommendedEpisodes: []
-};
+}
 
 export const setSinglePodcast = podcast => ({
   type: SET_PODCAST,
@@ -20,24 +31,31 @@ export const setSinglePodcast = podcast => ({
 
 export const setBestCategoryPodcasts = podcasts => ({
   type: SET_BEST_CATEGORY_PODCASTS,
-  bestCategoryPodcasts: podcasts
+  podcasts
 });
 
 // THUNK CREATORS
-export const fetchBestCategoryPodcasts = podcastsWithoutEpisodeData => {
-  async dispatch => {
+export const fetchCategoryPodcastsEpisodeData = podcastsWithoutEpisodeData => {
+  return async dispatch => {
     const numEpisodesDesired = 5
     const indices = getRandomNonRepeatingIndices(numEpisodesDesired)
-    let podcastPromises, podcastIndex, podcast
-    for (let i = 0; i < numEpisodesDesired; i++) {
-      podcastIndex = indices[i]
-      podcast = podcastsWithoutEpisodeData[podcastIndex]
-      if (podcast !== undefined) {
-        podcastPromises.push(axios.get(`/api/episode/apiEpisode?id=${podcast.id}`))
+    try {
+      let podcastPromises = []
+      let podcastIndex, podcast
+      for (let i = 0; i < numEpisodesDesired; i++) {
+        podcastIndex = indices[i]
+        podcast = podcastsWithoutEpisodeData[podcastIndex]
+        if (podcast !== undefined) {
+          podcastPromises.push(axios.get(`/api/episode/apiEpisode?id=${podcast.id}`))
+        }
       }
+      const resolvedPodcastPromises = await Promise.all(podcastPromises)
+      const podcastsWithEpisodeData = resolvedPodcastPromises.map(podcast => podcast.data)
+
+      dispatch(setBestCategoryPodcasts(podcastsWithEpisodeData))
+    } catch (error) {
+      console.error(error)
     }
-    const podcastsWithEpisodeData = await Promise.all(podcastPromises).map(podcast => podcast.data)
-    dispatch(setBestCategoryPodcasts(podcastsWithEpisodeData))
   }
 }
 
@@ -52,9 +70,10 @@ export default function(state = initState, action) {
     case SET_PODCAST_LIST:
       return {
         ...state,
-        PodcastList: action.podcastList
+        podcastList: action.podcastList
       };
     case SET_BEST_CATEGORY_PODCASTS:
+      //const newState = setLocalStorage('podcastState', action.podcasts, 'bestCategoryPodcasts')
       return {
         ...state,
         bestCategoryPodcasts: action.podcasts

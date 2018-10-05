@@ -23,3 +23,20 @@ export const getRandomNonRepeatingIndices = length => {
 
   return Object.keys(indices)
 }
+
+export const setLocalStorage = (stateType, actionPayload, key) => {
+  const localStorageState = JSON.parse(localStorage.getItem(stateType))
+  localStorageState[key] = actionPayload
+  localStorage.setItem(stateType, JSON.stringify(localStorageState))
+  return JSON.parse(localStorage.getItem('podcastState'))
+}
+
+export const getGenreIdFromGenreName = (name, genres) => {
+  for (let i = 0; i < genres.length; i++) {
+    if (genres[i].name === name) {
+      return genres[i].id
+    }
+  }
+  return new Error('There is no genre with that name available.')
+}
+

@@ -79,11 +79,11 @@ class SingleChannel extends React.Component {
   }
 
   extractMostRecentlyPlayedEpisode() {
-    let episodeDates = playedEpisodes.map(episode =>
+    let episodeDates = this.state.playedEpisodes.map(episode =>
       new Date(episode.date).getTime()
     );
     let currentEpisodeDate = Math.max(...episodeDates);
-    let currentEpisode = playedEpisodes.find(
+    let currentEpisode = this.state.playedEpisodes.find(
       episode => new Date(episode.date).getTime() === currentEpisodeDate
     );
   }

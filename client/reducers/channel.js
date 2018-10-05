@@ -71,11 +71,17 @@ export const getActiveChannel = channelId => {
   };
 };
 
-export const updateActiveChannelTags = channelId => {
+export const updateActiveChannelTags = (channelId, method, epTags) => {
+  console.log('From reducers, channelId', channelId);
   return async dispatch => {
     try {
       const { data: channel } = await axios.put(
-        `/api/channel/${channelId}/tags`
+        `/api/channel/${channelId}/tags`,
+        {
+          id: channelId,
+          method: method,
+          tags: epTags
+        }
       );
       dispatch(updatedActiveChannelTags(channel));
     } catch (err) {
@@ -89,7 +95,7 @@ const initialState = {
   userChannels: [],
   userChannelsError: false,
   userChannelsLoading: false,
-  activeChannel: {}
+  activeChannel: {} // TODO Should we access channel's tags from this object or create a tags property in this state?
 };
 
 const reducer = (state = initialState, action) => {

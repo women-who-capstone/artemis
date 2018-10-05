@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 class SingleChannel extends React.Component {
-
   constructor() {
     super();
     this.state = {
-      episode: {}
+      episode: {},
+      tags: []
     };
     this.setEpisode = this.setEpisode.bind(this);
   }
@@ -18,14 +18,15 @@ class SingleChannel extends React.Component {
     const res = await axios.get(`/api/episode/apiEpisode?id=${episodeId}`);
     const episode = res.data.episodes[0];
     episode.channelId = channelId;
-    let req = await axios.post("/api/episode", episode);
+    let req = await axios.post('/api/episode', episode);
     let newEpisode = req.data;
     this.setState({
       episode: newEpisode
     });
   };
 
-  setTags = async function() {
+  setTags = function() {
+    //this.setState({ tags: ['red', 'fish', 'one', 'eggs', 'ham'] });
     const description = this.state.episode.description;
   };
 
@@ -35,16 +36,13 @@ class SingleChannel extends React.Component {
     const episodeId = await this.props.episodeId;
     if (episodeId !== undefined) {
       this.setEpisode(episodeId);
-
-      //this.setTags()
     } else {
       let res = await axios.get(
         `/api/channel?id=${this.props.match.params.channelId}`
       );
       let playedEpisodes = res.data[0].episodes;
       let episodeDates = playedEpisodes.map(episode =>
-        new Date(episode.date).getTime()
-      );
+        new Date(episode.date).getTime());
       let currentEpisodeDate = Math.max(...episodeDates);
       let currentEpisode = playedEpisodes.find(
         episode => new Date(episode.date).getTime() === currentEpisodeDate
@@ -53,20 +51,27 @@ class SingleChannel extends React.Component {
         episode: currentEpisode
       });
     }
+    this.setTags(); //
   }
 
   render() {
     if (this.state.episode.audio || this.state.episode.audioURL) {
-      return <PodcastPlayer episode={this.state.episode} />;
+      return (
+        <PodcastPlayer
+          episode={this.state.episode}
+          tags={this.state.tags}
+          channelId={this.props.match.params.channelId}
+        />
+      );
     }
     return <div />;
   }
 }
 
-const mapStateToProps = (state) => {
-	return {
-		episodeId: state.podcast.podcast.id
-	};
+const mapStateToProps = state => {
+  return {
+    episodeId: state.podcast.podcast.id
+  };
 };
 
 // const mapDispatchToProps = dispatch => {
@@ -76,4 +81,7 @@ const mapStateToProps = (state) => {
 //   };
 // };
 
-export default connect(mapStateToProps, null)(SingleChannel);
+export default connect(
+  mapStateToProps,
+  null
+)(SingleChannel);

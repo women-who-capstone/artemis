@@ -7,6 +7,8 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import axios from 'axios';
+import { updateActiveChannelTags } from '../../reducers/channel';
+import { connect } from 'react-redux';
 
 let episodeAudio = document.createElement('audio');
 class AudioPlayer extends Component {
@@ -15,10 +17,10 @@ class AudioPlayer extends Component {
     this.state = {
       isPlaying: false,
       audioLength: 0,
-      audioTimeElapsed: 0,
-      episode: {},
-      epTags: [],
-      chanTags: []
+      audioTimeElapsed: 0
+      // episode: {}, // Redux
+      // epTags: [],
+      // chanTags: []
     };
     this.play = this.play.bind(this);
     this.pause = this.pause.bind(this);
@@ -29,14 +31,13 @@ class AudioPlayer extends Component {
   }
 
   async componentDidMount() {
+    // FIX shouldn't be async
     try {
       episodeAudio.src = await this.props.audio;
       episodeAudio.preload = 'metadata';
       episodeAudio.addEventListener('loadedmetadata', () => {
         this.setState({
-          audioLength: episodeAudio.duration,
-          episode: this.props.episode,
-          epTags: this.props.tags
+          audioLength: episodeAudio.duration
         });
       });
     } catch (error) {
@@ -71,40 +72,30 @@ class AudioPlayer extends Component {
 
   async bookmark() {
     let episode = this.props.episode;
-    await axios.post('/api/bookmarks', { episodeId: episode.id });
+    await axios.post('/api/bookmarks', { episodeId: episode.id }); //FIX use Redux
   }
 
-  async like() {
-    let episode = this.state.episode;
-    let epTags = this.state.epTags;
-    console.log('EPISODE from like()', episode);
-    console.log('TAGS from like()', epTags);
-    let channelId = episode.channelEpisode.channelId;
-    const { data: chanTags } = await axios.put(
-      `/api/channel/${channelId}/tags`,
-      {
-        id: channelId,
-        method: 'like',
-        tags: epTags
-      }
+  like() {
+    console.log(
+      'from AudioPlayer component',
+      this.props.channelId,
+      typeof this.props.channelId
     );
-    this.setState(chanTags);
-    console.log('EPISODE from like()', episode);
+    let episode = this.props.episode;
+    let epTags = this.props.tags;
+    console.log(episode, epTags);
+    this.props.updatedActiveChannelTags(this.props.channelId, 'like', epTags);
+    console.log(this.props);
   }
 
-  async dislike() {
-    let episode = this.state.episode;
-    let epTags = this.state.epTags;
-    let channelId = episode.channelEpisode.channelId;
-    const { data: chanTags } = await axios.put(
-      `/api/channel/${channelId}/tags`,
-      {
-        id: channelId,
-        method: 'dislike',
-        tags: epTags
-      }
+  dislike() {
+    let episode = this.props.episode;
+    let epTags = this.props.tags;
+    this.props.updatedActiveChannelTags(
+      episode.channelEpisode.channelId,
+      'dislike',
+      epTags
     );
-    this.setState(chanTags);
   }
 
   render() {
@@ -145,4 +136,15 @@ class AudioPlayer extends Component {
   }
 }
 
-export default AudioPlayer;
+//mapStateToProps()
+const mapDispatchToProps = dispatch => {
+  return {
+    updatedActiveChannelTags: (channelId, method, tags) =>
+      dispatch(updateActiveChannelTags(channelId, method, tags))
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(AudioPlayer);

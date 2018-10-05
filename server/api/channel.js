@@ -44,7 +44,18 @@ router.get('/user', async (req, res, next) => {
   }
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id/episodes', async (req, res, next) => {
+  try {
+    const channel = await Channel.findById(req.params.id, {
+      include: [{model: Episode}]
+    })
+    res.send(channel.episodes)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get("/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
     const channel = await Channel.findById(id, {

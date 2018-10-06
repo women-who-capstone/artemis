@@ -6,19 +6,12 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import BookmarkOutlinedIcon from '@material-ui/icons/BookmarkBorderOutlined';
+import Bookmark from '@material-ui/icons/Bookmark';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 import VolumeOff from '@material-ui/icons/VolumeOff';
 import axios from 'axios';
 import SoundVolume from './SoundVolume';
 let episodeAudio = document.createElement('audio');
-
-const styles = {
-	inputy: {
-		width: '50%',
-		right: '10%'
-	},
-	timer: { verticalAlign: 'baseline' }
-};
 
 class AudioPlayer extends Component {
 	constructor() {
@@ -31,6 +24,9 @@ class AudioPlayer extends Component {
 			audioLength: 0,
 			audioTimeElapsed: 0,
 			audioVolume: 0.5,
+			isBookmark: false,
+			liked:false,
+			disliked:false,
 			episode: {}
 		};
 		this.play = this.play.bind(this);
@@ -112,7 +108,9 @@ class AudioPlayer extends Component {
 
 	async bookmark() {
 		let episode = this.props.episode;
+		let bookMarked = this.state.isBookmark;
 		await axios.post('/api/bookmarks', { episodeId: episode.id });
+		this.setState({ isBookmark: !bookMarked });
 	}
 
 	render() {
@@ -147,13 +145,13 @@ class AudioPlayer extends Component {
 				<IconButton>
 					<ThumbDownIcon />
 				</IconButton>
+
 				<IconButton>
-					<BookmarkOutlinedIcon
-						onClick={this.bookmark}
-						style={{
-							backgroundColor: `mediumaquamarine`
-						}}
-					/>
+					{this.state.isBookmark ? (
+						<Bookmark onClick={this.bookmark} className="material-icons orange600" />
+					) : (
+						<Bookmark onClick={this.bookmark} />
+					)}
 				</IconButton>
 
 				{this.state.unmute ? (

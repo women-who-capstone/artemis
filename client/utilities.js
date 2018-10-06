@@ -13,15 +13,15 @@ export const convertPlayedEpisodesArrayToObject = playedEpisodesArr => {
   return playedEpisodes
 }
 
-export const getRandomNonRepeatingIndices = length => {
+export const getRandomNonRepeatingIndices = (desiredNumEpisodes, length) => {
   let indices = {}
   let currentIndex
-  while (Object.keys(indices) < length) {
+  while (Object.keys(indices).length < desiredNumEpisodes) {
     currentIndex = Math.floor(Math.random() * length)
     indices[currentIndex] = true
   }
 
-  return Object.keys(indices)
+  return Object.keys(indices).map(index => Number(index))
 }
 
 export const setLocalStorage = (stateType, actionPayload, key) => {

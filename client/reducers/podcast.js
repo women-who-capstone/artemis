@@ -37,12 +37,14 @@ export const setBestCategoryPodcasts = podcasts => ({
 // THUNK CREATORS
 export const fetchCategoryPodcastsEpisodeData = podcastsWithoutEpisodeData => {
   return async dispatch => {
-    const numEpisodesDesired = 5
-    const indices = getRandomNonRepeatingIndices(numEpisodesDesired)
+    let numEpisodesDesired = podcastsWithoutEpisodeData.length >= 5 ? 5 : podcastsWithoutEpisodeData.length
+
+    const indices = getRandomNonRepeatingIndices(numEpisodesDesired, podcastsWithoutEpisodeData.length)
+
     try {
       let podcastPromises = []
       let podcastIndex, podcast
-      for (let i = 0; i < numEpisodesDesired; i++) {
+      for (let i = 0; i < indices.length; i++) {
         podcastIndex = indices[i]
         podcast = podcastsWithoutEpisodeData[podcastIndex]
         if (podcast !== undefined) {
@@ -50,8 +52,12 @@ export const fetchCategoryPodcastsEpisodeData = podcastsWithoutEpisodeData => {
         }
       }
       const resolvedPodcastPromises = await Promise.all(podcastPromises)
-      const podcastsWithEpisodeData = resolvedPodcastPromises.map(podcast => podcast.data)
 
+      const podcastsWithEpisodeData = resolvedPodcastPromises.map(elem => elem.data)
+
+      if (podcastsWithEpisodeData.length === 0) {
+        throw new Error('podcastsWithEpisodeData is empty.')
+      }
       dispatch(setBestCategoryPodcasts(podcastsWithEpisodeData))
     } catch (error) {
       console.error(error)

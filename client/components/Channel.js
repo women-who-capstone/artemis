@@ -43,7 +43,6 @@ class SingleChannel extends React.Component {
     //get genre id
     //get episodes
     //${this.props.match.params.id}
-    console.log(this.props)
     await this.getGenrePodcasts()
     const playedEpisodes = await this.fetchPlayedEpisodes()
     console.log('playedEpisodes', playedEpisodes)
@@ -61,11 +60,11 @@ class SingleChannel extends React.Component {
   }
 
   async getGenrePodcasts() {
-    console.log('genres', genres)
     const { data: channel } = await axios.get(`/api/channel/${this.props.match.params.channelId}`)
     const genreId = getGenreIdFromGenreName(channel.name, genres)
     const { data: podcastsWithoutData } = await axios.get(`/api/podcast?id=${genreId}`)
-    this.props.fetchCategoryPodcastsEpisodeData(podcastsWithoutData)
+    console.log('podcastsWithoutData', podcastsWithoutData)
+    await this.props.fetchCategoryPodcastsEpisodeData(podcastsWithoutData.channels)
   }
 //
   async fetchPlayedEpisodes() {
@@ -92,7 +91,7 @@ class SingleChannel extends React.Component {
     const { bestCategoryPodcasts } = this.props
     let counter = 0
     let podcastIndex, podcast, episodeIndex, episode
-    console.log('been played', this.episodeHasNotBeenPlayed(episode))
+
     while (!this.episodeHasNotBeenPlayed(episode)) {
 
       podcastIndex = getRandomIndex(bestCategoryPodcasts.length)
@@ -100,7 +99,7 @@ class SingleChannel extends React.Component {
 
       episodeIndex = getRandomIndex(podcast.episodes.length)
       episode = podcast.episodes[episodeIndex]
-      console.log('episode', episode)
+
       counter++
       if (counter > 25) {
         break

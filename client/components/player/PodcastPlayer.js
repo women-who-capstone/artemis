@@ -56,7 +56,6 @@ class PodcastPlayer extends Component {
 						</Typography>
 					</CardContent>
 					<CardActions className={classes.actions}>
-						<SoundVolume />
 						<AudioPlayer audio={episode.audio ? episode.audio : episode.audioURL} episode={episode} />
 					</CardActions>
 				</Card>

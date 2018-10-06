@@ -5,27 +5,34 @@ import PauseIcon from '@material-ui/icons/Pause';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
+import BookmarkOutlinedIcon from '@material-ui/icons/BookmarkBorderOutlined';
+import VolumeUp from '@material-ui/icons/VolumeUp';
+import VolumeOff from '@material-ui/icons/VolumeOff';
 import axios from 'axios';
-
-
+import SoundVolume from './SoundVolume';
 let episodeAudio = document.createElement('audio');
+
 class AudioPlayer extends Component {
 	constructor() {
 		super();
 		this.state = {
 			isPlaying: false,
+			unmute: true,
 			audioLength: 0,
 			audioTimeElapsed: 0,
+			audioVolume: 0.5,
 			episode: {}
 		};
 		this.play = this.play.bind(this);
 		this.pause = this.pause.bind(this);
+		this.handleMute = this.handleMute.bind(this);
 		this.handleSliderChange = this.handleSliderChange.bind(this);
 		this.bookmark = this.bookmark.bind(this);
+		this.handleVolumeChange = this.handleVolumeChange.bind(this);
 	}
 
 	async componentDidMount() {
+		console.log('this is episodeAudio', episodeAudio);
 		try {
 			episodeAudio.src = await this.props.audio;
 			episodeAudio.preload = 'metadata';
@@ -49,6 +56,13 @@ class AudioPlayer extends Component {
 			//handle end of episode
 		}
 	}
+	handleVolumeChange(event) {
+		this.setState({
+			audioVolume: event.target.value
+		});
+
+		episodeAudio.volume = this.state.audioVolume;
+	}
 
 	play() {
 		episodeAudio.play();
@@ -62,6 +76,23 @@ class AudioPlayer extends Component {
 		this.setState({
 			isPlaying: false
 		});
+	}
+
+	handleMute() {
+		var stateUnmute = this.state.unmute;
+		if (stateUnmute) {
+			this.setState({
+				audioVolume: 0,
+				unmute: !stateUnmute
+			});
+			episodeAudio.muted = true;
+		} else {
+			this.setState({
+				audioVolume: 0.1,
+				unmute: !stateUnmute
+			});
+			episodeAudio.muted = false;
+		}
 	}
 
 	async bookmark() {
@@ -91,9 +122,25 @@ class AudioPlayer extends Component {
 					<ThumbDownIcon />
 				</IconButton>
 				<IconButton>
-					<BookmarkIcon onClick={this.bookmark} />
+					<BookmarkOutlinedIcon
+						onClick={this.bookmark}
+						style={{
+							backgroundColor: `mediumaquamarine`
+						}}
+					/>
 				</IconButton>
-			
+
+				{this.state.unmute ? (
+					<IconButton>
+						<VolumeUp onClick={this.handleMute} />
+					</IconButton>
+				) : (
+					<IconButton>
+						<VolumeOff onClick={this.handleMute} />
+					</IconButton>
+				)}
+				<SoundVolume handleVolumeChange={this.handleVolumeChange} audioVolume={this.state.audioVolume} />
+
 				<input
 					type="range"
 					value={this.state.audioTimeElapsed}

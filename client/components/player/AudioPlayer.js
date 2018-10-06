@@ -12,12 +12,22 @@ import axios from 'axios';
 import SoundVolume from './SoundVolume';
 let episodeAudio = document.createElement('audio');
 
+const styles = {
+	inputy: {
+		width: '50%',
+		right: '10%'
+	},
+	timer: { verticalAlign: 'baseline' }
+};
+
 class AudioPlayer extends Component {
 	constructor() {
 		super();
 		this.state = {
 			isPlaying: false,
 			unmute: true,
+			//added for time
+			//audioCurrentTime: 0,
 			audioLength: 0,
 			audioTimeElapsed: 0,
 			audioVolume: 0.5,
@@ -32,7 +42,7 @@ class AudioPlayer extends Component {
 	}
 
 	async componentDidMount() {
-		console.log('this is episodeAudio', episodeAudio);
+		// console.log('this is currentTime', Number(episodeAudio.currentTime / 60).toFixed(2));
 		try {
 			episodeAudio.src = await this.props.audio;
 			episodeAudio.preload = 'metadata';
@@ -48,7 +58,9 @@ class AudioPlayer extends Component {
 
 	handleSliderChange(event) {
 		this.setState({
-			audioTimeElapsed: event.target.value
+			audioTimeElapsed: event.target.value,
+			//added for time
+			audioCurrentTime: episodeAudio.currentTime
 		});
 		episodeAudio.currentTime = this.state.audioTimeElapsed;
 
@@ -79,6 +91,9 @@ class AudioPlayer extends Component {
 	}
 
 	handleMute() {
+		// console.log('this is min', parseInt(episodeAudio.duration / 60, 10));
+		// console.log('this is sec', parseInt(episodeAudio.duration % 60));
+
 		var stateUnmute = this.state.unmute;
 		if (stateUnmute) {
 			this.setState({
@@ -101,6 +116,17 @@ class AudioPlayer extends Component {
 	}
 
 	render() {
+		console.log('this is render', episodeAudio.currentTime);
+		const currentTimeInString = Number(episodeAudio.currentTime / 60).toFixed(2);
+		const currentAudioTime = currentTimeInString
+			.toString()
+			.split('')
+			.map((each) => (each === '.' ? ':' : each))
+			.join('');
+
+		const durationInMin = parseInt(episodeAudio.duration / 60, 10);
+		const durationInSec = parseInt(episodeAudio.duration % 60);
+
 		return (
 			<div>
 				{this.state.isPlaying ? (
@@ -140,16 +166,25 @@ class AudioPlayer extends Component {
 					</IconButton>
 				)}
 				<SoundVolume handleVolumeChange={this.handleVolumeChange} audioVolume={this.state.audioVolume} />
-
-				<input
-					type="range"
-					value={this.state.audioTimeElapsed}
-					aria-labelledby="label"
-					onChange={this.handleSliderChange}
-					min={0}
-					max={this.state.audioLength}
-					step="any"
-				/>
+				<div style={{ display: 'flex' }}>
+					<input
+						type="range"
+						value={this.state.audioTimeElapsed}
+						aria-labelledby="label"
+						onChange={this.handleSliderChange}
+						min={0}
+						max={this.state.audioLength}
+						step="any"
+						style={{ flexGrow: '3' }}
+					/>
+					{durationInMin && durationInSec ? (
+						<div style={{ float: 'right', flexGrow: '1' }}>
+							{currentAudioTime} | {durationInMin}:{durationInSec}
+						</div>
+					) : (
+						<div />
+					)}
+				</div>
 			</div>
 		);
 	}

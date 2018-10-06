@@ -167,16 +167,17 @@ class AudioPlayer extends Component {
 				)}
 				<SoundVolume handleVolumeChange={this.handleVolumeChange} audioVolume={this.state.audioVolume} />
 				<div style={{ display: 'flex' }}>
-					<input
-						type="range"
-						value={this.state.audioTimeElapsed}
-						aria-labelledby="label"
-						onChange={this.handleSliderChange}
-						min={0}
-						max={this.state.audioLength}
-						step="any"
-						style={{ flexGrow: '3' }}
-					/>
+					<div style={{ flexGrow: '35' }}>
+						<input
+							type="range"
+							value={this.state.audioTimeElapsed}
+							aria-labelledby="label"
+							onChange={this.handleSliderChange}
+							min={0}
+							max={this.state.audioLength}
+							step="any"
+						/>
+					</div>
 					{durationInMin && durationInSec ? (
 						<div style={{ float: 'right', flexGrow: '1' }}>
 							{currentAudioTime} | {durationInMin}:{durationInSec}

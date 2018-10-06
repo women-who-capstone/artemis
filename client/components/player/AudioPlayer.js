@@ -35,10 +35,8 @@ class AudioPlayer extends Component {
           audioLength: episodeAudio.duration
         });
       });
-      episodeAudio.addEventListener('timeupdate', () => {
-        if ((episodeAudio.duration - episodeAudio.currentTime) < 300) {
-
-        }
+      episodeAudio.addEventListener('ended', () => {
+        this.props.handleEpisodeEnd()
       })
     } catch (error) {
       throw new Error("There was an audio error");

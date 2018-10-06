@@ -19,6 +19,7 @@ class SingleChannel extends React.Component {
     this.setEpisode = this.setEpisode.bind(this);
     this.getEpisodeFromQueue = this.getEpisodeFromQueue.bind(this)
     this.handleSkip = this.handleSkip.bind(this)
+    this.handleEpisodeEnd = this.handleEpisodeEnd.bind(this)
 
   }
 
@@ -45,7 +46,7 @@ class SingleChannel extends React.Component {
     //${this.props.match.params.id}
     await this.getGenrePodcasts()
     const playedEpisodes = await this.fetchPlayedEpisodes()
-    console.log('playedEpisodes', playedEpisodes)
+
     const episodeQueue = this.getEpisodeQueue(5)
     this.setState({
       episodeQueue,
@@ -63,10 +64,10 @@ class SingleChannel extends React.Component {
     const { data: channel } = await axios.get(`/api/channel/${this.props.match.params.channelId}`)
     const genreId = getGenreIdFromGenreName(channel.name, genres)
     const { data: podcastsWithoutData } = await axios.get(`/api/podcast?id=${genreId}`)
-    console.log('podcastsWithoutData', podcastsWithoutData)
+
     await this.props.fetchCategoryPodcastsEpisodeData(podcastsWithoutData.channels)
   }
-//
+
   async fetchPlayedEpisodes() {
     let res = await axios.get(
       `/api/channel?id=${this.props.match.params.channelId}`
@@ -79,8 +80,8 @@ class SingleChannel extends React.Component {
 
   extractMostRecentlyPlayedEpisode() {
     let episodeDates = this.state.playedEpisodes.map(episode =>
-      new Date(episode.date).getTime()
-    );
+      new Date(episode.date).getTime());
+
     let currentEpisodeDate = Math.max(...episodeDates);
     let currentEpisode = this.state.playedEpisodes.find(
       episode => new Date(episode.date).getTime() === currentEpisodeDate
@@ -157,7 +158,10 @@ class SingleChannel extends React.Component {
 
   handleEpisodeEnd() {
     //add current episode to played episode
-    //get episode from queue
+    const newEpisode  = this.getEpisodeFromQueue()
+    this.setState({
+      episode: newEpisode
+    })
   }
 
   handleSkip() {
@@ -172,9 +176,9 @@ class SingleChannel extends React.Component {
 
     if ((this.state.episode.audio || this.state.episode.audioURL)) {
       //
-      return <PodcastPlayer episode={this.state.episode} episodeQueue={this.state.episodeQueue} handleSkip={this.handleSkip}/>;
+      return <PodcastPlayer episode={this.state.episode} episodeQueue={this.state.episodeQueue} handleSkip={this.handleSkip} handleEpisodeEnd={this.handleEpisodeEnd} />;
     }
-    console.log('bestCategory', this.props.bestCategoryPodcasts)
+
     return <div />;
   }
 }

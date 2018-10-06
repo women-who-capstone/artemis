@@ -56,10 +56,14 @@ class PodcastPlayer extends Component {
 						</Typography>
 					</CardContent>
 					<CardActions className={classes.actions}>
-						<AudioPlayer audio={episode.audio ? episode.audio : episode.audioURL} episode={episode} />
+						<AudioPlayer
+							audio={episode.audio ? episode.audio : episode.audioURL}
+							episode={episode}
+							channelId={this.props.channelId}
+							tags={this.props.tags}
+						/>
 					</CardActions>
 				</Card>
-
 				<div />
 			</div>
 		);

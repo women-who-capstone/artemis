@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { updateActiveChannelTags } from '../../reducers/channel';
+import { connect } from 'react-redux';
 import IconButton from '@material-ui/core/IconButton';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
@@ -25,12 +27,17 @@ class AudioPlayer extends Component {
 			audioTimeElapsed: 0,
 			audioVolume: 0.5,
 			isBookmark: false,
-			liked:false,
-			disliked:false,
+			liked: false,
+			disliked: false,
 			episode: {}
+			// episode: {}, // Redux
+			// epTags: [],
+			// chanTags: []
 		};
 		this.play = this.play.bind(this);
 		this.pause = this.pause.bind(this);
+		this.like = this.like.bind(this);
+		this.dislike = this.dislike.bind(this);
 		this.handleMute = this.handleMute.bind(this);
 		this.handleSliderChange = this.handleSliderChange.bind(this);
 		this.bookmark = this.bookmark.bind(this);
@@ -38,6 +45,7 @@ class AudioPlayer extends Component {
 	}
 
 	async componentDidMount() {
+		// FIX shouldn't be async
 		// console.log('this is currentTime', Number(episodeAudio.currentTime / 60).toFixed(2));
 		try {
 			episodeAudio.src = await this.props.audio;
@@ -64,6 +72,7 @@ class AudioPlayer extends Component {
 			//handle end of episode
 		}
 	}
+
 	handleVolumeChange(event) {
 		this.setState({
 			audioVolume: event.target.value
@@ -106,10 +115,33 @@ class AudioPlayer extends Component {
 		}
 	}
 
+	like() {
+		let isLiked = this.state.liked;
+		let episode = this.props.episode;
+		let epTags = this.props.tags;
+		console.log(episode, epTags);
+		this.props.updatedActiveChannelTags(this.props.channelId, 'like', epTags);
+		this.setState({
+			liked: !isLiked,
+			disliked: false
+		});
+	}
+
+	dislike() {
+		let isDisliked = this.state.disliked;
+		let episode = this.props.episode;
+		let epTags = this.props.tags;
+		this.props.updatedActiveChannelTags(episode.channelEpisode.channelId, 'dislike', epTags);
+		this.setState({
+			disliked: !isDisliked,
+			liked: false
+		});
+	}
+
 	async bookmark() {
 		let episode = this.props.episode;
 		let bookMarked = this.state.isBookmark;
-		await axios.post('/api/bookmarks', { episodeId: episode.id });
+		await axios.post('/api/bookmarks', { episodeId: episode.id }); //FIX use Redux
 		this.setState({ isBookmark: !bookMarked });
 	}
 
@@ -140,12 +172,19 @@ class AudioPlayer extends Component {
 					<SkipNextIcon />
 				</IconButton>
 				<IconButton>
-					<ThumbUpIcon />
+					{this.state.liked ? (
+						<ThumbUpIcon onClick={this.like} className="material-icons orange600" />
+					) : (
+						<ThumbUpIcon onClick={this.like} />
+					)}
 				</IconButton>
 				<IconButton>
-					<ThumbDownIcon />
+					{this.state.disliked ? (
+						<ThumbDownIcon onClick={this.dislike} className="material-icons orange600" />
+					) : (
+						<ThumbDownIcon onClick={this.dislike} />
+					)}
 				</IconButton>
-
 				<IconButton>
 					{this.state.isBookmark ? (
 						<Bookmark onClick={this.bookmark} className="material-icons orange600" />
@@ -153,7 +192,6 @@ class AudioPlayer extends Component {
 						<Bookmark onClick={this.bookmark} />
 					)}
 				</IconButton>
-
 				{this.state.unmute ? (
 					<IconButton>
 						<VolumeUp onClick={this.handleMute} />
@@ -188,5 +226,12 @@ class AudioPlayer extends Component {
 		);
 	}
 }
+//mapStateToProps()
+const mapDispatchToProps = (dispatch) => {
+	return {
+		updatedActiveChannelTags: (channelId, method, tags) =>
+			dispatch(updateActiveChannelTags(channelId, method, tags))
+	};
+};
 
-export default AudioPlayer;
+export default connect(null, mapDispatchToProps)(AudioPlayer);

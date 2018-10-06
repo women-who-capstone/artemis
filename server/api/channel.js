@@ -6,9 +6,9 @@ const {
   Genre,
   Episode,
   ChannelEpisode
-} = require("../db/models");
+} = require('../db/models');
 
-router.get("/", async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     if (req.query) {
       const channels = await Channel.findAll({
@@ -30,7 +30,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/user", async (req, res, next) => {
+router.get('/user', async (req, res, next) => {
   const userId = req.session.passport.user;
   try {
     const channels = await Channel.findAll({
@@ -44,6 +44,17 @@ router.get("/user", async (req, res, next) => {
   }
 });
 
+router.get('/:id/episodes', async (req, res, next) => {
+  try {
+    const channel = await Channel.findById(req.params.id, {
+      include: [{model: Episode}]
+    })
+    res.send(channel.episodes)
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.get("/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -53,7 +64,7 @@ router.get("/:id", async (req, res, next) => {
           model: Tag
         },
         {
-          model: Genre
+          model: Genre //TODO Do we still need to include this model?
         }
       ]
     });
@@ -61,18 +72,52 @@ router.get("/:id", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
 
+router.get('/:id/tags', async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const tags = await Tag.findAll({
+      where: {
+        channelId: id
+      }
+    });
+    res.status(200).send(tags);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put('/:id/tags', async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const method = req.body.method;
+    const tags = req.body.tags;
+    const tagNames = tags.map(tag => tag.name);
+    let chan = await Channel.findById(id);
+    console.log('from PUT tags API');
+    if (method === 'like') {
+      chan.incrementScore(tagNames);
+    }
+    if (method === 'dislike') {
+      chan.decrementScore(tagNames);
+    }
+
+    res.status(200).send();
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.post('/', async (req, res, next) => {
-	try {
-		let channelObj = req.body;
-		channelObj.userId = req.user.id;
-		const newChannel = await Channel.create(channelObj);
-		res.status(200).send(newChannel);
-	} catch (error) {
-		next(error);
-	}
+  try {
+    let channelObj = req.body;
+    channelObj.userId = req.user.id;
+    const newChannel = await Channel.create(channelObj);
+    res.status(200).send(newChannel);
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

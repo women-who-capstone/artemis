@@ -1,13 +1,23 @@
-import React from 'react';
-import { withRouter } from 'react-router'
-import PodcastPlayer from './player/PodcastPlayer';
-import { connect } from 'react-redux';
-import axios from 'axios';
-import { getRandomIndex, convertPlayedEpisodesArrayToObject, getGenreIdFromGenreName } from '../utilities'
-import { setSinglePodcast, setPodcastList, fetchCategoryPodcastsEpisodeData, fetchPlayedEpisodes } from "../reducers/podcast";
-import genres from '../genreList'
-class SingleChannel extends React.Component {
+import React from "react";
+import { withRouter } from "react-router";
+import PodcastPlayer from "./player/PodcastPlayer";
+import { connect } from "react-redux";
+import axios from "axios";
+import {
+  getRandomIndex,
+  convertPlayedEpisodesArrayToObject,
+  getGenreIdFromGenreName
+} from "../utilities";
+import {
+  setSinglePodcast,
+  setPodcastList,
+  fetchCategoryPodcastsEpisodeData,
+  fetchPlayedEpisodes,
+  addPlayedEpisode
+} from "../reducers/podcast";
+import genres from "../genreList";
 
+class SingleChannel extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -16,10 +26,9 @@ class SingleChannel extends React.Component {
       episodeQueue: []
     };
     //this.setEpisode = this.setEpisode.bind(this);
-    this.getEpisodeFromQueue = this.getEpisodeFromQueue.bind(this)
-    this.handleSkip = this.handleSkip.bind(this)
-    this.handleEpisodeEnd = this.handleEpisodeEnd.bind(this)
-
+    this.getEpisodeFromQueue = this.getEpisodeFromQueue.bind(this);
+    this.handleSkip = this.handleSkip.bind(this);
+    this.handleEpisodeEnd = this.handleEpisodeEnd.bind(this);
   }
 
   // async addEpisodeToPlayedEpisodesInDatabase(episode) {
@@ -40,27 +49,33 @@ class SingleChannel extends React.Component {
     //get genre id
     //get episodes
     //${this.props.match.params.id}
-    await this.getGenrePodcasts()
-    await this.props.fetchPlayedEpisodes(this.props.match.params.channelId)
+    await this.getGenrePodcasts();
+    await this.props.fetchPlayedEpisodes(this.props.match.params.channelId);
 
-    const episodeQueue = this.getEpisodeQueue(5)
+    const episodeQueue = this.getEpisodeQueue(5);
     this.setState({
       episodeQueue
-    })
+    });
 
-    const newEpisode = this.getEpisodeFromQueue()
+    const newEpisode = this.getEpisodeFromQueue();
     this.setState({
       episode: newEpisode,
       unfinishedEpisode: newEpisode
-    })
+    });
   }
 
   async getGenrePodcasts() {
-    const { data: channel } = await axios.get(`/api/channel/${this.props.match.params.channelId}`)
-    const genreId = getGenreIdFromGenreName(channel.name, genres)
-    const { data: podcastsWithoutData } = await axios.get(`/api/podcast?id=${genreId}`)
+    const { data: channel } = await axios.get(
+      `/api/channel/${this.props.match.params.channelId}`
+    );
+    const genreId = getGenreIdFromGenreName(channel.name, genres);
+    const { data: podcastsWithoutData } = await axios.get(
+      `/api/podcast?id=${genreId}`
+    );
 
-    await this.props.fetchCategoryPodcastsEpisodeData(podcastsWithoutData.channels)
+    await this.props.fetchCategoryPodcastsEpisodeData(
+      podcastsWithoutData.channels
+    );
   }
 
   // async fetchPlayedEpisodes() {
@@ -75,7 +90,8 @@ class SingleChannel extends React.Component {
 
   extractMostRecentlyPlayedEpisode() {
     let episodeDates = this.state.playedEpisodes.map(episode =>
-      new Date(episode.date).getTime());
+      new Date(episode.date).getTime()
+    );
 
     let currentEpisodeDate = Math.max(...episodeDates);
     let currentEpisode = this.props.playedEpisodes.find(
@@ -84,117 +100,138 @@ class SingleChannel extends React.Component {
   }
 
   getNewEpisodeFromCategoryPodcast() {
-    const { bestCategoryPodcasts } = this.props
-    let counter = 0
-    let podcastIndex, podcast, episodeIndex, episode
+    const { bestCategoryPodcasts } = this.props;
+    let counter = 0;
+    let podcastIndex, podcast, episodeIndex, episode;
 
     while (!this.episodeHasNotBeenPlayed(episode)) {
+      podcastIndex = getRandomIndex(bestCategoryPodcasts.length);
+      podcast = bestCategoryPodcasts[podcastIndex];
 
-      podcastIndex = getRandomIndex(bestCategoryPodcasts.length)
-      podcast = bestCategoryPodcasts[podcastIndex]
+      episodeIndex = getRandomIndex(podcast.episodes.length);
+      episode = podcast.episodes[episodeIndex];
 
-      episodeIndex = getRandomIndex(podcast.episodes.length)
-      episode = podcast.episodes[episodeIndex]
-
-      counter++
+      counter++;
       if (counter > 25) {
-        break
+        break;
         //we should get new episodes at this point
       }
     }
-    return episode
+    return episode;
   }
 
   episodeHasNotBeenPlayed(episode) {
     if (episode === undefined) {
-      return false
+      return false;
     }
     if (this.props.playedEpisodes[episode.id]) {
-      return false
+      return false;
     }
-    return true
+    return true;
   }
 
   getNewEpisode() {
-    let newEpisode
+    let newEpisode;
     if (this.props.recommendedEpisodes.length === 0) {
       newEpisode = this.getNewEpisodeFromCategoryPodcast();
       //this.setTags()
-
     } else if (this.state.unfinishedEpisode.id) {
-      newEpisode = this.extractMostRecentlyPlayedEpisode()
+      newEpisode = this.extractMostRecentlyPlayedEpisode();
     }
 
-    return newEpisode
+    return newEpisode;
   }
 
   getEpisodeQueue(numDesiredEpisodes) {
-    const queue = []
+    const queue = [];
 
     for (let i = 0; i < numDesiredEpisodes; i++) {
-      queue.push(this.getNewEpisode())
+      queue.push(this.getNewEpisode());
     }
 
-    return queue
+    return queue;
   }
 
   getEpisodeFromQueue() {
-    const queueCopy = this.state.episodeQueue.slice(0)
-    const episode = queueCopy.shift()
+    const queueCopy = this.state.episodeQueue.slice(0);
+    const episode = queueCopy.shift();
     this.setState({
       episodeQueue: queueCopy
-    })
-    return episode
+    });
+    return episode;
   }
 
   handleEpisodeNearEnd() {
     //add episode to queue
   }
 
-  handleEpisodeEnd() {
-    //add current episode to played episode
-    const newEpisode  = this.getEpisodeFromQueue()
+  async handleEpisodeEnd() {
+    //add episode that just ended to played episodes
+    const episodeThatJustEnded = this.state.episode
+    const channelId = this.props.match.params.channelId
+    await this.props.addPlayedEpisode(episodeThatJustEnded, channelId)
+
+    const newEpisode = this.getEpisodeFromQueue();
     this.setState({
       episode: newEpisode
-    })
+    });
   }
 
-  handleSkip() {
-    const newEpisode  = this.getEpisodeFromQueue()
+  async handleSkip() {
+    //add episode that was playing before skip to played episodes
+    const episodeThatJustEnded = this.state.episode
+    const channelId = this.props.match.params.channelId
+    await this.props.addPlayedEpisode(episodeThatJustEnded, channelId)
+
+    //get new episode
+    const newEpisode = this.getEpisodeFromQueue();
     this.setState({
       episode: newEpisode
-    })
+    });
     //add current episode to played episode
   }
 
   render() {
-
-    if ((this.state.episode.audio || this.state.episode.audioURL)) {
+    if (this.state.episode.audio || this.state.episode.audioURL) {
       //
-      return <PodcastPlayer episode={this.state.episode} episodeQueue={this.state.episodeQueue} handleSkip={this.handleSkip} handleEpisodeEnd={this.handleEpisodeEnd} />;
+      return (
+        <PodcastPlayer
+          episode={this.state.episode}
+          episodeQueue={this.state.episodeQueue}
+          handleSkip={this.handleSkip}
+          handleEpisodeEnd={this.handleEpisodeEnd}
+        />
+      );
     }
 
     return <div />;
   }
 }
 
-const mapStateToProps = (state) => {
-	return {
+const mapStateToProps = state => {
+  return {
     bestCategoryPodcasts: state.podcast.bestCategoryPodcasts,
     recommendedEpisodes: state.podcast.recommendedEpisodes,
     playedEpisodes: state.podcast.playedEpisodes
-		// podcastId: state.podcast.podcast.id,
-  //   podcastList: state.podcast.podcastList
-	};
+    // podcastId: state.podcast.podcast.id,
+    //   podcastList: state.podcast.podcastList
+  };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     // setSinglePodcast: podcast => dispatch(setSinglePodcast(podcast)),
     // setPodcastList: podcasts => dispatch(setPodcastList(podcasts)),
-    fetchCategoryPodcastsEpisodeData: podcasts => dispatch(fetchCategoryPodcastsEpisodeData(podcasts)),
-    fetchPlayedEpisodes: channelId => dispatch(fetchPlayedEpisodes(channelId))
+    fetchCategoryPodcastsEpisodeData: podcasts =>
+      dispatch(fetchCategoryPodcastsEpisodeData(podcasts)),
+    fetchPlayedEpisodes: channelId => dispatch(fetchPlayedEpisodes(channelId)),
+    addPlayedEpisode: (episode, channelId) => dispatch(addPlayedEpisode(episode, channelId))
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleChannel));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(SingleChannel)
+);

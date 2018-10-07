@@ -693,7 +693,7 @@ console.log("length of des", descriptions.length);
 
 router.get("/", async (req, res, next) => {
   try {
-    console.log(myStopwords);
+    // console.log(myStopwords);
     let channelId = req.query.channelId;
     // console.log("CHANNELID", channelId);
     // console.log("QUERY", req.query);

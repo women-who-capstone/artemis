@@ -1,59 +1,59 @@
-const { Channel, Episode } = require('../server/db/models')
+const { Channel, Episode } = require("../server/db/models");
 
 class ChannelVector {
   constructor(channelTags) {
-    //console.log('channelTags', channelTags)
-    const vector = []
+    // console.log("channelTags", channelTags);
+    const vector = [];
     for (let i = 0; i < channelTags.length; i++) {
-      vector[channelTags[i].tagId] = channelTags[i].score
+      vector[channelTags[i].tagId] = channelTags[i].score;
     }
 
-    this.id = channelTags[0].channelId
-    this.vector = vector
+    this.id = channelTags.channelId;
+    this.vector = vector;
   }
 
   formatVectorForVectorAttribute(vector) {
-    return JSON.stringify(vector)
+    return JSON.stringify(vector);
   }
 }
 
 class ChannelEpisodeGetter {
   constructor(channelId) {
-    this.channelId = channelId
+    this.channelId = channelId;
   }
 
   _getRandomIndex(length) {
-    return Math.floor((Math.random() * length))
+    return Math.floor(Math.random() * length);
   }
 
   async _getEpisodes() {
     try {
       const channel = await Channel.findById(this.channelId, {
-        include: [{model: Episode}]
-      })
-      return channel.episodes // returns promise for array of episodes
+        include: [{ model: Episode }]
+      });
+      return channel.episodes; // returns promise for array of episodes
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
   async getMostRecentEpisode() {
     try {
-      let episodes = await this._getEpisodes()
-      episodes.sort((a, b) => b.date - a.date)
-      return episodes[0]
+      let episodes = await this._getEpisodes();
+      episodes.sort((a, b) => b.date - a.date);
+      return episodes[0];
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
   async getRandomEpisode() {
     try {
-      const episodes = await this._getEpisodes()
-      const randomIndex = this._getRandomIndex(episodes.length)
-      return episodes[randomIndex]
+      const episodes = await this._getEpisodes();
+      const randomIndex = this._getRandomIndex(episodes.length);
+      return episodes[randomIndex];
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 }
@@ -61,4 +61,4 @@ class ChannelEpisodeGetter {
 module.exports = {
   ChannelVector,
   ChannelEpisodeGetter
-}
+};

@@ -58,6 +58,8 @@ class PodcastPlayer extends Component {
             <AudioPlayer
               audio={episode.audio ? episode.audio : episode.audioURL}
               episode={episode}
+              channelId={this.props.channelId}
+              setNewEpisode={this.props.setNewEpisode}
             />
           </CardActions>
         </Card>

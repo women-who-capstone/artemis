@@ -1,11 +1,16 @@
 import axios from "axios";
-import { getRandomNonRepeatingIndices, setLocalStorage } from '../utilities'
+import {
+  getRandomNonRepeatingIndices,
+  setLocalStorage,
+  convertPlayedEpisodesArrayToObject
+} from "../utilities";
 
 const SET_PODCAST = "SET_PODCAST";
 const SET_PODCAST_LIST = "SET_PODCAST_LIST";
-const SET_BEST_CATEGORY_PODCASTS = 'SET_BEST_CATEGORY_PODCASTS'
-const SET_CURRENT_EPISODE = 'SET_CURRENT_EPISODE'
-
+const SET_BEST_CATEGORY_PODCASTS = "SET_BEST_CATEGORY_PODCASTS";
+const SET_CURRENT_EPISODE = "SET_CURRENT_EPISODE";
+const SET_PLAYED_EPISODES = "SET_PLAYED_EPISODES";
+const SET_ADDED_PLAYED_EPISODE = 'SET_ADDED_PLAYED_EPISODE'
 // if (localStorage.getItem('podcastState') === null) {
 //     localStorage.setItem('podcastState', JSON.stringify({
 //     podcast: {},
@@ -21,8 +26,9 @@ const initState = {
   podcast: {},
   podcastList: [],
   bestCategoryPodcasts: [],
-  recommendedEpisodes: []
-}
+  recommendedEpisodes: [],
+  playedEpisodes: {}
+};
 
 export const setSinglePodcast = podcast => ({
   type: SET_PODCAST,
@@ -34,31 +40,74 @@ export const setBestCategoryPodcasts = podcasts => ({
   podcasts
 });
 
+export const setPlayedEpisodes = episodes => ({
+  type: SET_PLAYED_EPISODES,
+  episodes
+});
+
+export const setAddedPlayedEpisode = episode => ({
+  type: SET_ADDED_PLAYED_EPISODE,
+  episode
+})
+
 // THUNK CREATORS
 export const fetchCategoryPodcastsEpisodeData = podcastsWithoutEpisodeData => {
   return async dispatch => {
-    let numEpisodesDesired = podcastsWithoutEpisodeData.length >= 5 ? 5 : podcastsWithoutEpisodeData.length
+    let numEpisodesDesired =
+      podcastsWithoutEpisodeData.length >= 5
+        ? 5
+        : podcastsWithoutEpisodeData.length;
 
-    const indices = getRandomNonRepeatingIndices(numEpisodesDesired, podcastsWithoutEpisodeData.length)
+    const indices = getRandomNonRepeatingIndices(
+      numEpisodesDesired,
+      podcastsWithoutEpisodeData.length
+    );
 
     try {
-      let podcastPromises = []
-      let podcastIndex, podcast
+      let podcastPromises = [];
+      let podcastIndex, podcast;
       for (let i = 0; i < indices.length; i++) {
-        podcastIndex = indices[i]
-        podcast = podcastsWithoutEpisodeData[podcastIndex]
+        podcastIndex = indices[i];
+        podcast = podcastsWithoutEpisodeData[podcastIndex];
         if (podcast !== undefined) {
-          podcastPromises.push(axios.get(`/api/episode/apiEpisode?id=${podcast.id}`))
+          podcastPromises.push(
+            axios.get(`/api/episode/apiEpisode?id=${podcast.id}`)
+          );
         }
       }
-      const resolvedPodcastPromises = await Promise.all(podcastPromises)
+      const resolvedPodcastPromises = await Promise.all(podcastPromises);
 
-      const podcastsWithEpisodeData = resolvedPodcastPromises.map(elem => elem.data)
+      const podcastsWithEpisodeData = resolvedPodcastPromises.map(
+        elem => elem.data
+      );
 
       if (podcastsWithEpisodeData.length === 0) {
-        throw new Error('podcastsWithEpisodeData is empty.')
+        throw new Error("podcastsWithEpisodeData is empty.");
       }
-      dispatch(setBestCategoryPodcasts(podcastsWithEpisodeData))
+      dispatch(setBestCategoryPodcasts(podcastsWithEpisodeData));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export const fetchPlayedEpisodes = channelId => {
+  return async dispatch => {
+    let res = await axios.get(`/api/channel?id=${channelId}`);
+    let playedEpisodes = res.data[0].episodes;
+
+    const episodesObject = convertPlayedEpisodesArrayToObject(playedEpisodes);
+    dispatch(setPlayedEpisodes(episodesObject))
+  };
+};
+
+export const addPlayedEpisode = (episode, channelId) => {
+  return async dispatch => {
+    episode.channelId = channelId;
+    try {
+      let req = await axios.post("/api/episode", episode);
+      let newEpisode = req.data;
+      dispatch(setAddedPlayedEpisode(newEpisode))
     } catch (error) {
       console.error(error)
     }
@@ -83,6 +132,19 @@ export default function(state = initState, action) {
       return {
         ...state,
         bestCategoryPodcasts: action.podcasts
+      };
+    case SET_PLAYED_EPISODES:
+      return {
+        ...state,
+        playedEpisodes: action.episodes
+      };
+    case SET_ADDED_PLAYED_EPISODE:
+      return {
+        ...state,
+        playedEpisodes: {
+          ...state.playedEpisodes,
+          [action.episode.id]: true
+        }
       }
     default:
       return state;

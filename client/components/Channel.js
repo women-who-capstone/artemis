@@ -4,7 +4,7 @@ import PodcastPlayer from './player/PodcastPlayer';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { getRandomIndex, convertPlayedEpisodesArrayToObject, getGenreIdFromGenreName } from '../utilities'
-import { setSinglePodcast, setPodcastList, fetchCategoryPodcastsEpisodeData } from "../reducers/podcast";
+import { setSinglePodcast, setPodcastList, fetchCategoryPodcastsEpisodeData, fetchPlayedEpisodes } from "../reducers/podcast";
 import genres from '../genreList'
 class SingleChannel extends React.Component {
 
@@ -12,26 +12,22 @@ class SingleChannel extends React.Component {
     super();
     this.state = {
       episode: {},
-      playedEpisodes: {},
       unfinishedEpisode: {},
       episodeQueue: []
     };
-    this.setEpisode = this.setEpisode.bind(this);
+    //this.setEpisode = this.setEpisode.bind(this);
     this.getEpisodeFromQueue = this.getEpisodeFromQueue.bind(this)
     this.handleSkip = this.handleSkip.bind(this)
     this.handleEpisodeEnd = this.handleEpisodeEnd.bind(this)
 
   }
 
-  setEpisode = async function(podcastId) {
-    const channelId = this.props.match.params.channelId;
-    const res = await axios.get(`/api/episode/apiEpisode?id=${podcastId}`);
-    const episode = res.data.episodes[0];
-    episode.channelId = channelId;
-    let req = await axios.post("/api/episode", episode);
-    let newEpisode = req.data;
-    return newEpisode
-  };
+  // async addEpisodeToPlayedEpisodesInDatabase(episode) {
+  //   episode.channelId = channelId;
+  //   let req = await axios.post("/api/episode", episode);
+  //   let newEpisode = req.data;
+  //   return newEpisode
+  // };
 
   setTags = async function() {
     const description = this.state.episode.description;
@@ -45,12 +41,11 @@ class SingleChannel extends React.Component {
     //get episodes
     //${this.props.match.params.id}
     await this.getGenrePodcasts()
-    const playedEpisodes = await this.fetchPlayedEpisodes()
+    await this.props.fetchPlayedEpisodes(this.props.match.params.channelId)
 
     const episodeQueue = this.getEpisodeQueue(5)
     this.setState({
-      episodeQueue,
-      playedEpisodes,
+      episodeQueue
     })
 
     const newEpisode = this.getEpisodeFromQueue()
@@ -68,22 +63,22 @@ class SingleChannel extends React.Component {
     await this.props.fetchCategoryPodcastsEpisodeData(podcastsWithoutData.channels)
   }
 
-  async fetchPlayedEpisodes() {
-    let res = await axios.get(
-      `/api/channel?id=${this.props.match.params.channelId}`
-    );
-    let playedEpisodes = res.data[0].episodes;
+  // async fetchPlayedEpisodes() {
+  //   let res = await axios.get(
+  //     `/api/channel?id=${this.props.match.params.channelId}`
+  //   );
+  //   let playedEpisodes = res.data[0].episodes;
 
-    const episodesObject = convertPlayedEpisodesArrayToObject(playedEpisodes)
-    return episodesObject
-  }
+  //   const episodesObject = convertPlayedEpisodesArrayToObject(playedEpisodes)
+  //   return episodesObject
+  // }
 
   extractMostRecentlyPlayedEpisode() {
     let episodeDates = this.state.playedEpisodes.map(episode =>
       new Date(episode.date).getTime());
 
     let currentEpisodeDate = Math.max(...episodeDates);
-    let currentEpisode = this.state.playedEpisodes.find(
+    let currentEpisode = this.props.playedEpisodes.find(
       episode => new Date(episode.date).getTime() === currentEpisodeDate
     );
   }
@@ -114,7 +109,7 @@ class SingleChannel extends React.Component {
     if (episode === undefined) {
       return false
     }
-    if (this.state.playedEpisodes[episode.id]) {
+    if (this.props.playedEpisodes[episode.id]) {
       return false
     }
     return true
@@ -186,7 +181,8 @@ class SingleChannel extends React.Component {
 const mapStateToProps = (state) => {
 	return {
     bestCategoryPodcasts: state.podcast.bestCategoryPodcasts,
-    recommendedEpisodes: state.podcast.recommendedEpisodes
+    recommendedEpisodes: state.podcast.recommendedEpisodes,
+    playedEpisodes: state.podcast.playedEpisodes
 		// podcastId: state.podcast.podcast.id,
   //   podcastList: state.podcast.podcastList
 	};
@@ -196,7 +192,8 @@ const mapDispatchToProps = dispatch => {
   return {
     // setSinglePodcast: podcast => dispatch(setSinglePodcast(podcast)),
     // setPodcastList: podcasts => dispatch(setPodcastList(podcasts)),
-    fetchCategoryPodcastsEpisodeData: podcasts => dispatch(fetchCategoryPodcastsEpisodeData(podcasts))
+    fetchCategoryPodcastsEpisodeData: podcasts => dispatch(fetchCategoryPodcastsEpisodeData(podcasts)),
+    fetchPlayedEpisodes: channelId => dispatch(fetchPlayedEpisodes(channelId))
   };
 };
 

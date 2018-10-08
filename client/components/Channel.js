@@ -33,6 +33,7 @@ class SingleChannel extends React.Component {
     this.getEpisodeFromQueue = this.getEpisodeFromQueue.bind(this);
     this.handleSkip = this.handleSkip.bind(this);
     this.handleEpisodeEnd = this.handleEpisodeEnd.bind(this);
+    this.addNewEpisodeToQueue = this.addNewEpisodeToQueue.bind(this)
 
     this.setEpisode = this.setEpisode.bind(this);
     this.setTags = this.setTags.bind(this);
@@ -196,6 +197,13 @@ class SingleChannel extends React.Component {
     return queue;
   }
 
+  addNewEpisodeToQueue() {
+    const newEpisode = this.getNewEpisode()
+    this.setState({
+      episodeQueue: [...this.state.episodeQueue, newEpisode]
+    })
+  }
+
   getEpisodeFromQueue() {
     const queueCopy = this.state.episodeQueue.slice(0);
     const episode = queueCopy.shift();
@@ -216,6 +224,7 @@ class SingleChannel extends React.Component {
     this.setState({
       episode: newEpisode
     });
+    this.addNewEpisodeToQueue()
   }
 
   async handleSkip() {
@@ -229,6 +238,7 @@ class SingleChannel extends React.Component {
     this.setState({
       episode: newEpisode
     });
+    this.addNewEpisodeToQueue()
     // const episodeId = await this.props.episodeId;
     // if (episodeId !== undefined) {
     //   this.setEpisode(episodeId);
@@ -247,7 +257,7 @@ class SingleChannel extends React.Component {
       // this.setState({
       //   episode: currentEpisode
       // });
-    this.setTags(); //
+    //this.setTags(); //
   }
 
   render() {

@@ -9,7 +9,8 @@ import { auth } from '../reducers/user';
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
+    width: '100px'
   },
   input: {
     display: 'none'

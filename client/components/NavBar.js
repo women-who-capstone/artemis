@@ -41,6 +41,10 @@ const styles = theme => ({
       duration: theme.transitions.duration.leavingScreen
     })
   },
+  title: {
+    color: 'white',
+    flexGrow: 1
+  },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['margin', 'width'], {
@@ -75,7 +79,7 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3,
+    padding: 0,
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
@@ -196,6 +200,10 @@ class PersistentDrawer extends React.Component {
               >
                 <MenuIcon />
               </IconButton>
+
+              <Typography variant="title" className={classes.title}>
+                Artemis
+              </Typography>
               <Logout />
             </Toolbar>
           </AppBar>

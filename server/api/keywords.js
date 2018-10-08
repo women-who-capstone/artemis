@@ -1,7 +1,4 @@
 const router = require('express').Router();
-const unirest = require('unirest');
-const algorithmia = require('algorithmia');
-var timeout = require('connect-timeout');
 let descriptions = require('../../descriptions');
 const Tag = require('../db/models/tag');
 const ChannelTag = require('../db/models/channelTag');
@@ -28,9 +25,7 @@ router.get('/', async (req, res, next) => {
 				)
 				.map((word) => word.toLowerCase())
 		);
-		console.log('INPUT ARRAY', inputArr);
-		// let input = [ 'the', 'History', 'technology' ];
-		console.log('node--------------');
+
 		let descriptionsArr = descriptions.slice(0, 500);
 		descriptionsArr.forEach((each) => {
 			tfidf.addDocument(each);
@@ -44,7 +39,6 @@ router.get('/', async (req, res, next) => {
 			tfidf.tfidfs(each, function(i, measure) {
 				currentTag = each;
 				allDes += measure;
-				// console.log(`document# ${currentTag} is ${measure}`);
 			});
 			let tagRating = allDes / descriptionsArr.length;
 			let tagId;
@@ -65,7 +59,6 @@ router.get('/', async (req, res, next) => {
 					});
 				}
 			}
-			//   console.log("tagRating", tagRating);
 		});
 
 		res.send('THIS WORKS!!');

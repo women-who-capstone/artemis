@@ -7,7 +7,6 @@ import PauseIcon from '@material-ui/icons/Pause';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import BookmarkOutlinedIcon from '@material-ui/icons/BookmarkBorderOutlined';
 import Bookmark from '@material-ui/icons/Bookmark';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 import VolumeOff from '@material-ui/icons/VolumeOff';
@@ -28,8 +27,7 @@ class AudioPlayer extends Component {
 			audioVolume: 0.5,
 			isBookmark: false,
 			liked: false,
-			disliked: false,
-			episode: {}
+			disliked: false
 			// episode: {}, // Redux
 			// epTags: [],
 			// chanTags: []
@@ -172,35 +170,31 @@ class AudioPlayer extends Component {
 					<SkipNextIcon />
 				</IconButton>
 				<IconButton>
-					{this.state.liked ? (
-						<ThumbUpIcon onClick={this.like} className="material-icons orange600" />
-					) : (
-						<ThumbUpIcon onClick={this.like} />
-					)}
+					<ThumbUpIcon
+						onClick={this.like}
+						className={this.state.liked ? 'material-icons orange600' : 'empty'}
+					/>
 				</IconButton>
 				<IconButton>
-					{this.state.disliked ? (
-						<ThumbDownIcon onClick={this.dislike} className="material-icons orange600" />
-					) : (
-						<ThumbDownIcon onClick={this.dislike} />
-					)}
+					<ThumbDownIcon
+						onClick={this.dislike}
+						className={this.state.disliked ? 'material-icons orange600' : 'empty'}
+					/>
 				</IconButton>
 				<IconButton>
-					{this.state.isBookmark ? (
-						<Bookmark onClick={this.bookmark} className="material-icons orange600" />
-					) : (
-						<Bookmark onClick={this.bookmark} />
-					)}
+					<Bookmark
+						onClick={this.bookmark}
+						className={this.state.isBookmark ? 'material-icons orange600' : 'empty'}
+					/>
 				</IconButton>
-				{this.state.unmute ? (
-					<IconButton>
+				<IconButton>
+					{this.state.unmute ? (
 						<VolumeUp onClick={this.handleMute} />
-					</IconButton>
-				) : (
-					<IconButton>
+					) : (
 						<VolumeOff onClick={this.handleMute} />
-					</IconButton>
-				)}
+					)}
+				</IconButton>
+
 				<SoundVolume handleVolumeChange={this.handleVolumeChange} audioVolume={this.state.audioVolume} />
 				<div style={{ display: 'flex' }}>
 					<div style={{ flexGrow: '35' }}>

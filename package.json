@@ -9,18 +9,18 @@
 		"@material-ui/core": "^3.1.1",
 		"@material-ui/icons": "^3.0.1",
 		"@material-ui/lab": "^3.0.0-alpha.17",
-		"algorithmia": "^0.3.10",
+
 		"autosuggest-highlight": "^3.1.1",
 		"axios": "^0.18.0",
 		"body-parser": "^1.18.3",
 		"connect-session-sequelize": "^5.2.2",
-		"connect-timeout": "^1.9.0",
 		"csv-parse": "^3.1.2",
 		"express": "^4.16.3",
 		"express-session": "^1.15.6",
 		"fast-csv": "^2.4.1",
 		"history": "^4.7.2",
 		"material-ui-icons": "^1.0.0-beta.36",
+		"material-ui-image": "^3.0.1",
 		"morgan": "^1.9.1",
 		"natural": "^0.6.1",
 		"passport": "^0.4.0",
@@ -39,9 +39,8 @@
 		"redux-thunk": "^2.3.0",
 		"sequelize": "^4.39.0",
 		"stopword": "^0.1.13",
-		"stopwords": "0.0.9",
-		"unirest": "^0.5.1",
-		"wordpos": "^1.2.0"
+
+		"unirest": "^0.5.1"
 	},
 	"scripts": {
 		"build-client": "webpack",

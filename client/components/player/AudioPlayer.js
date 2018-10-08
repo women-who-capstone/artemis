@@ -187,6 +187,7 @@ class AudioPlayer extends Component {
 						className={this.state.isBookmark ? 'material-icons orange600' : 'empty'}
 					/>
 				</IconButton>
+
 				<IconButton>
 					{this.state.unmute ? (
 						<VolumeUp onClick={this.handleMute} />
@@ -196,6 +197,7 @@ class AudioPlayer extends Component {
 				</IconButton>
 
 				<SoundVolume handleVolumeChange={this.handleVolumeChange} audioVolume={this.state.audioVolume} />
+
 				<div style={{ display: 'flex' }}>
 					<div style={{ flexGrow: '35' }}>
 						<input

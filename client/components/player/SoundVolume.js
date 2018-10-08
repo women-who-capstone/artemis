@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 
 const styles = {
 	container: {
-		width: '15%',
+		width: '130px',
 		font: '10px',
-		position: 'absolute',
-		left: '25%',
-		bottom: '35%',
+		//position: 'relative',
+		//left: '25%',
+		//bottom: '35%',
 
-		display: 'table-cell',
-		verticalAlign: 'middle'
+		display: 'inline-flex',
+		//verticalAlign: 'middle'
 	},
-	inputy: { verticalAlign: 'baseline' }
+	//inputy: { verticalAlign: 'baseline' }
 };
 
 class SoundVolume extends Component {

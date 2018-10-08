@@ -2402,17 +2402,15 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 var styles = {
   container: {
-    width: '15%',
+    width: '130px',
     font: '10px',
-    position: 'absolute',
-    left: '25%',
-    bottom: '35%',
-    display: 'table-cell',
-    verticalAlign: 'middle'
-  },
-  inputy: {
-    verticalAlign: 'baseline'
-  }
+    //position: 'relative',
+    //left: '25%',
+    //bottom: '35%',
+    display: 'inline-flex' //verticalAlign: 'middle'
+
+  } //inputy: { verticalAlign: 'baseline' }
+
 };
 
 var SoundVolume =

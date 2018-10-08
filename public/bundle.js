@@ -1393,6 +1393,7 @@ function (_Component) {
   _createClass(Home, [{
     key: "render",
     value: function render() {
+      console.log('just to try');
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "homeDiv"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_AuthForm__WEBPACK_IMPORTED_MODULE_1__["Login"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_AuthForm__WEBPACK_IMPORTED_MODULE_1__["Signup"], null));

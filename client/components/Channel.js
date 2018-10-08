@@ -202,6 +202,7 @@ class SingleChannel extends React.Component {
     this.setState({
       episodeQueue: [...this.state.episodeQueue, newEpisode]
     })
+    console.log('queue', this.state.episodeQueue)
   }
 
   getEpisodeFromQueue() {

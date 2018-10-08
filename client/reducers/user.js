@@ -39,8 +39,13 @@ export const auth = (email, password, method) => async (dispatch) => {
 	}
 
 	try {
+		console.log('AUTH USER', res.data);
 		dispatch(gotUser(res.data));
-		history.push('/home');
+		if (method === 'signup') {
+			history.push('/createchannel');
+		} else {
+			history.push('/allchannels');
+		}
 	} catch (dispatchOrHistoryErr) {
 		console.error(dispatchOrHistoryErr);
 	}

@@ -2988,8 +2988,14 @@ var auth = function auth(email, password, method) {
 
               case 9:
                 try {
+                  console.log('AUTH USER', res.data);
                   dispatch(gotUser(res.data));
-                  _history__WEBPACK_IMPORTED_MODULE_1__["default"].push('/home');
+
+                  if (method === 'signup') {
+                    _history__WEBPACK_IMPORTED_MODULE_1__["default"].push('/createchannel');
+                  } else {
+                    _history__WEBPACK_IMPORTED_MODULE_1__["default"].push('/allchannels');
+                  }
                 } catch (dispatchOrHistoryErr) {
                   console.error(dispatchOrHistoryErr);
                 }

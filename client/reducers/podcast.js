@@ -153,7 +153,7 @@ export default function(state = initState, action) {
         ...state,
         playedEpisodes: {
           ...state.playedEpisodes,
-          [action.episode.id]: true
+          [action.episodeId]: true
         }
       }
     case SET_RECOMMENDED_EPISODES:

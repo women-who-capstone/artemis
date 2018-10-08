@@ -159,7 +159,7 @@ class SingleChannel extends React.Component {
 
       counter++;
       if (counter > 25) {
-        this.props.fetchCategoryPodcastsEpisodeData()
+        this.getGenrePodcasts();
         return episode
       }
     }
@@ -170,7 +170,7 @@ class SingleChannel extends React.Component {
     if (episode === undefined) {
       return false;
     }
-    if (this.props.playedEpisodes[episode.id]) {
+    if (this.props.playedEpisodes[episode.episodeId]) {
       return false;
     }
     return true;
@@ -202,7 +202,6 @@ class SingleChannel extends React.Component {
     this.setState({
       episodeQueue: [...this.state.episodeQueue, newEpisode]
     })
-    console.log('queue', this.state.episodeQueue)
   }
 
   getEpisodeFromQueue() {

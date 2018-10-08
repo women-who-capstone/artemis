@@ -179,16 +179,15 @@ class SingleChannel extends React.Component {
 
   async handleSkip() {
     //add episode that was playing before skip to played episodes
-    const episodeThatJustEnded = this.state.episode
+    const episodeSkipped = this.state.episode
     const channelId = this.props.match.params.channelId
-    await this.props.addPlayedEpisode(episodeThatJustEnded, channelId)
+    await this.props.addPlayedEpisode(episodeSkipped, channelId)
 
     //get new episode
     const newEpisode = this.getEpisodeFromQueue();
     this.setState({
       episode: newEpisode
     });
-    //add current episode to played episode
   }
 
   render() {

@@ -67,7 +67,7 @@ const AuthForm = props => {
       />
       <Button
         variant="outlined"
-        color="secondary"
+        color="primary"
         className={classes.button}
         type="submit"
         name=""

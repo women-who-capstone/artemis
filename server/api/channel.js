@@ -106,7 +106,7 @@ router.put("/:id", async (req, res, next) => {
       ]
     });
     const newVectorValue = new ChannelVector(channel.channelTags);
-    console.log("newvector", newVectorValue.vector);
+    // console.log("newvector", newVectorValue.vector);
     const updatedChannel = await Channel.update(
       { vector: newVectorValue },
       {
@@ -142,7 +142,7 @@ router.put("/:id/tags", async (req, res, next) => {
     const tags = req.body.tags;
     const tagNames = tags.map(tag => tag.name);
     let chan = await Channel.findById(id);
-    console.log("from PUT tags API");
+    // console.log("from PUT tags API");
     if (method === "like") {
       chan.incrementScore(tagNames);
     }

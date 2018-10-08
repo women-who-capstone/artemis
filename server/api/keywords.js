@@ -9,7 +9,7 @@ const sw = require("stopword");
 var WordPOS = require("wordpos");
 let wordpos = new WordPOS({ stopwords: true });
 
-var natural = require('natural');
+var natural = require("natural");
 var TfIdf = natural.TfIdf;
 var tfidf = new TfIdf();
 
@@ -686,7 +686,7 @@ us`;
 const myStopwords = string.split("\n");
 
 function exclude(text) {
-  console.log(text.filter(word => !myStopwords.includes(word)));
+  return text.filter(word => !myStopwords.includes(word));
 }
 
 console.log("length of des", descriptions.length);

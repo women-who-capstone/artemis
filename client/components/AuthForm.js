@@ -1,25 +1,27 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import { connect } from "react-redux";
-import classNames from "classnames";
-import { auth } from "../reducers/user";
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
+import classNames from 'classnames';
+import { auth } from '../reducers/user';
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
+    width: '100px'
   },
   input: {
-    display: "none"
+    display: 'none'
   },
   root: {
     flexGrow: 1
   },
   container: {
-    display: "flex",
-    flexWrap: "wrap"
+    display: 'flex',
+    flexWrap: 'no-wrap',
+    alignItems: 'baseline'
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -34,10 +36,10 @@ const styles = theme => ({
 });
 
 const AuthForm = props => {
-  const { name, displayName, handleSubmit, error } = props;
+  const { name, displayName, handleSubmit, error, classes } = props;
   return (
     <form
-      className={styles.container}
+      className={classes.container}
       autoComplete="off"
       onSubmit={handleSubmit}
       name={name}
@@ -46,7 +48,7 @@ const AuthForm = props => {
         required
         id="outlined-email-input"
         label="Email"
-        className={styles.textField}
+        className={classes.textField}
         type="email"
         name="email"
         autoComplete="email"
@@ -57,7 +59,7 @@ const AuthForm = props => {
         required
         id="outlined-password-input"
         label="Password"
-        className={styles.textField}
+        className={classes.textField}
         type="password"
         name="password"
         autoComplete="current-password"
@@ -66,8 +68,8 @@ const AuthForm = props => {
       />
       <Button
         variant="outlined"
-        color="secondary"
-        className={styles.button}
+        color="primary"
+        className={classes.button}
         type="submit"
         name=""
       >
@@ -80,16 +82,16 @@ const AuthForm = props => {
 
 const mapLogin = state => {
   return {
-    name: "login",
-    displayName: "Login",
+    name: 'login',
+    displayName: 'Login',
     error: state.user.error
   };
 };
 
 const mapSignup = state => {
   return {
-    name: "signup",
-    displayName: "Sign Up",
+    name: 'signup',
+    displayName: 'Sign Up',
     error: state.user.error
   };
 };

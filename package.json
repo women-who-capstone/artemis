@@ -16,6 +16,8 @@
 		"connect-session-sequelize": "^5.2.2",
 		"connect-timeout": "^1.9.0",
 		"csv-parse": "^3.1.2",
+		"eslint": "^5.6.1",
+		"eslint-config-fullstack": "^6.0.0",
 		"express": "^4.16.3",
 		"express-session": "^1.15.6",
 		"fast-csv": "^2.4.1",

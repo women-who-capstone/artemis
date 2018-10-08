@@ -24,6 +24,7 @@ class AudioPlayer extends Component {
     };
     this.play = this.play.bind(this);
     this.pause = this.pause.bind(this);
+    this.skip = this.skip.bind(this)
     this.handleSliderChange = this.handleSliderChange.bind(this);
     this.bookmark = this.bookmark.bind(this);
     this.next = this.next.bind(this);
@@ -31,19 +32,34 @@ class AudioPlayer extends Component {
     this.dislike = this.dislike.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     // FIX shouldn't be async
     try {
-      episodeAudio.src = await this.props.audio;
-      episodeAudio.preload = 'metadata';
-      episodeAudio.addEventListener('loadedmetadata', () => {
+      episodeAudio.src = this.props.audio;
+      episodeAudio.preload = "metadata";
+
+      episodeAudio.addEventListener("loadedmetadata", () => {
         this.setState({
           audioLength: episodeAudio.duration
         });
       });
+      episodeAudio.addEventListener('ended', () => {
+        this.props.handleEpisodeEnd()
+      })
     } catch (error) {
       throw new Error('There was an audio error');
     }
+  }
+
+  componentWillUnmount() {
+     episodeAudio.removeEventListener("loadedmetadata", () => {
+        this.setState({
+          audioLength: episodeAudio.duration
+        });
+      });
+      episodeAudio.removeEventListener('ended', () => {
+        this.props.handleEpisodeEnd()
+      })
   }
 
   handleSliderChange(event) {
@@ -69,6 +85,11 @@ class AudioPlayer extends Component {
     this.setState({
       isPlaying: false
     });
+  }
+
+  skip() {
+    this.pause()
+    this.props.handleSkip()
   }
 
   async bookmark() {
@@ -122,8 +143,9 @@ class AudioPlayer extends Component {
             <PlayArrowIcon onClick={this.play} />
           </IconButton>
         )}
-        <IconButton>
-          <SkipNextIcon onClick={this.next} />
+
+        <IconButton onClick={this.skip}>
+          <SkipNextIcon />
         </IconButton>
         <IconButton>
           <ThumbUpIcon onClick={this.like} />

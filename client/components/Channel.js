@@ -170,6 +170,7 @@ class SingleChannel extends React.Component {
 
       counter++;
       if (counter > 25) {
+        console.log('counter', counter)
         this.getGenrePodcasts();
         return episode
       }
@@ -182,7 +183,8 @@ class SingleChannel extends React.Component {
     if (episode === undefined) {
       return false;
     }
-    if (this.props.playedEpisodes[episode.title]) {
+
+    if (this.props.playedEpisodes[episode.title] !== undefined) {
       return false;
     }
 
@@ -203,20 +205,32 @@ class SingleChannel extends React.Component {
   getEpisodeQueue(numDesiredEpisodes) {
 
     const queue = [];
+    let newEpisode
     const mostRecentlyPlayedEpisode = this.state.mostRecentlyPlayedEpisode
     if (mostRecentlyPlayedEpisode) {
       queue.push(this.state.mostRecentlyPlayedEpisode)
     }
+    const hasSameTitle = episode => episode.title === newEpisode.title
 
-    for (let i = 0; i < numDesiredEpisodes; i++) {
-      queue.push(this.getNewEpisode());
+    while (queue.length < numDesiredEpisodes) {
+      newEpisode = this.getNewEpisode()
+      let sameTitles = queue.filter(hasSameTitle)
+      if (sameTitles.length === 0) {
+        console.log('sameTitles', sameTitles)
+        queue.push(this.getNewEpisode());
+      }
     }
 
     return queue;
   }
 
   addNewEpisodeToQueue() {
-    const newEpisode = this.getNewEpisode()
+    let newEpisode = this.getNewEpisode()
+    const hasSameTitle = episode => episode.title === newEpisode.title
+    while (this.state.episodeQueue.filter(hasSameTitle).length > 0) {
+      newEpisode = this.getNewEpisode()
+    }
+
     this.setState({
       episodeQueue: [...this.state.episodeQueue, newEpisode]
     })

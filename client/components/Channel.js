@@ -169,7 +169,7 @@ class SingleChannel extends React.Component {
       episode = podcast.episodes[episodeIndex];
 
       counter++;
-      if (counter > 25) {
+      if (counter > 50) {
         console.log('counter', counter)
         this.getGenrePodcasts();
         return episode
@@ -216,7 +216,6 @@ class SingleChannel extends React.Component {
       newEpisode = this.getNewEpisode()
       let sameTitles = queue.filter(hasSameTitle)
       if (sameTitles.length === 0) {
-        console.log('sameTitles', sameTitles)
         queue.push(this.getNewEpisode());
       }
     }

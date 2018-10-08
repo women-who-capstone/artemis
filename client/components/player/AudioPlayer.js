@@ -49,6 +49,11 @@ class AudioPlayer extends Component {
       episodeAudio.addEventListener('error', () => {
         this.props.handleEpisodeEnd()
       })
+      episodeAudio.addEventListener('timeupdate', () => {
+        this.setState({
+          audioTimeElapsed: episodeAudio.currentTime
+        })
+      })
     } catch (error) {
       throw new Error('There was an audio error');
     }
@@ -138,6 +143,7 @@ class AudioPlayer extends Component {
   }
 
   render() {
+    console.log(this.state.audioTimeElapsed)
     return (
       <div>
         {this.state.isPlaying ? (

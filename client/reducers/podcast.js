@@ -113,7 +113,7 @@ export const addPlayedEpisode = (episode, channelId) => {
     try {
       let req = await axios.post("/api/episode", episode);
       let newEpisode = req.data;
-      console.log('new episode id', newEpisode)
+
       let playedEpisodeObj = {}
       playedEpisodeObj[newEpisode.title] = newEpisode
       dispatch(setAddedPlayedEpisode(playedEpisodeObj))

@@ -12,9 +12,10 @@ class Bookmark extends React.Component {
   }
 
   async componentDidMount() {
+    console.log("hi");
     let res = await axios.get(`/api/bookmarks`);
     let bookmarkEpisodes = res.data;
-    // console.log("HERE", bookmarkEpisodes);
+    console.log("HERE", bookmarkEpisodes);
     this.setState({
       bookmarks: bookmarkEpisodes
     });

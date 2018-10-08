@@ -686,7 +686,7 @@ us`;
 const myStopwords = string.split("\n");
 
 function exclude(text) {
-  console.log(text.filter(word => !myStopwords.includes(word)));
+  return text.filter(word => !myStopwords.includes(word));
 }
 
 console.log("length of des", descriptions.length);

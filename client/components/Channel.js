@@ -104,6 +104,11 @@ class SingleChannel extends React.Component {
     await this.props.fetchPlayedEpisodes(channelId);
     //await this.props.fetchRecommendedEpisodes(channelId)
 
+    const mostRecentlyPlayedEpisode = this.extractMostRecentlyPlayedEpisode()
+     this.setState({
+      mostRecentlyPlayedEpisode
+    });
+
     const episodeQueue = this.getEpisodeQueue(5);
     this.setState({
       episodeQueue
@@ -114,6 +119,7 @@ class SingleChannel extends React.Component {
       episode: newEpisode,
       unfinishedEpisode: newEpisode
     });
+    await this.props.addPlayedEpisode(newEpisode, channelId)
   }
 
   async getGenrePodcasts() {
@@ -131,14 +137,19 @@ class SingleChannel extends React.Component {
   }
 
   extractMostRecentlyPlayedEpisode() {
-    let episodeDates = this.state.playedEpisodes.map(episode =>
+    let episodes = Object.keys(this.props.playedEpisodes).map(key => {
+      return this.props.playedEpisodes[key]
+    })
+
+    let episodeDates = episodes.map(episode =>
       new Date(episode.date).getTime()
     );
 
     let currentEpisodeDate = Math.max(...episodeDates);
-    let currentEpisode = this.props.playedEpisodes.find(
+    let currentEpisode = episodes.find(
       episode => new Date(episode.date).getTime() === currentEpisodeDate
     );
+    return currentEpisode
   }
 
   getNewEpisodeFromRecommendedEpisodes() {
@@ -171,7 +182,7 @@ class SingleChannel extends React.Component {
     if (episode === undefined) {
       return false;
     }
-    if (this.props.playedEpisodes[episode.id]) {
+    if (this.props.playedEpisodes[episode.title]) {
       return false;
     }
 
@@ -190,7 +201,12 @@ class SingleChannel extends React.Component {
   }
 
   getEpisodeQueue(numDesiredEpisodes) {
+
     const queue = [];
+    const mostRecentlyPlayedEpisode = this.state.mostRecentlyPlayedEpisode
+    if (mostRecentlyPlayedEpisode) {
+      queue.push(this.state.mostRecentlyPlayedEpisode)
+    }
 
     for (let i = 0; i < numDesiredEpisodes; i++) {
       queue.push(this.getNewEpisode());
@@ -219,10 +235,10 @@ class SingleChannel extends React.Component {
     //add episode that just ended to played episodes
     const episodeThatJustEnded = this.state.episode
     const channelId = this.props.match.params.channelId
-    await this.props.addPlayedEpisode(episodeThatJustEnded, channelId)
 
     //get new episode from queue
     const newEpisode = this.getEpisodeFromQueue();
+    await this.props.addPlayedEpisode(newEpisode, channelId)
     this.setState({
       episode: newEpisode
     });
@@ -233,10 +249,10 @@ class SingleChannel extends React.Component {
     //add episode that was playing before skip to played episodes
     const episodeSkipped = this.state.episode
     const channelId = this.props.match.params.channelId
-    await this.props.addPlayedEpisode(episodeSkipped, channelId)
 
     //get new episode
     const newEpisode = this.getEpisodeFromQueue();
+    await this.props.addPlayedEpisode(newEpisode, channelId)
     this.setState({
       episode: newEpisode
     });

@@ -85,22 +85,29 @@ router.get('/channelepisode/:channelId', async (req, res, next) => {
 })
 
 router.post("/", async (req, res, next) => {
-  const episodeObj = {
-    title: req.body.title,
-    date: Date.now(),
-    imageURL: req.body.image,
-    audioURL: req.body.audio,
-    length: req.body.audio_length,
-    description: req.body.description
-  };
   try {
-    const episode = await Episode.create(episodeObj);
-    await ChannelEpisode.create({
-      episodeId: episode.id,
-      channelId: req.body.channelId
-    });
-    // console.log("this is assocition", episode);
-    res.status(200).send(episode);
+    if (req.body.createdAt) {
+      const existingEpisode = await Episode.findById(req.body.id)
+      existingEpisode.date = Date.now()
+      await existingEpisode.save()
+      res.send(existingEpisode)
+    } else {
+      const episodeObj = {
+        title: req.body.title,
+        date: Date.now(),
+        imageURL: req.body.image,
+        audioURL: req.body.audio,
+        length: req.body.audio_length,
+        description: req.body.description
+      }
+      const episode = await Episode.create(episodeObj);
+      await ChannelEpisode.create({
+        episodeId: episode.id,
+        channelId: req.body.channelId
+      });
+      // console.log("this is assocition", episode);
+      res.status(200).send(episode);
+    }
   } catch (err) {
     next(err);
   }

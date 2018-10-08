@@ -101,7 +101,7 @@ export const fetchPlayedEpisodes = channelId => {
   return async dispatch => {
     let res = await axios.get(`/api/channel?id=${channelId}`);
     let playedEpisodes = res.data[0].episodes;
-
+    console.log('played episodes', playedEpisodes)
     const episodesObject = convertPlayedEpisodesArrayToObject(playedEpisodes);
     dispatch(setPlayedEpisodes(episodesObject))
   };
@@ -113,6 +113,7 @@ export const addPlayedEpisode = (episode, channelId) => {
     try {
       let req = await axios.post("/api/episode", episode);
       let newEpisode = req.data;
+      console.log('new episode id', newEpisode)
       dispatch(setAddedPlayedEpisode(newEpisode))
     } catch (error) {
       console.error(error)

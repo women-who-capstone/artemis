@@ -33,6 +33,9 @@ const Episode = db.define("episode", {
   },
   length: {
     type: Sequelize.INTEGER
+  },
+  description: {
+    type: Sequelize.TEXT
   }
 });
 

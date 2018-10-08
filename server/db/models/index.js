@@ -18,11 +18,13 @@ const Bookmark = require("./bookmark");
 Channel.belongsToMany(Tag, { through: ChannelTag });
 Channel.hasMany(ChannelTag);
 Tag.belongsToMany(Channel, { through: ChannelTag });
+Tag.hasMany(ChannelTag);
 
 //Genre-Channel Model created to associate Channel Ids with Genre Ids (score as already set attribute)
 Channel.belongsToMany(Genre, { through: ChannelGenre });
 Channel.hasMany(ChannelGenre);
 Genre.belongsToMany(Channel, { through: ChannelGenre });
+Genre.hasMany(ChannelGenre);
 
 //Podacast-Channel Model created to associate Channel Ids with Podcast Ids (score as already set attribute)
 Channel.belongsToMany(Podcast, { through: ChannelPodcast });
@@ -42,9 +44,9 @@ Channel.hasMany(ChannelEpisode);
 // ChannelEpisode.hasMany(Episode);
 
 //Bookmarks CREATES new own table to associates User Ids with Episode Ids
-User.belongsToMany(Episode, { through: "Bookmark" });
+User.belongsToMany(Episode, { through: Bookmark });
 User.hasMany(Bookmark);
-Episode.belongsToMany(User, { through: "Bookmark" });
+Episode.belongsToMany(User, { through: Bookmark });
 Episode.hasMany(Bookmark);
 // one to many relationships
 

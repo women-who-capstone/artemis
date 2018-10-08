@@ -7,7 +7,7 @@ const User = db.model('user')
 const { ChannelVector } = require('./utilities')
 const Recommender = require('./collab')
 
-describe.only('Collab', () => {
+describe('Collab', () => {
   beforeEach(() => {
     return db.sync({force: true})
   })
@@ -88,7 +88,7 @@ describe.only('Collab', () => {
       })
     })
 
-    describe('getClosestNChannels', () => {
+    describe.only('getClosestNChannels', () => {
       it(`returns the n channels closest to the user's channel`, () => {
         const userChannel = {
           id: 1,

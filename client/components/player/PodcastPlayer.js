@@ -1,44 +1,46 @@
-import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
-import AudioPlayer from "./AudioPlayer";
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
+import CardActions from '@material-ui/core/CardActions';
+import AudioPlayer from './AudioPlayer';
 
 const styles = theme => ({
   card: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     // alignItems: "center",
-    maxWidth: "auto",
-    height: "80%"
+    maxWidth: 'auto',
+    height: '80%'
   },
   details: {
-    display: "flex",
-    flexDirection: "column"
+    display: 'flex',
+    flexDirection: 'column'
   },
   content: {
-    flex: "1 0 auto"
+    flex: '1 0 auto'
   },
   cover: {
-    display: "flex",
-    alignItems: "center",
-    width: "auto",
+    display: 'flex',
+    alignItems: 'center',
+    width: 'auto',
     height: 300,
-    maxWidth: "400px"
+    maxWidth: '400px'
   },
   actions: {
-    display: "block"
+    display: 'block'
   }
 });
 
 class PodcastPlayer extends Component {
   render() {
     // const { value } = this.state
+
     const { classes, handleEpisodeEnd, episodeQueue, handleSkip, episode } = this.props;
 
+    console.log('From PodcastPlayer', this.props.channelId);
     return (
       <div>
         <Card className={`${classes.card} `}>
@@ -57,6 +59,7 @@ class PodcastPlayer extends Component {
             <AudioPlayer
               audio={episode.audio ? episode.audio : episode.audioURL}
               episode={episode} episodeQueue={episodeQueue} handleSkip={handleSkip} handleEpisodeEnd={handleEpisodeEnd}
+              tags={this.props.tags}
             />
           </CardActions>
         </Card>

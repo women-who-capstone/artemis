@@ -1,7 +1,13 @@
 const router = require("express").Router();
 const unirest = require("unirest");
-const { Episode, ChannelEpisode, Channel } = require("../db/models");
-
+const {
+  Episode,
+  ChannelEpisode,
+  Channel,
+  ChannelTag
+} = require("../db/models");
+const Recommender = require("../../recommendations/collab");
+// const recommender = new Recommender();
 module.exports = router;
 
 router.get("/", async (req, res, next) => {
@@ -15,6 +21,34 @@ router.get("/", async (req, res, next) => {
       ]
     });
     res.status(200).send(episodes);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/next", async (req, res, next) => {
+  try {
+    const userChannel = await Channel.findById(req.query.channelId, {
+      include: [
+        { model: ChannelTag },
+        {
+          model: Episode,
+          through: ChannelEpisode
+        }
+      ]
+    });
+    const allChannels = await Channel.findAll({
+      include: [{ model: ChannelTag }]
+    });
+    const allOtherChannels = allChannels.filter(channel => {
+      // console.log("Channel.id", channel.id, "channelid", req.query.channelId);
+      return channel.id != req.query.channelId;
+    });
+    // console.log("ALL OTHER CHANNELS", allOtherChannels);
+    const recommender = new Recommender(userChannel, allOtherChannels);
+    // console.log(recommender);
+    const episode = await recommender.getRecommendedEpisode();
+    res.status(200).send(episode);
   } catch (err) {
     next(err);
   }
@@ -56,7 +90,8 @@ router.post("/", async (req, res, next) => {
     date: Date.now(),
     imageURL: req.body.image,
     audioURL: req.body.audio,
-    length: req.body.audio_length
+    length: req.body.audio_length,
+    description: req.body.description
   };
   try {
     const episode = await Episode.create(episodeObj);
@@ -65,6 +100,19 @@ router.post("/", async (req, res, next) => {
       channelId: req.body.channelId
     });
     // console.log("this is assocition", episode);
+    res.status(200).send(episode);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/nextEpisode", async (req, res, next) => {
+  try {
+    // console.log("QUERY", req.body);
+    const episode = await ChannelEpisode.create({
+      episodeId: req.body.episodeId,
+      channelId: req.body.channelId
+    });
     res.status(200).send(episode);
   } catch (err) {
     next(err);

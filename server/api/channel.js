@@ -121,4 +121,39 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
+router.get("/:id/tags", async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const tags = await ChannelTag.findAll({
+      where: {
+        channelId: id
+      }
+    });
+    res.status(200).send(tags);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put("/:id/tags", async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const method = req.body.method;
+    const tags = req.body.tags;
+    const tagNames = tags.map(tag => tag.name);
+    let chan = await Channel.findById(id);
+    console.log("from PUT tags API");
+    if (method === "like") {
+      chan.incrementScore(tagNames);
+    }
+    if (method === "dislike") {
+      chan.decrementScore(tagNames);
+    }
+
+    res.status(200).send();
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

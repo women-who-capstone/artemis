@@ -105,6 +105,7 @@ class SingleChannel extends React.Component {
           episode={this.state.episode}
           channelId={this.props.match.params.channelId}
           setNewEpisode={this.setNewEpisode}
+          tags={this.state.tags}
         />
       );
     }

@@ -6,6 +6,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import AudioPlayer from "./AudioPlayer";
+import SoundVolume from "./SoundVolume";
 
 const styles = theme => ({
   card: {
@@ -60,6 +61,7 @@ class PodcastPlayer extends Component {
               episode={episode}
               channelId={this.props.channelId}
               setNewEpisode={this.props.setNewEpisode}
+              tags={this.props.tags}
             />
           </CardActions>
         </Card>

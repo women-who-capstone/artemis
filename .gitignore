@@ -8,7 +8,9 @@
 
 # production
 /build
-/public
+/public/bundle.js
+/public/bundle.js.map
+
 
 # misc
 .DS_Store

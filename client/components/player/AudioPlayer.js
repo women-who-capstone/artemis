@@ -38,6 +38,7 @@ class AudioPlayer extends Component {
     this.like = this.like.bind(this);
     this.dislike = this.dislike.bind(this);
     this.handleMute = this.handleMute.bind(this);
+    this.skip = this.skip.bind(this);
     this.handleSliderChange = this.handleSliderChange.bind(this);
     this.bookmark = this.bookmark.bind(this);
     this.handleVolumeChange = this.handleVolumeChange.bind(this);
@@ -55,9 +56,34 @@ class AudioPlayer extends Component {
           audioLength: episodeAudio.duration
         });
       });
+      episodeAudio.addEventListener("ended", () => {
+        this.props.handleEpisodeEnd();
+      });
+      episodeAudio.addEventListener("error", () => {
+        this.props.handleEpisodeEnd();
+      });
+      episodeAudio.addEventListener("timeupdate", () => {
+        this.setState({
+          audioTimeElapsed: episodeAudio.currentTime
+        });
+      });
     } catch (error) {
       throw new Error("There was an audio error");
     }
+  }
+
+  componentWillUnmount() {
+    episodeAudio.removeEventListener("loadedmetadata", () => {
+      this.setState({
+        audioLength: episodeAudio.duration
+      });
+    });
+    episodeAudio.removeEventListener("ended", () => {
+      this.props.handleEpisodeEnd();
+    });
+    episodeAudio.removeEventListener("error", () => {
+      this.props.handleEpisodeEnd();
+    });
   }
 
   handleSliderChange(event) {
@@ -115,12 +141,22 @@ class AudioPlayer extends Component {
     }
   }
 
+  skip() {
+    this.pause();
+    this.props.handleSkip();
+  }
+
+  async bookmark() {
+    let episode = this.props.episode;
+    await axios.post("/api/bookmarks", { episodeId: episode.id }); //FIX use Redux
+  }
+
   like() {
     let isLiked = this.state.liked;
     let episode = this.props.episode;
     let epTags = this.props.tags;
     console.log(episode, epTags);
-    this.props.updatedActiveChannelTags(this.props.channelId, "like", epTags);
+    this.props.updatedActiveChannelTags(episode.channelId, "like", epTags);
     this.setState({
       liked: !isLiked,
       disliked: false
@@ -131,11 +167,7 @@ class AudioPlayer extends Component {
     let isDisliked = this.state.disliked;
     let episode = this.props.episode;
     let epTags = this.props.tags;
-    this.props.updatedActiveChannelTags(
-      episode.channelEpisode.channelId,
-      "dislike",
-      epTags
-    );
+    this.props.updatedActiveChannelTags(episode.channelId, "dislike", epTags);
     this.setState({
       disliked: !isDisliked,
       liked: false
@@ -185,8 +217,9 @@ class AudioPlayer extends Component {
             <PlayArrowIcon onClick={this.play} />
           </IconButton>
         )}
-        <IconButton>
-          <SkipNextIcon onClick={this.next} />
+
+        <IconButton onClick={this.skip}>
+          <SkipNextIcon />
         </IconButton>
         <IconButton>
           <ThumbUpIcon

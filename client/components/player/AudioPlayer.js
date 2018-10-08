@@ -143,7 +143,6 @@ class AudioPlayer extends Component {
   }
 
   render() {
-    console.log(this.state.audioTimeElapsed)
     return (
       <div>
         {this.state.isPlaying ? (

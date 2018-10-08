@@ -8,7 +8,7 @@ export const getRandomIndex = length => {
 export const convertPlayedEpisodesArrayToObject = playedEpisodesArr => {
   let playedEpisodes = {}
   playedEpisodesArr.forEach(episode => {
-    playedEpisodes[episode.id] = true
+    playedEpisodes[episode.episodeId] = true
   })
   return playedEpisodes
 }

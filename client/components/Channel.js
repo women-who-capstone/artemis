@@ -167,12 +167,14 @@ class SingleChannel extends React.Component {
   }
 
   episodeHasNotBeenPlayed(episode) {
+
     if (episode === undefined) {
       return false;
     }
-    if (this.props.playedEpisodes[episode.episodeId]) {
+    if (this.props.playedEpisodes[episode.id]) {
       return false;
     }
+
     return true;
   }
 

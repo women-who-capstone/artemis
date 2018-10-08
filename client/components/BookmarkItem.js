@@ -2,9 +2,21 @@ import React from 'react';
 import { Redirect } from 'react-router';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import PodcastPlayer from './player/PodcastPlayer';
-
 import axios from 'axios';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
+const styles = (theme) => ({
+	root: {
+		flexGrow: 1
+	},
+	paper: {
+		padding: theme.spacing.unit * 2,
+		textAlign: 'center',
+		color: theme.palette.text.secondary
+	}
+});
 
 class BookmarkItem extends React.Component {
 	constructor() {
@@ -29,7 +41,16 @@ class BookmarkItem extends React.Component {
 		});
 	}
 	render() {
+		const { classes } = this.props;
 		const singleEp = this.state.singleEpisode;
+		// let epTitle = singleEp.title;
+		// let tuty = '';
+		// if (epTitle.indexOf(':') > -1) {
+		// 	tuty = epTitle.slice(epTitle.indexOf(':') + 2);
+		// } else {
+		// 	tuty = epTitle;
+		// }
+
 		if (this.state.cliked) {
 			//return <PodcastPlayer episode={singleEp} />;
 			return (
@@ -45,14 +66,22 @@ class BookmarkItem extends React.Component {
 		} else {
 			return (
 				<div onClick={this.playBookmark}>
-					<ListItem>
-						<ListItemText>{singleEp.title}</ListItemText>
-					</ListItem>
-					<img src={singleEp.imageURL} style={{ alignSelf: 'center' }} />
+					<div className={classes.root}>
+						<Grid container spacing={8}>
+							<Grid item xs={4}>
+								<Paper className={classes.paper}>
+									<ListItem>
+										<ListItemText>{singleEp.title}</ListItemText>
+									</ListItem>
+									<img src={singleEp.imageURL} style={{ alignSelf: 'center' }} />
+								</Paper>
+							</Grid>
+						</Grid>
+					</div>
 				</div>
 			);
 		}
 	}
 }
 
-export default BookmarkItem;
+export default withStyles(styles)(BookmarkItem);

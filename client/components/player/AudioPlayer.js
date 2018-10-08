@@ -26,6 +26,7 @@ class AudioPlayer extends Component {
     this.pause = this.pause.bind(this);
     this.handleSliderChange = this.handleSliderChange.bind(this);
     this.bookmark = this.bookmark.bind(this);
+    this.next = this.next.bind(this);
     this.like = this.like.bind(this);
     this.dislike = this.dislike.bind(this);
   }
@@ -98,6 +99,17 @@ class AudioPlayer extends Component {
     );
   }
 
+  async next() {
+    let channelId = this.props.channelId;
+    let res = await axios.get("/api/episode/next", {
+      params: {
+        channelId: channelId
+      }
+    });
+    let nextEpisode = res.data;
+    this.props.setNewEpisode(nextEpisode);
+  }
+
   render() {
     return (
       <div>
@@ -111,7 +123,7 @@ class AudioPlayer extends Component {
           </IconButton>
         )}
         <IconButton>
-          <SkipNextIcon />
+          <SkipNextIcon onClick={this.next} />
         </IconButton>
         <IconButton>
           <ThumbUpIcon onClick={this.like} />

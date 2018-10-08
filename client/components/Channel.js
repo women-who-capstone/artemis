@@ -13,7 +13,8 @@ import {
   setPodcastList,
   fetchCategoryPodcastsEpisodeData,
   fetchPlayedEpisodes,
-  addPlayedEpisode
+  addPlayedEpisode,
+  fetchRecommendedEpisodes
 } from "../reducers/podcast";
 import genres from "../genreList";
 
@@ -49,8 +50,10 @@ class SingleChannel extends React.Component {
     //get genre id
     //get episodes
     //${this.props.match.params.id}
+    const { channelId } = this.props.match.params
     await this.getGenrePodcasts();
-    await this.props.fetchPlayedEpisodes(this.props.match.params.channelId);
+    await this.props.fetchPlayedEpisodes(channelId);
+    //await this.props.fetchRecommendedEpisodes(channelId)
 
     const episodeQueue = this.getEpisodeQueue(5);
     this.setState({
@@ -99,6 +102,10 @@ class SingleChannel extends React.Component {
     );
   }
 
+  getNewEpisodeFromRecommendedEpisodes() {
+
+  }
+
   getNewEpisodeFromCategoryPodcast() {
     const { bestCategoryPodcasts } = this.props;
     let counter = 0;
@@ -113,8 +120,8 @@ class SingleChannel extends React.Component {
 
       counter++;
       if (counter > 25) {
-        break;
-        //we should get new episodes at this point
+        this.props.fetchCategoryPodcastsEpisodeData()
+        return episode
       }
     }
     return episode;
@@ -132,13 +139,12 @@ class SingleChannel extends React.Component {
 
   getNewEpisode() {
     let newEpisode;
-    if (this.props.recommendedEpisodes.length === 0) {
+    if (!this.props.recommendedEpisodes.length) {
       newEpisode = this.getNewEpisodeFromCategoryPodcast();
-      //this.setTags()
-    } else if (this.state.unfinishedEpisode.id) {
-      newEpisode = this.extractMostRecentlyPlayedEpisode();
+    } else {
+      //gets new recommended episodes
+      //newEpisode = this.getNewEpisodeFromRecommendedEpisodes()
     }
-
     return newEpisode;
   }
 
@@ -161,16 +167,13 @@ class SingleChannel extends React.Component {
     return episode;
   }
 
-  handleEpisodeNearEnd() {
-    //add episode to queue
-  }
-
   async handleEpisodeEnd() {
     //add episode that just ended to played episodes
     const episodeThatJustEnded = this.state.episode
     const channelId = this.props.match.params.channelId
     await this.props.addPlayedEpisode(episodeThatJustEnded, channelId)
 
+    //get new episode from queue
     const newEpisode = this.getEpisodeFromQueue();
     this.setState({
       episode: newEpisode
@@ -219,12 +222,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // setSinglePodcast: podcast => dispatch(setSinglePodcast(podcast)),
-    // setPodcastList: podcasts => dispatch(setPodcastList(podcasts)),
     fetchCategoryPodcastsEpisodeData: podcasts =>
       dispatch(fetchCategoryPodcastsEpisodeData(podcasts)),
     fetchPlayedEpisodes: channelId => dispatch(fetchPlayedEpisodes(channelId)),
-    addPlayedEpisode: (episode, channelId) => dispatch(addPlayedEpisode(episode, channelId))
+    addPlayedEpisode: (episode, channelId) => dispatch(addPlayedEpisode(episode, channelId)),
+    //fetchRecommendedEpisodes: (channelId) => dispatch(fetchRecommendedEpisodes(channelId))
   };
 };
 

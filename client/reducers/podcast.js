@@ -11,6 +11,7 @@ const SET_BEST_CATEGORY_PODCASTS = "SET_BEST_CATEGORY_PODCASTS";
 const SET_CURRENT_EPISODE = "SET_CURRENT_EPISODE";
 const SET_PLAYED_EPISODES = "SET_PLAYED_EPISODES";
 const SET_ADDED_PLAYED_EPISODE = 'SET_ADDED_PLAYED_EPISODE'
+const SET_RECOMMENDED_EPISODES = 'SET_RECOMMENDED_EPISODES'
 // if (localStorage.getItem('podcastState') === null) {
 //     localStorage.setItem('podcastState', JSON.stringify({
 //     podcast: {},
@@ -48,6 +49,11 @@ export const setPlayedEpisodes = episodes => ({
 export const setAddedPlayedEpisode = episode => ({
   type: SET_ADDED_PLAYED_EPISODE,
   episode
+})
+
+export const setRecommendedEpisodes = episodes => ({
+  type: SET_RECOMMENDED_EPISODES,
+  episodes
 })
 
 // THUNK CREATORS
@@ -114,6 +120,10 @@ export const addPlayedEpisode = (episode, channelId) => {
   }
 }
 
+export const fetchRecommendedEpisodes = (channelId) => {
+
+}
+
 //REDUCER
 export default function(state = initState, action) {
   switch (action.type) {
@@ -145,6 +155,11 @@ export default function(state = initState, action) {
           ...state.playedEpisodes,
           [action.episode.id]: true
         }
+      }
+    case SET_RECOMMENDED_EPISODES:
+      return {
+        ...state,
+        recommendedEpisodes: action.episodes
       }
     default:
       return state;

@@ -71,26 +71,35 @@ router.get("/apiEpisode", async (req, res, next) => {
   }
 });
 
-router.get('/channelepisode/:channelId', async (req, res, next) => {
+router.get("/:episodeId", async (req, res, next) => {
+  try {
+    const singleEpisode = await Episode.findById(req.params.episodeId);
+    res.status(200).send(singleEpisode);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/channelepisode/:channelId", async (req, res, next) => {
   try {
     const channelEpisodes = await ChannelEpisode.findAll({
       where: {
         channelId: req.params.channelId
       }
-    })
-    res.send(channelEpisodes)
+    });
+    res.send(channelEpisodes);
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 
 router.post("/", async (req, res, next) => {
   try {
     if (req.body.createdAt) {
-      const existingEpisode = await Episode.findById(req.body.id)
-      existingEpisode.date = Date.now()
-      await existingEpisode.save()
-      res.send(existingEpisode)
+      const existingEpisode = await Episode.findById(req.body.id);
+      existingEpisode.date = Date.now();
+      await existingEpisode.save();
+      res.send(existingEpisode);
     } else {
       const episodeObj = {
         title: req.body.title,
@@ -99,7 +108,7 @@ router.post("/", async (req, res, next) => {
         audioURL: req.body.audio,
         length: req.body.audio_length,
         description: req.body.description
-      }
+      };
       const episode = await Episode.create(episodeObj);
       await ChannelEpisode.create({
         episodeId: episode.id,

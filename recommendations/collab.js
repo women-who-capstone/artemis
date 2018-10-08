@@ -47,12 +47,12 @@ class Recommender {
   async getRecommendedEpisode() {
     try {
       let playedEps = this.userChannel.episodes;
-      console.log("USERCHANEL EPISODES", playedEps);
+      // console.log("USERCHANEL EPISODES", playedEps);
       let episodeArray = [];
       for (let i = 0; i < playedEps.length; i++) {
         episodeArray.push(playedEps[i].id);
       }
-      console.log("EP ARRAY", episodeArray);
+      // console.log("EP ARRAY", episodeArray);
       const getter = new ChannelEpisodeGetter(
         this.getClosestNChannels(1)[0].id,
         episodeArray

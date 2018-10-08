@@ -46,6 +46,9 @@ class AudioPlayer extends Component {
       episodeAudio.addEventListener('ended', () => {
         this.props.handleEpisodeEnd()
       })
+      episodeAudio.addEventListener('error', () => {
+        this.props.handleEpisodeEnd()
+      })
     } catch (error) {
       throw new Error('There was an audio error');
     }
@@ -58,6 +61,9 @@ class AudioPlayer extends Component {
         });
       });
       episodeAudio.removeEventListener('ended', () => {
+        this.props.handleEpisodeEnd()
+      })
+      episodeAudio.removeEventListener('error', () => {
         this.props.handleEpisodeEnd()
       })
   }

@@ -11,6 +11,7 @@ class SingleChannel extends React.Component {
       episode: {},
       tags: [],
       vector: []
+      tags: []
     };
     this.setEpisode = this.setEpisode.bind(this);
     this.setTags = this.setTags.bind(this);
@@ -23,7 +24,7 @@ class SingleChannel extends React.Component {
     const res = await axios.get(`/api/episode/apiEpisode?id=${episodeId}`);
     const episode = res.data.episodes[0];
     episode.channelId = channelId;
-    let req = await axios.post("/api/episode", episode);
+    let req = await axios.post('/api/episode', episode);
     let newEpisode = req.data;
     this.setState({
       episode: newEpisode
@@ -31,6 +32,7 @@ class SingleChannel extends React.Component {
     this.setTags(newEpisode);
     this.props.setSinglePodcast({});
   };
+
 
   setNewEpisode = async function(episode) {
     let episodeId = episode.id;
@@ -78,7 +80,6 @@ class SingleChannel extends React.Component {
     const episodeId = await this.props.episodeId;
     if (episodeId !== undefined) {
       this.setEpisode(episodeId);
-      //this.setTags()
     } else {
       let res = await axios.get(
         `/api/channel?id=${this.props.match.params.channelId}`
@@ -86,8 +87,7 @@ class SingleChannel extends React.Component {
       let playedEpisodes = res.data[0].episodes;
       // console.log(playedEpisodes);
       let episodeDates = playedEpisodes.map(episode =>
-        new Date(episode.date).getTime()
-      );
+        new Date(episode.date).getTime());
       let currentEpisodeDate = Math.max(...episodeDates);
       let currentEpisode = playedEpisodes.find(
         episode => new Date(episode.date).getTime() === currentEpisodeDate
@@ -96,6 +96,7 @@ class SingleChannel extends React.Component {
         episode: currentEpisode
       });
     }
+    this.setTags(); //
   }
 
   render() {

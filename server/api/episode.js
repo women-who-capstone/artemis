@@ -29,7 +29,13 @@ router.get("/", async (req, res, next) => {
 router.get("/next", async (req, res, next) => {
   try {
     const userChannel = await Channel.findById(req.query.channelId, {
-      include: [{ model: ChannelTag }]
+      include: [
+        { model: ChannelTag },
+        {
+          model: Episode,
+          through: ChannelEpisode
+        }
+      ]
     });
     const allChannels = await Channel.findAll({
       include: [{ model: ChannelTag }]

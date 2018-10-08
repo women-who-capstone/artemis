@@ -29,6 +29,7 @@ class SingleChannel extends React.Component {
       episode: newEpisode
     });
     this.setTags(newEpisode);
+    this.props.setSinglePodcast({});
   };
 
   setNewEpisode = async function(episode) {
@@ -83,7 +84,7 @@ class SingleChannel extends React.Component {
         `/api/channel?id=${this.props.match.params.channelId}`
       );
       let playedEpisodes = res.data[0].episodes;
-      console.log(playedEpisodes);
+      // console.log(playedEpisodes);
       let episodeDates = playedEpisodes.map(episode =>
         new Date(episode.date).getTime()
       );

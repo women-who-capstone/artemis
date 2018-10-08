@@ -67,6 +67,10 @@ router.get("/:id", async (req, res, next) => {
           model: ChannelTag
         },
         {
+          model: Episode,
+          through: ChannelEpisode
+        },
+        {
           model: Genre
         }
       ]

@@ -18,8 +18,9 @@ class ChannelVector {
 }
 
 class ChannelEpisodeGetter {
-  constructor(channelId) {
+  constructor(channelId, currentChannelEpisodes) {
     this.channelId = channelId;
+    this.alreadyPlayed = currentChannelEpisodes;
   }
 
   _getRandomIndex(length) {
@@ -31,7 +32,13 @@ class ChannelEpisodeGetter {
       const channel = await Channel.findById(this.channelId, {
         include: [{ model: Episode }]
       });
-      return channel.episodes; // returns promise for array of episodes
+      // let channelEpisodes = channel.episodes;
+      let alreadyPlayed = this.alreadyPlayed;
+      let channelEpisodes = channel.episodes.filter(
+        episode => alreadyPlayed.indexOf(episode.id) === -1
+      );
+      //IF NO MATCHING EPISODE TAKE FROM THE QUEU
+      return channelEpisodes; // returns promise for array of episodes
     } catch (error) {
       console.error(error);
     }

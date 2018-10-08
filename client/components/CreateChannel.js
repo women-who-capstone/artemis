@@ -12,7 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import Channel from "./Channel";
 import { withStyles } from "@material-ui/core/styles";
-import { setSinglePodcast, setPodcastList } from "../reducers/podcast";
+import { setSinglePodcast, setPodcastList, fetchCategoryPodcastsEpisodeData } from "../reducers/podcast";
 import { connect } from "react-redux";
 
 let suggestions = [];
@@ -161,13 +161,15 @@ class IntegrationAutosuggest extends React.Component {
       let channelList = res.data;
 
       if (channelList.channels === undefined) throw new Error('channelList is undefined')
-      console.log('channelList length', channelList.channels.length)
-      console.log('channelList.channels', channelList.channels)
-      let randomPodcast =
-        channelList.channels[Math.floor(Math.random() * channelList.channels.length + 1)];
-      if (randomPodcast === undefined) throw new Error('randomPodcast is undefined')
-      this.props.setSinglePodcast(randomPodcast);
-      this.props.setPodcastList(channelList.channels);
+
+      this.props.fetchCategoryPodcastsEpisodeData(channelList.channels)
+
+      // let randomPodcast =
+      //   channelList.channels[Math.floor(Math.random() * channelList.channels.length + 1)];
+      // if (randomPodcast === undefined) throw new Error('randomPodcast is undefined')
+      // this.props.setSinglePodcast(randomPodcast);
+      // this.props.setPodcastList(channelList.channels);
+
       const createdChannel = await axios.post("/api/channel", {
         name: searchInput
       });
@@ -229,8 +231,9 @@ class IntegrationAutosuggest extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSinglePodcast: episode => dispatch(setSinglePodcast(episode)),
-    setPodcastList: episodes => dispatch(setPodcastList(episodes))
+    // setSinglePodcast: podcast => dispatch(setSinglePodcast(podcast)),
+    // setPodcastList: podcasts => dispatch(setPodcastList(podcasts)),
+    fetchCategoryPodcastsEpisodeData: podcasts => dispatch(fetchCategoryPodcastsEpisodeData(podcasts))
   };
 };
 

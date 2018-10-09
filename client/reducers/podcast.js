@@ -113,8 +113,10 @@ export const addPlayedEpisode = (episode, channelId) => {
     try {
       let req = await axios.post("/api/episode", episode);
       let newEpisode = req.data;
-      console.log('new episode id', newEpisode)
-      dispatch(setAddedPlayedEpisode(newEpisode))
+
+      let playedEpisodeObj = {}
+      playedEpisodeObj[newEpisode.title] = newEpisode
+      dispatch(setAddedPlayedEpisode(playedEpisodeObj))
     } catch (error) {
       console.error(error)
     }
@@ -154,7 +156,7 @@ export default function(state = initState, action) {
         ...state,
         playedEpisodes: {
           ...state.playedEpisodes,
-          [action.episodeId]: true
+          ...action.episode
         }
       }
     case SET_RECOMMENDED_EPISODES:

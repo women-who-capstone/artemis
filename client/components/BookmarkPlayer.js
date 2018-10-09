@@ -5,8 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import CardActions from '@material-ui/core/CardActions';
-import AudioPlayer from './AudioPlayer';
-import SoundVolume from './SoundVolume';
+import AudioPlayer from './player/AudioPlayer';
 
 const styles = (theme) => ({
 	card: {
@@ -35,12 +34,12 @@ const styles = (theme) => ({
 	}
 });
 
-class PodcastPlayer extends Component {
+class BookmarkPlayer extends Component {
 	render() {
-		// const { value } = this.state
 		const { classes } = this.props;
-		const episode = this.props.episode;
-		console.log('From PodcastPlayer', this.props.channelId);
+		const episode = this.props.location.state.episode;
+		console.log('EPISODE IN BOOKMARK', episode);
+
 		return (
 			<div>
 				<Card className={`${classes.card} `}>
@@ -59,7 +58,6 @@ class PodcastPlayer extends Component {
 						<AudioPlayer
 							audio={episode.audio ? episode.audio : episode.audioURL}
 							episode={episode}
-							channelId={this.props.channelId}
 							setNewEpisode={this.props.setNewEpisode}
 							tags={this.props.tags}
 						/>
@@ -68,6 +66,7 @@ class PodcastPlayer extends Component {
 			</div>
 		);
 	}
+	x;
 }
 
-export default withStyles(styles, { withTheme: true })(PodcastPlayer);
+export default withStyles(styles, { withTheme: true })(BookmarkPlayer);

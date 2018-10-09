@@ -1,36 +1,87 @@
 import React from 'react';
+import { Redirect } from 'react-router';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-
 import axios from 'axios';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
+const styles = (theme) => ({
+	root: {
+		flexGrow: 1
+	},
+	paper: {
+		padding: theme.spacing.unit * 2,
+		textAlign: 'center',
+		color: theme.palette.text.secondary
+	}
+});
 
 class BookmarkItem extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			singleEpisode: {}
+			singleEpisode: {},
+			cliked: false
 		};
+		this.playBookmark = this.playBookmark.bind(this);
 	}
 	async componentDidMount() {
 		let res = await axios.get(`/api/episode/${this.props.episode.episodeId}`);
 		let singleEpisode = res.data;
 		this.setState({
-			singleEpisode
+			singleEpisode: singleEpisode
+		});
+	}
+
+	playBookmark() {
+		this.setState({
+			cliked: true
 		});
 	}
 	render() {
-		const episode = this.props.episode;
+		const { classes } = this.props;
 		const singleEp = this.state.singleEpisode;
-		console.log('EPICODE', episode);
-		return (
-			<div>
-				<ListItem>
-					<ListItemText>{singleEp.title}</ListItemText>
-				</ListItem>
-				<img src={singleEp.imageURL} style={{ alignSelf: 'center' }} />
-			</div>
-		);
+		// let epTitle = singleEp.title;
+		// let tuty = '';
+		// if (epTitle.indexOf(':') > -1) {
+		// 	tuty = epTitle.slice(epTitle.indexOf(':') + 2);
+		// } else {
+		// 	tuty = epTitle;
+		// }
+
+		if (this.state.cliked) {
+			//return <PodcastPlayer episode={singleEp} />;
+			return (
+				<Redirect
+					to={{
+						pathname: '/bookmarkplayer',
+						state: {
+							episode: singleEp
+						}
+					}}
+				/>
+			);
+		} else {
+			return (
+				<div onClick={this.playBookmark}>
+					<div className={classes.root}>
+						<Grid container spacing={8}>
+							<Grid item xs={4}>
+								<Paper className={classes.paper}>
+									<ListItem>
+										<ListItemText>{singleEp.title}</ListItemText>
+									</ListItem>
+									<img src={singleEp.imageURL} style={{ alignSelf: 'center' }} />
+								</Paper>
+							</Grid>
+						</Grid>
+					</div>
+				</div>
+			);
+		}
 	}
 }
 
-export default BookmarkItem;
+export default withStyles(styles)(BookmarkItem);

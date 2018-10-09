@@ -9,7 +9,8 @@ import { auth } from '../reducers/user';
 
 const styles = (theme) => ({
 	button: {
-		margin: theme.spacing.unit
+		margin: theme.spacing.unit,
+		width: '100px'
 	},
 	input: {
 		display: 'none'
@@ -19,12 +20,13 @@ const styles = (theme) => ({
 	},
 	container: {
 		display: 'flex',
-		flexWrap: 'wrap',
-	
+		flexWrap: 'no-wrap',
+		alignItems: 'baseline'
 	},
 	textField: {
 		marginLeft: theme.spacing.unit,
-		marginRight: theme.spacing.unit
+		marginRight: theme.spacing.unit,
+		backgroundColor: 'transparent'
 	},
 	dense: {
 		marginTop: 16
@@ -35,14 +37,14 @@ const styles = (theme) => ({
 });
 
 const AuthForm = (props) => {
-	const { name, displayName, handleSubmit, error } = props;
+	const { name, displayName, handleSubmit, error, classes } = props;
 	return (
-		<form className={styles.container} autoComplete="off" onSubmit={handleSubmit} name={name}>
+		<form className={classes.container} autoComplete="off" onSubmit={handleSubmit} name={name}>
 			<TextField
 				required
 				id="outlined-email-input"
 				label="Email"
-				className={styles.textField}
+				className={classes.textField}
 				type="email"
 				name="email"
 				autoComplete="email"
@@ -53,14 +55,14 @@ const AuthForm = (props) => {
 				required
 				id="outlined-password-input"
 				label="Password"
-				className={styles.textField}
+				className={classes.textField}
 				type="password"
 				name="password"
 				autoComplete="current-password"
 				margin="normal"
 				size="small"
 			/>
-			<Button variant="outlined" color="secondary" className={styles.button} type="submit" name="">
+			<Button variant="outlined" color="secondary" className={classes.button} type="submit" name="">
 				{props.displayName}
 			</Button>
 			{error && error.response && <div> {error.response.data} </div>}

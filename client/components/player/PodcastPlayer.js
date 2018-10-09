@@ -37,16 +37,37 @@ const styles = theme => ({
 });
 
 class PodcastPlayer extends Component {
+  constructor() {
+    super()
+    this.state = {
+      episodeAudio: new Audio()
+    }
+  }
+
   render() {
     // const { value } = this.state
-
     const {
       classes,
       handleEpisodeEnd,
       episodeQueue,
       handleSkip,
-      episode
+      episode,
+      channelId
     } = this.props;
+    let audioLength
+    let currentTime
+
+    this.state.episodeAudio.src = episode.audio ? episode.audio : episode.audioURL
+    this.state.episodeAudio.preload = 'auto';
+    this.state.episodeAudio.load()
+
+    this.state.episodeAudio.addEventListener('loadedmetadata', () => {
+      audioLength = this.state.episodeAudio.duration
+    });
+
+    this.state.episodeAudio.addEventListener('timeupdate', () => {
+      currentTime = this.state.episodeAudio.currentTime
+    });
 
     return (
       <div>
@@ -71,10 +92,14 @@ class PodcastPlayer extends Component {
             <AudioPlayer
               audio={episode.audio ? episode.audio : episode.audioURL}
               episode={episode}
+              channelId={channelId}
               episodeQueue={episodeQueue}
               handleSkip={handleSkip}
               handleEpisodeEnd={handleEpisodeEnd}
               tags={this.props.tags}
+              episodeAudio={this.state.episodeAudio}
+              audioLength={audioLength}
+              currentTime={currentTime}
             />
           </CardActions>
         </Card>

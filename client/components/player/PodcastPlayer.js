@@ -48,9 +48,6 @@ class PodcastPlayer extends Component {
       episode
     } = this.props;
 
-    console.log("From PodcastPlayer", this.props.channelId);
-
-    console.log("EPISODE from PodcastPlayer", episode);
     return (
       <div>
         <Card className={`${classes.card} `}>

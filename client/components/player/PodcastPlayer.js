@@ -39,18 +39,15 @@ const styles = theme => ({
 class PodcastPlayer extends Component {
   render() {
     // const { value } = this.state
-
     const {
       classes,
       handleEpisodeEnd,
       episodeQueue,
       handleSkip,
-      episode
+      episode,
+      channelId
     } = this.props;
 
-    console.log("From PodcastPlayer", this.props.channelId);
-
-    console.log("EPISODE from PodcastPlayer", episode);
     return (
       <div>
         <Card className={`${classes.card} `}>
@@ -74,6 +71,7 @@ class PodcastPlayer extends Component {
             <AudioPlayer
               audio={episode.audio ? episode.audio : episode.audioURL}
               episode={episode}
+              channelId={channelId}
               episodeQueue={episodeQueue}
               handleSkip={handleSkip}
               handleEpisodeEnd={handleEpisodeEnd}

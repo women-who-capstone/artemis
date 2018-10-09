@@ -1,37 +1,37 @@
-import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
-import AudioPlayer from "./AudioPlayer";
-import SoundVolume from "./SoundVolume";
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
+import CardActions from '@material-ui/core/CardActions';
+import AudioPlayer from './AudioPlayer';
+import SoundVolume from './SoundVolume';
 
 const styles = theme => ({
   card: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     // alignItems: "center",
-    maxWidth: "auto",
-    height: "80%"
+    maxWidth: 'auto',
+    height: '80%'
   },
   details: {
-    display: "flex",
-    flexDirection: "column"
+    display: 'flex',
+    flexDirection: 'column'
   },
   content: {
-    flex: "1 0 auto"
+    flex: '1 0 auto'
   },
   cover: {
-    display: "flex",
-    alignItems: "center",
-    width: "auto",
+    display: 'flex',
+    alignItems: 'center',
+    width: 'auto',
     height: 300,
-    maxWidth: "400px"
+    maxWidth: '400px'
   },
   actions: {
-    display: "block"
+    display: 'block'
   }
 });
 
@@ -47,19 +47,23 @@ class PodcastPlayer extends Component {
       episode
     } = this.props;
 
-    console.log("From PodcastPlayer", this.props.channelId);
+    console.log('From PodcastPlayer', this.props.channelId);
+
+    console.log('EPISODE from PodcastPlayer', episode);
     return (
       <div>
         <Card className={`${classes.card} `}>
           <CardMedia
             className={classes.cover}
-            image={episode.image ? episode.image : episode.imageURL}
+            image={
+              episode.imageURL ? episode.imageURL : episode.podcastImageURL
+            }
             title={episode.title}
           />
           <CardContent className={classes.content}>
             <Typography variant="headline">{episode.title}</Typography>
             <Typography variant="subheading" color="textSecondary">
-              {episode.title}
+              {episode.podcastTitle}
             </Typography>
           </CardContent>
           <CardActions className={classes.actions}>

@@ -1,13 +1,13 @@
-import React from "react";
-import { withRouter } from "react-router";
-import PodcastPlayer from "./player/PodcastPlayer";
-import { connect } from "react-redux";
-import axios from "axios";
+import React from 'react';
+import { withRouter } from 'react-router';
+import PodcastPlayer from './player/PodcastPlayer';
+import { connect } from 'react-redux';
+import axios from 'axios';
 import {
   getRandomIndex,
   convertPlayedEpisodesArrayToObject,
   getGenreIdFromGenreName
-} from "../utilities";
+} from '../utilities';
 import {
   setSinglePodcast,
   setPodcastList,
@@ -15,8 +15,8 @@ import {
   fetchPlayedEpisodes,
   addPlayedEpisode,
   fetchRecommendedEpisodes
-} from "../reducers/podcast";
-import genres from "../genreList";
+} from '../reducers/podcast';
+import genres from '../genreList';
 
 class SingleChannel extends React.Component {
   constructor() {
@@ -43,9 +43,14 @@ class SingleChannel extends React.Component {
   setEpisode = async function(episodeId) {
     const channelId = this.props.match.params.channelId;
     const res = await axios.get(`/api/episode/apiEpisode?id=${episodeId}`);
+    const podcastTitle = res.data.title;
+    const podcastImage = res.data.image;
     const episode = res.data.episodes[0];
     episode.channelId = channelId;
-    let req = await axios.post("/api/episode", episode);
+    episode.podcastTitle = podcastTitle;
+    episode.podcastImageURL = podcastImage;
+    console.log('EPISODE from setEpisode', episode);
+    let req = await axios.post('/api/episode', episode);
     let newEpisode = req.data;
     this.setState({
       episode: newEpisode
@@ -64,7 +69,7 @@ class SingleChannel extends React.Component {
     this.setState({
       episode
     });
-    await axios.post("/api/episode/nextEpisode", {
+    await axios.post('/api/episode/nextEpisode', {
       episodeId,
       channelId
     });
@@ -75,7 +80,7 @@ class SingleChannel extends React.Component {
   setTags = async function(episode) {
     // console.log(episode);
     const description = episode.description;
-    const res = await axios.get("/api/keywords", {
+    const res = await axios.get('/api/keywords', {
       params: {
         input: description,
         channelId: this.props.match.params.channelId
@@ -141,8 +146,7 @@ class SingleChannel extends React.Component {
     });
 
     let episodeDates = episodes.map(episode =>
-      new Date(episode.date).getTime()
-    );
+      new Date(episode.date).getTime());
 
     let currentEpisodeDate = Math.min(...episodeDates);
     let currentEpisode = episodes.find(
@@ -164,6 +168,8 @@ class SingleChannel extends React.Component {
 
       episodeIndex = getRandomIndex(podcast.episodes.length);
       episode = podcast.episodes[episodeIndex];
+      episode.podcastTitle = podcast.title;
+      episode.podcastImageURL = podcast.image;
 
       counter++;
       if (counter > 50) {
@@ -289,6 +295,7 @@ class SingleChannel extends React.Component {
   }
 
   render() {
+    console.log('EPISODE from Channel', this.state.episode);
     if (this.state.episode.audio || this.state.episode.audioURL) {
       return (
         <PodcastPlayer

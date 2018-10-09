@@ -156,7 +156,12 @@ class AudioPlayer extends Component {
     let episode = this.props.episode;
     let epTags = this.props.tags;
     console.log(episode, epTags);
-    this.props.updatedActiveChannelTags(episode.channelId, "like", epTags);
+    this.props.updatedActiveChannelTags(
+      episode.channelId,
+      "like",
+      epTags,
+      episode
+    );
     this.setState({
       liked: !isLiked,
       disliked: false
@@ -282,8 +287,8 @@ class AudioPlayer extends Component {
 //mapStateToProps()
 const mapDispatchToProps = dispatch => {
   return {
-    updatedActiveChannelTags: (channelId, method, tags) =>
-      dispatch(updateActiveChannelTags(channelId, method, tags))
+    updatedActiveChannelTags: (channelId, method, tags, episode) =>
+      dispatch(updateActiveChannelTags(channelId, method, tags, episode))
   };
 };
 

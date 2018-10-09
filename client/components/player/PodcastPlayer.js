@@ -39,7 +39,9 @@ const styles = theme => ({
 class PodcastPlayer extends Component {
   constructor() {
     super()
-    this.state.episodeAudio = new Audio()
+    this.state = {
+      episodeAudio: new Audio()
+    }
   }
 
   render() {
@@ -95,7 +97,7 @@ class PodcastPlayer extends Component {
               handleSkip={handleSkip}
               handleEpisodeEnd={handleEpisodeEnd}
               tags={this.props.tags}
-              episodeAudio={episodeAudio}
+              episodeAudio={this.state.episodeAudio}
               audioLength={audioLength}
               currentTime={currentTime}
             />

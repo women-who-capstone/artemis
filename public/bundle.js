@@ -2952,7 +2952,9 @@ function (_Component) {
     _classCallCheck(this, PodcastPlayer);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(PodcastPlayer).call(this));
-    _this.state.episodeAudio = new Audio();
+    _this.state = {
+      episodeAudio: new Audio()
+    };
     return _this;
   }
 
@@ -3006,7 +3008,7 @@ function (_Component) {
         handleSkip: handleSkip,
         handleEpisodeEnd: handleEpisodeEnd,
         tags: this.props.tags,
-        episodeAudio: episodeAudio,
+        episodeAudio: this.state.episodeAudio,
         audioLength: audioLength,
         currentTime: currentTime
       }))));

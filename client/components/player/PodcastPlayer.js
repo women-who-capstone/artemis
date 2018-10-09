@@ -14,7 +14,7 @@ const styles = theme => ({
     flexDirection: "column",
     // alignItems: "center",
     maxWidth: "60%",
-    height: "80%"
+    height: "100%"
   },
   details: {
     display: "flex",

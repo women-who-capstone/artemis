@@ -6,22 +6,19 @@ import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { auth } from '../reducers/user';
+import { Typography, FormGroup } from '@material-ui/core';
 
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
-    width: '100px'
+    width: '100px',
+    height: '30px'
   },
   input: {
     display: 'none'
   },
   root: {
     flexGrow: 1
-  },
-  container: {
-    display: 'flex',
-    flexWrap: 'no-wrap',
-    alignItems: 'baseline'
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -32,6 +29,14 @@ const styles = theme => ({
   },
   menu: {
     width: 200
+  },
+  authLabel: {
+    color: '#424242',
+    fontSize: '1.25rem',
+    margin: '8px'
+  },
+  authGroup: {
+    alignItems: 'baseline'
   }
 });
 
@@ -44,38 +49,47 @@ const AuthForm = props => {
       onSubmit={handleSubmit}
       name={name}
     >
-      <TextField
-        required
-        id="outlined-email-input"
-        label="Email"
-        className={classes.textField}
-        type="email"
-        name="email"
-        autoComplete="email"
-        margin="normal"
-        size="small"
-      />
-      <TextField
-        required
-        id="outlined-password-input"
-        label="Password"
-        className={classes.textField}
-        type="password"
-        name="password"
-        autoComplete="current-password"
-        margin="normal"
-        size="small"
-      />
-      <Button
-        variant="outlined"
-        color="primary"
-        className={classes.button}
-        type="submit"
-        name=""
-      >
-        {props.displayName}
-      </Button>
-      {error && error.response && <div> {error.response.data} </div>}
+      <FormGroup row={true} className={classes.authGroup}>
+        <TextField
+          required
+          label="Email"
+          className={classes.textField}
+          type="email"
+          name="email"
+          autoComplete="email"
+          margin="normal"
+          size="small"
+        />
+        <TextField
+          required
+          label="Password"
+          className={classes.textField}
+          type="password"
+          name="password"
+          autoComplete="current-password"
+          margin="normal"
+          size="small"
+        />
+        <Button
+          className={classes.button}
+          type="submit"
+          name=""
+          variant="outlined"
+          color="secondary"
+        >
+          {props.displayName}
+        </Button>
+        {error && error.response && <div> {error.response.data} </div>}
+      </FormGroup>
+      {name === 'login' ? (
+        <Typography className={classes.authLabel}>
+          Already signed up? Log in here.
+        </Typography>
+      ) : (
+        <Typography className={classes.authLabel}>
+          Sign up to start getting podcast recommendations.
+        </Typography>
+      )}
     </form>
   );
 };

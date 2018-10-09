@@ -172,7 +172,12 @@ class AudioPlayer extends Component {
     let isDisliked = this.state.disliked;
     let episode = this.props.episode;
     let epTags = this.props.tags;
-    this.props.updatedActiveChannelTags(episode.channelId, "dislike", epTags);
+    this.props.updatedActiveChannelTags(
+      episode.channelId,
+      "dislike",
+      epTags,
+      episode
+    );
     this.setState({
       disliked: !isDisliked,
       liked: false

@@ -139,9 +139,10 @@ router.put("/:id/tags", async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     const method = req.body.method;
-    const tags = req.body.tags;
+    const tagNames = req.body.tags;
     const episode = req.body.episode;
-    const tagNames = tags.map(tag => tag.name);
+    // console.log("TAGS", tags);
+    // const tagNames = tags.map(tag => tag.name);
     let chan = await Channel.findById(id);
     let chanEp = await ChannelEpisode.find({
       where: {

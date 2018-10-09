@@ -1,8 +1,7 @@
-const { Channel, Episode } = require("../server/db/models");
+const { Channel, Episode, ChannelEpisode } = require("../server/db/models");
 
 class ChannelVector {
   constructor(channelTags) {
-    // console.log("channelTags", channelTags);
     const vector = [];
     for (let i = 0; i < channelTags.length; i++) {
       vector[channelTags[i].tagId] = channelTags[i].score;
@@ -30,14 +29,13 @@ class ChannelEpisodeGetter {
   async _getEpisodes() {
     try {
       const channel = await Channel.findById(this.channelId, {
-        include: [{ model: Episode }]
+        include: [{ model: Episode, through: ChannelEpisode }]
       });
-      // let channelEpisodes = channel.episodes;
       let alreadyPlayed = this.alreadyPlayed;
       let channelEpisodes = channel.episodes.filter(
         episode => alreadyPlayed.indexOf(episode.id) === -1
+        //&& episode.channelEpisode.liked
       );
-      //IF NO MATCHING EPISODE TAKE FROM THE QUEU
       return channelEpisodes; // returns promise for array of episodes
     } catch (error) {
       console.error(error);

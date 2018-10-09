@@ -53,6 +53,11 @@ class AudioPlayer extends Component {
 					audioLength: episodeAudio.duration
 				});
 			});
+      episodeAudio.addEventListener("timeupdate", () => {
+        this.setState({
+          audioTimeElapsed: episodeAudio.currentTime
+        });
+      });
 		} catch (error) {
 			throw new Error('There was an audio error');
 		}
@@ -143,17 +148,27 @@ class AudioPlayer extends Component {
 		this.setState({ isBookmark: !bookMarked });
 	}
 
-	render() {
-		console.log('this is render', episodeAudio.currentTime);
-		const currentTimeInString = Number(episodeAudio.currentTime / 60).toFixed(2);
-		const currentAudioTime = currentTimeInString
-			.toString()
-			.split('')
-			.map((each) => (each === '.' ? ':' : each))
-			.join('');
+  currentTimeCalculation() {
+    let timeInMin = Math.floor(episodeAudio.currentTime / 60).toString();
+    let timeInSec = Math.floor(episodeAudio.currentTime % 60).toString();
+    if (timeInMin < 10) {
+      timeInMin = '0' + timeInMin;
+    }
+    if (timeInSec < 10) {
+      timeInSec = '0' + timeInSec;
+    }
+    let currentTimeInStr = timeInMin + ':' + timeInSec;
+    return currentTimeInStr;
+  }
 
-		const durationInMin = parseInt(episodeAudio.duration / 60, 10);
-		const durationInSec = parseInt(episodeAudio.duration % 60);
+	render() {
+		console.log('AUDIOTIME ELAPSED', this.state.audioTimeElapsed);
+    const currentTimeInString = this.currentTimeCalculation();
+    const durationInMin = parseInt(episodeAudio.duration / 60, 10);
+    const durationInSec = parseInt(episodeAudio.duration % 60);
+
+		//const durationInMin = parseInt(episodeAudio.duration / 60, 10);
+		//const durationInSec = parseInt(episodeAudio.duration % 60);
 
 		return (
 			<div>
@@ -212,7 +227,7 @@ class AudioPlayer extends Component {
 					</div>
 					{durationInMin && durationInSec ? (
 						<div style={{ float: 'right', flexGrow: '1' }}>
-							{currentAudioTime} | {durationInMin}:{durationInSec}
+							{currentTimeInString} | {durationInMin}:{durationInSec}
 						</div>
 					) : (
 						<div />

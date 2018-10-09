@@ -4,7 +4,6 @@ const styles = {
 	container: {
 		width: '130px',
 		font: '10px',
-
 		display: 'inline-flex'
 	}
 };

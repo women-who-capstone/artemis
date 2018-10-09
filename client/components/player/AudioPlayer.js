@@ -56,6 +56,11 @@ class AudioPlayer extends Component {
 					audioLength: episodeAudio.duration
 				});
 			});
+      episodeAudio.addEventListener("timeupdate", () => {
+        this.setState({
+          audioTimeElapsed: episodeAudio.currentTime
+        });
+      });
 		} catch (error) {
 			throw new Error('There was an audio error');
 		}
@@ -137,24 +142,27 @@ class AudioPlayer extends Component {
 		this.setState({ isBookmark: !bookMarked });
 	}
 
-	currentTimeCalculation() {
-		let timeInMin = Math.floor(episodeAudio.currentTime / 60).toString();
-		let timeInSec = Math.floor(episodeAudio.currentTime % 60).toString();
-		if (timeInMin < 10) {
-			timeInMin = '0' + timeInMin;
-		}
-		if (timeInSec < 10) {
-			timeInSec = '0' + timeInSec;
-		}
-		let currentTimeInStr = timeInMin + ':' + timeInSec;
-		return currentTimeInStr;
-	}
+  currentTimeCalculation() {
+    let timeInMin = Math.floor(episodeAudio.currentTime / 60).toString();
+    let timeInSec = Math.floor(episodeAudio.currentTime % 60).toString();
+    if (timeInMin < 10) {
+      timeInMin = '0' + timeInMin;
+    }
+    if (timeInSec < 10) {
+      timeInSec = '0' + timeInSec;
+    }
+    let currentTimeInStr = timeInMin + ':' + timeInSec;
+    return currentTimeInStr;
+  }
 
 	render() {
 		console.log('AUDIOTIME ELAPSED', this.state.audioTimeElapsed);
-		const currentTimeInString = this.currentTimeCalculation();
-		const durationInMin = parseInt(episodeAudio.duration / 60, 10);
-		const durationInSec = parseInt(episodeAudio.duration % 60);
+    const currentTimeInString = this.currentTimeCalculation();
+    const durationInMin = parseInt(episodeAudio.duration / 60, 10);
+    const durationInSec = parseInt(episodeAudio.duration % 60);
+
+		//const durationInMin = parseInt(episodeAudio.duration / 60, 10);
+		//const durationInSec = parseInt(episodeAudio.duration % 60);
 
 		return (
 			<div>
@@ -188,6 +196,7 @@ class AudioPlayer extends Component {
 						className={this.state.isBookmark ? 'material-icons orange600' : 'empty'}
 					/>
 				</IconButton>
+
 				<IconButton>
 					{this.state.unmute ? (
 						<VolumeUp onClick={this.handleMute} />
@@ -196,6 +205,7 @@ class AudioPlayer extends Component {
 					)}
 				</IconButton>
 				<SoundVolume handleVolumeChange={this.handleVolumeChange} audioVolume={this.state.audioVolume} />
+
 				<div style={{ display: 'flex' }}>
 					<div style={{ flexGrow: '35' }}>
 						<input

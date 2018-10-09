@@ -2245,20 +2245,25 @@ function (_Component) {
                     audioLength: episodeAudio.duration
                   });
                 });
-                _context.next = 12;
+                episodeAudio.addEventListener("timeupdate", function () {
+                  _this2.setState({
+                    audioTimeElapsed: episodeAudio.currentTime
+                  });
+                });
+                _context.next = 13;
                 break;
 
-              case 9:
-                _context.prev = 9;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](0);
                 throw new Error('There was an audio error');
 
-              case 12:
+              case 13:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 9]]);
+        }, _callee, this, [[0, 10]]);
       }));
 
       return function componentDidMount() {
@@ -2400,7 +2405,9 @@ function (_Component) {
       console.log('AUDIOTIME ELAPSED', this.state.audioTimeElapsed);
       var currentTimeInString = this.currentTimeCalculation();
       var durationInMin = parseInt(episodeAudio.duration / 60, 10);
-      var durationInSec = parseInt(episodeAudio.duration % 60);
+      var durationInSec = parseInt(episodeAudio.duration % 60); //const durationInMin = parseInt(episodeAudio.duration / 60, 10);
+      //const durationInSec = parseInt(episodeAudio.duration % 60);
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.isPlaying ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_IconButton__WEBPACK_IMPORTED_MODULE_3___default.a, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Pause__WEBPACK_IMPORTED_MODULE_5___default.a, {
         onClick: this.pause
       })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_IconButton__WEBPACK_IMPORTED_MODULE_3___default.a, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_PlayArrow__WEBPACK_IMPORTED_MODULE_4___default.a, {

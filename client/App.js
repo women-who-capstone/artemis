@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import PodcastPlayer from './components/player/PodcastPlayer';
-import Routes from './routes';
-import Button from '@material-ui/core/Button';
-import NavBar from './components/NavBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import React, { Component } from "react";
+import PodcastPlayer from "./components/player/PodcastPlayer";
+import Routes from "./routes";
+import Button from "@material-ui/core/Button";
+import NavBar from "./components/NavBar";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#ffccbc',
-      contrastText: '#000'
+      main: "#ffccbc",
+      contrastText: "#000"
     },
     secondary: {
-      main: '#e0f7fa',
-      contrastText: '#000'
+      main: "#e0f7fa",
+      contrastText: "#000"
     },
     background: {
-      default: '#ffccbc'
+      default: "#ffccbc"
     }
   }
 });
@@ -29,7 +29,6 @@ class App extends Component {
         <MuiThemeProvider theme={theme}>
           <div className="App">
             <NavBar />
-            <Routes />
           </div>
         </MuiThemeProvider>
       </React.Fragment>

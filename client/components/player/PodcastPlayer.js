@@ -13,7 +13,7 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column",
     // alignItems: "center",
-    maxWidth: "auto",
+    maxWidth: "60%",
     height: "80%"
   },
   details: {
@@ -26,8 +26,8 @@ const styles = theme => ({
   cover: {
     display: "flex",
     alignItems: "center",
-    width: "auto",
-    height: 300,
+    // width: "auto",
+    height: 400,
     maxWidth: "400px"
   },
   actions: {
@@ -52,6 +52,9 @@ class PodcastPlayer extends Component {
       <div>
         <Card className={`${classes.card} `}>
           <CardMedia
+            style={{
+              margin: "0px 0px 0px 0px"
+            }}
             className={classes.cover}
             image={episode.image ? episode.image : episode.imageURL}
             title={episode.title}

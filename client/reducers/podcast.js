@@ -10,8 +10,8 @@ const SET_PODCAST_LIST = "SET_PODCAST_LIST";
 const SET_BEST_CATEGORY_PODCASTS = "SET_BEST_CATEGORY_PODCASTS";
 const SET_CURRENT_EPISODE = "SET_CURRENT_EPISODE";
 const SET_PLAYED_EPISODES = "SET_PLAYED_EPISODES";
-const SET_ADDED_PLAYED_EPISODE = 'SET_ADDED_PLAYED_EPISODE'
-const SET_RECOMMENDED_EPISODES = 'SET_RECOMMENDED_EPISODES'
+const SET_ADDED_PLAYED_EPISODE = "SET_ADDED_PLAYED_EPISODE";
+const SET_RECOMMENDED_EPISODES = "SET_RECOMMENDED_EPISODES";
 // if (localStorage.getItem('podcastState') === null) {
 //     localStorage.setItem('podcastState', JSON.stringify({
 //     podcast: {},
@@ -49,12 +49,12 @@ export const setPlayedEpisodes = episodes => ({
 export const setAddedPlayedEpisode = episode => ({
   type: SET_ADDED_PLAYED_EPISODE,
   episode
-})
+});
 
 export const setRecommendedEpisodes = episodes => ({
   type: SET_RECOMMENDED_EPISODES,
   episodes
-})
+});
 
 // THUNK CREATORS
 export const fetchCategoryPodcastsEpisodeData = podcastsWithoutEpisodeData => {
@@ -101,9 +101,9 @@ export const fetchPlayedEpisodes = channelId => {
   return async dispatch => {
     let res = await axios.get(`/api/channel?id=${channelId}`);
     let playedEpisodes = res.data[0].episodes;
-    console.log('played episodes', playedEpisodes)
+    console.log("played episodes", playedEpisodes);
     const episodesObject = convertPlayedEpisodesArrayToObject(playedEpisodes);
-    dispatch(setPlayedEpisodes(episodesObject))
+    dispatch(setPlayedEpisodes(episodesObject));
   };
 };
 
@@ -113,17 +113,30 @@ export const addPlayedEpisode = (episode, channelId) => {
     try {
       let req = await axios.post("/api/episode", episode);
       let newEpisode = req.data;
-      console.log('new episode id', newEpisode)
-      dispatch(setAddedPlayedEpisode(newEpisode))
+      console.log("new episode id", newEpisode);
+      dispatch(setAddedPlayedEpisode(newEpisode));
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
-}
+  };
+};
 
-export const fetchRecommendedEpisodes = (channelId) => {
-
-}
+export const fetchRecommendedEpisodes = channelId => {
+  return async dispatch => {
+    try {
+      let res = await axios.get("/api/episode/next", {
+        params: {
+          channelId: channelId
+        }
+      });
+      let recommendedEpisode = res.data;
+      console.log("new episode id", recommendedEpisode);
+      dispatch(setRecommendedEpisodes(recommendedEpisode));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
 
 //REDUCER
 export default function(state = initState, action) {
@@ -156,12 +169,12 @@ export default function(state = initState, action) {
           ...state.playedEpisodes,
           [action.episodeId]: true
         }
-      }
+      };
     case SET_RECOMMENDED_EPISODES:
       return {
         ...state,
         recommendedEpisodes: action.episodes
-      }
+      };
     default:
       return state;
   }

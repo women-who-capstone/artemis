@@ -13,8 +13,7 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     // alignItems: "center",
-    maxWidth: 'auto',
-    height: '80%'
+    minHeight: 450
   },
   details: {
     display: 'flex',
@@ -28,7 +27,7 @@ const styles = theme => ({
     alignItems: 'center',
     width: 'auto',
     height: 300,
-    maxWidth: '400px'
+    maxWidth: '1440px'
   },
   actions: {
     display: 'block'

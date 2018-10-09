@@ -13,6 +13,7 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column",
     // alignItems: "center",
+    minwidth: "400px",
     maxWidth: "60%",
     height: "100%"
   },
@@ -48,6 +49,8 @@ class PodcastPlayer extends Component {
     } = this.props;
 
     console.log("From PodcastPlayer", this.props.channelId);
+
+    console.log("EPISODE from PodcastPlayer", episode);
     return (
       <div>
         <Card className={`${classes.card} `}>
@@ -56,13 +59,15 @@ class PodcastPlayer extends Component {
               margin: "0px 0px 0px 0px"
             }}
             className={classes.cover}
-            image={episode.image ? episode.image : episode.imageURL}
+            image={
+              episode.imageURL ? episode.imageURL : episode.podcastImageURL
+            }
             title={episode.title}
           />
           <CardContent className={classes.content}>
             <Typography variant="headline">{episode.title}</Typography>
             <Typography variant="subheading" color="textSecondary">
-              {episode.title}
+              {episode.podcastTitle}
             </Typography>
           </CardContent>
           <CardActions className={classes.actions}>

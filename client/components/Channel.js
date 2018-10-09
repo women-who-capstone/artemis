@@ -27,56 +27,53 @@ class SingleChannel extends React.Component {
       episodeQueue: [],
       tags: [],
       vector: []
-      // recommendedEpisode: {}
     };
-    //this.setEpisode = this.setEpisode.bind(this);
     this.getEpisodeFromQueue = this.getEpisodeFromQueue.bind(this);
     this.handleSkip = this.handleSkip.bind(this);
     this.handleEpisodeEnd = this.handleEpisodeEnd.bind(this);
     this.addNewEpisodeToQueue = this.addNewEpisodeToQueue.bind(this);
 
-    this.setEpisode = this.setEpisode.bind(this);
+    //this.setEpisode = this.setEpisode.bind(this);
     this.setTags = this.setTags.bind(this);
-    this.setNewEpisode = this.setNewEpisode.bind(this);
-    // this.updateVector = this.updateVector.bind(this);
+    //this.setNewEpisode = this.setNewEpisode.bind(this);
   }
 
-  setEpisode = async function(episodeId) {
-    const channelId = this.props.match.params.channelId;
-    const res = await axios.get(`/api/episode/apiEpisode?id=${episodeId}`);
-    const podcastTitle = res.data.title;
-    const podcastImage = res.data.image;
-    const episode = res.data.episodes[0];
-    episode.channelId = channelId;
-    episode.podcastTitle = podcastTitle;
-    episode.podcastImageURL = podcastImage;
+  // setEpisode = async function(episodeId) {
+  //   const channelId = this.props.match.params.channelId;
+  //   const res = await axios.get(`/api/episode/apiEpisode?id=${episodeId}`);
+  //   const podcastTitle = res.data.title;
+  //   const podcastImage = res.data.image;
+  //   const episode = res.data.episodes[0];
+  //   episode.channelId = channelId;
+  //   episode.podcastTitle = podcastTitle;
+  //   episode.podcastImageURL = podcastImage;
 
-    let req = await axios.post('/api/episode', episode);
-    let newEpisode = req.data;
-    this.setState({
-      episode: newEpisode
-    });
-    this.setTags(newEpisode);
-    this.props.setSinglePodcast({});
-  };
+  //   let req = await axios.post('/api/episode', episode);
+  //   let newEpisode = req.data;
+  //   this.setState({
+  //     episode: newEpisode
+  //   });
+  //   this.setTags(newEpisode);
+  //   this.props.setSinglePodcast({});
+  // };
 
-  setNewEpisode = async function(episode) {
-    let episodeId = episode.id;
-    let channelId = this.props.match.params.channelId;
-    // await axios.post("/api/episode/nextEpisode", {
-    //   episodeId,
-    //   channelId
-    // });
-    this.setState({
-      episode
-    });
-    await axios.post('/api/episode/nextEpisode', {
-      episodeId,
-      channelId
-    });
-    this.setTags(episode);
-    this.props.setSinglePodcast({});
-  };
+  // setNewEpisode = async function(episode) {
+  //   let episodeId = episode.id;
+  //   let channelId = this.props.match.params.channelId;
+  //   // await axios.post("/api/episode/nextEpisode", {
+  //   //   episodeId,
+  //   //   channelId
+  //   // });
+  //   this.setState({
+  //     episode
+  //   });
+  //   await axios.post('/api/episode/nextEpisode', {
+  //     episodeId,
+  //     channelId
+  //   });
+  //   this.setTags(episode);
+  //   this.props.setSinglePodcast({});
+  // };
 
   setTags = async function(episode) {
     const description = episode.description;
@@ -87,6 +84,7 @@ class SingleChannel extends React.Component {
       }
     });
     const tags = res.data;
+
     this.setState({
       tags
     });
@@ -109,9 +107,9 @@ class SingleChannel extends React.Component {
     });
 
     const newEpisode = this.getEpisodeFromQueue();
+    this.setTags(newEpisode)
     this.setState({
-      episode: newEpisode,
-      unfinishedEpisode: newEpisode
+      episode: newEpisode
     });
     await this.props.addPlayedEpisode(newEpisode, channelId);
   }
@@ -153,7 +151,6 @@ class SingleChannel extends React.Component {
     const { bestCategoryPodcasts } = this.props;
     let counter = 0;
     let podcastIndex, podcast, episodeIndex, episode;
-    console.log('bestCategoryPodcasts', bestCategoryPodcasts)
 
     while (!this.episodeHasNotBeenPlayed(episode)) {
       podcastIndex = getRandomIndex(bestCategoryPodcasts.length);
@@ -241,12 +238,13 @@ class SingleChannel extends React.Component {
 
   async handleEpisodeEnd() {
     //add episode that just ended to played episodes
-    const episodeThatJustEnded = this.state.episode;
+    //const episodeThatJustEnded = this.state.episode;
     const channelId = this.props.match.params.channelId;
 
     //get new episode from queue
     const newEpisode = this.getEpisodeFromQueue();
     await this.props.addPlayedEpisode(newEpisode, channelId);
+    this.setTags(newEpisode)
     this.setState({
       episode: newEpisode
     });
@@ -255,12 +253,13 @@ class SingleChannel extends React.Component {
 
   async handleSkip() {
     //add episode that was playing before skip to played episodes
-    const episodeSkipped = this.state.episode;
+    //const episodeSkipped = this.state.episode;
     const channelId = this.props.match.params.channelId;
 
     //get new episode
     const newEpisode = this.getEpisodeFromQueue();
     await this.props.addPlayedEpisode(newEpisode, channelId);
+    this.setTags(newEpisode)
     this.setState({
       episode: newEpisode
     });

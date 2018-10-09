@@ -50,7 +50,7 @@ class SingleChannel extends React.Component {
     episode.channelId = channelId;
     episode.podcastTitle = podcastTitle;
     episode.podcastImageURL = podcastImage;
-    console.log('EPISODE from setEpisode', episode);
+
     let req = await axios.post('/api/episode', episode);
     let newEpisode = req.data;
     this.setState({
@@ -125,9 +125,7 @@ class SingleChannel extends React.Component {
       `/api/podcast?id=${genreId}`
     );
 
-    //   await this.props.fetchCategoryPodcastsEpisodeData(
-    //     podcastsWithoutData.channels
-    //   );
+    await this.props.fetchCategoryPodcastsEpisodeData(podcastsWithoutData.channels);
   }
 
   extractMostRecentlyPlayedEpisode() {
@@ -155,6 +153,7 @@ class SingleChannel extends React.Component {
     const { bestCategoryPodcasts } = this.props;
     let counter = 0;
     let podcastIndex, podcast, episodeIndex, episode;
+    console.log('bestCategoryPodcasts', bestCategoryPodcasts)
 
     while (!this.episodeHasNotBeenPlayed(episode)) {
       podcastIndex = getRandomIndex(bestCategoryPodcasts.length);
@@ -167,7 +166,6 @@ class SingleChannel extends React.Component {
 
       counter++;
       if (counter > 50) {
-        console.log('counter', counter)
         this.getGenrePodcasts();
         return episode;
       }
@@ -289,7 +287,6 @@ class SingleChannel extends React.Component {
   }
 
   render() {
-    console.log('EPISODE from Channel', this.state.episode);
     if (this.state.episode.audio || this.state.episode.audioURL) {
       return (
         <PodcastPlayer

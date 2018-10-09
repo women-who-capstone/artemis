@@ -4,6 +4,7 @@ import { Redirect } from "react-router";
 import ChannelListItem from "./ChannelListItem";
 import List from "@material-ui/core/List";
 import { fetchUserChannels } from "../reducers/channel";
+import history from "../history";
 
 class ChannelList extends Component {
   constructor() {
@@ -17,10 +18,7 @@ class ChannelList extends Component {
   }
 
   handleClick(channelId) {
-    this.setState({
-      differentChannelSelected: true,
-      channelId
-    });
+    history.push(`/channel/${channelId}`);
   }
 
   componentDidMount() {
@@ -29,9 +27,10 @@ class ChannelList extends Component {
 
   render() {
     const { channels } = this.props;
-    return this.state.differentChannelSelected ? (
-      <Redirect to={`/channel/${this.state.channelId}`} />
-    ) : (
+    // return this.state.differentChannelSelected ? (
+    //   <Redirect to={`/channel/${this.state.channelId}`} />
+    // ) : (
+    return (
       <div>
         <List>
           {channels.map(channel => (

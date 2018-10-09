@@ -2195,8 +2195,6 @@ function (_Component) {
     _this.state = {
       isPlaying: false,
       unmute: true,
-      //added for time
-      //audioCurrentTime: 0,
       audioLength: 0,
       audioTimeElapsed: 0,
       audioVolume: 0.5,
@@ -2237,25 +2235,30 @@ function (_Component) {
               case 3:
                 episodeAudio.src = _context.sent;
                 episodeAudio.preload = 'metadata';
+                episodeAudio.addEventListener('timeupdate', function () {
+                  _this2.setState({
+                    audioTimeElapsed: episodeAudio.currentTime
+                  });
+                });
                 episodeAudio.addEventListener('loadedmetadata', function () {
                   _this2.setState({
                     audioLength: episodeAudio.duration
                   });
                 });
-                _context.next = 11;
+                _context.next = 12;
                 break;
 
-              case 8:
-                _context.prev = 8;
+              case 9:
+                _context.prev = 9;
                 _context.t0 = _context["catch"](0);
                 throw new Error('There was an audio error');
 
-              case 11:
+              case 12:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 8]]);
+        }, _callee, this, [[0, 9]]);
       }));
 
       return function componentDidMount() {
@@ -2266,14 +2269,9 @@ function (_Component) {
     key: "handleSliderChange",
     value: function handleSliderChange(event) {
       this.setState({
-        audioTimeElapsed: event.target.value,
-        //added for time
-        audioCurrentTime: episodeAudio.currentTime
+        audioTimeElapsed: Number(event.target.value)
       });
       episodeAudio.currentTime = this.state.audioTimeElapsed;
-
-      if (this.state.audioTimeElapsed === this.state.audioLength) {//handle end of episode
-      }
     }
   }, {
     key: "handleVolumeChange",
@@ -2302,8 +2300,6 @@ function (_Component) {
   }, {
     key: "handleMute",
     value: function handleMute() {
-      // console.log('this is min', parseInt(episodeAudio.duration / 60, 10));
-      // console.log('this is sec', parseInt(episodeAudio.duration % 60));
       var stateUnmute = this.state.unmute;
 
       if (stateUnmute) {
@@ -2382,13 +2378,27 @@ function (_Component) {
       };
     }()
   }, {
+    key: "currentTimeCalculation",
+    value: function currentTimeCalculation() {
+      var timeInMin = Math.floor(episodeAudio.currentTime / 60).toString();
+      var timeInSec = Math.floor(episodeAudio.currentTime % 60).toString();
+
+      if (timeInMin < 10) {
+        timeInMin = '0' + timeInMin;
+      }
+
+      if (timeInSec < 10) {
+        timeInSec = '0' + timeInSec;
+      }
+
+      var currentTimeInStr = timeInMin + ':' + timeInSec;
+      return currentTimeInStr;
+    }
+  }, {
     key: "render",
     value: function render() {
-      console.log('this is render', episodeAudio.currentTime);
-      var currentTimeInString = Number(episodeAudio.currentTime / 60).toFixed(2);
-      var currentAudioTime = currentTimeInString.toString().split('').map(function (each) {
-        return each === '.' ? ':' : each;
-      }).join('');
+      console.log('AUDIOTIME ELAPSED', this.state.audioTimeElapsed);
+      var currentTimeInString = this.currentTimeCalculation();
       var durationInMin = parseInt(episodeAudio.duration / 60, 10);
       var durationInSec = parseInt(episodeAudio.duration % 60);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.isPlaying ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_IconButton__WEBPACK_IMPORTED_MODULE_3___default.a, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Pause__WEBPACK_IMPORTED_MODULE_5___default.a, {
@@ -2432,7 +2442,7 @@ function (_Component) {
           float: 'right',
           flexGrow: '1'
         }
-      }, currentAudioTime, " | ", durationInMin, ":", durationInSec) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null)));
+      }, currentTimeInString, " | ", durationInMin, ":", durationInSec) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null)));
     }
   }]);
 
@@ -2618,16 +2628,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 var styles = {
   container: {
-    width: '15%',
+    width: '130px',
     font: '10px',
-    position: 'absolute',
-    left: '25%',
-    bottom: '35%',
-    display: 'table-cell',
-    verticalAlign: 'middle'
-  },
-  inputy: {
-    verticalAlign: 'baseline'
+    display: 'inline-flex'
   }
 };
 

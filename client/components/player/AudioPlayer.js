@@ -20,8 +20,6 @@ class AudioPlayer extends Component {
 		this.state = {
 			isPlaying: false,
 			unmute: true,
-			//added for time
-			//audioCurrentTime: 0,
 			audioLength: 0,
 			audioTimeElapsed: 0,
 			audioVolume: 0.5,
@@ -44,10 +42,15 @@ class AudioPlayer extends Component {
 
 	async componentDidMount() {
 		// FIX shouldn't be async
-		// console.log('this is currentTime', Number(episodeAudio.currentTime / 60).toFixed(2));
+
 		try {
 			episodeAudio.src = await this.props.audio;
 			episodeAudio.preload = 'metadata';
+			episodeAudio.addEventListener('timeupdate', () => {
+				this.setState({
+					audioTimeElapsed: episodeAudio.currentTime
+				});
+			});
 			episodeAudio.addEventListener('loadedmetadata', () => {
 				this.setState({
 					audioLength: episodeAudio.duration
@@ -60,15 +63,9 @@ class AudioPlayer extends Component {
 
 	handleSliderChange(event) {
 		this.setState({
-			audioTimeElapsed: event.target.value,
-			//added for time
-			audioCurrentTime: episodeAudio.currentTime
+			audioTimeElapsed: Number(event.target.value)
 		});
 		episodeAudio.currentTime = this.state.audioTimeElapsed;
-
-		if (this.state.audioTimeElapsed === this.state.audioLength) {
-			//handle end of episode
-		}
 	}
 
 	handleVolumeChange(event) {
@@ -94,9 +91,6 @@ class AudioPlayer extends Component {
 	}
 
 	handleMute() {
-		// console.log('this is min', parseInt(episodeAudio.duration / 60, 10));
-		// console.log('this is sec', parseInt(episodeAudio.duration % 60));
-
 		var stateUnmute = this.state.unmute;
 		if (stateUnmute) {
 			this.setState({
@@ -143,15 +137,22 @@ class AudioPlayer extends Component {
 		this.setState({ isBookmark: !bookMarked });
 	}
 
-	render() {
-		console.log('this is render', episodeAudio.currentTime);
-		const currentTimeInString = Number(episodeAudio.currentTime / 60).toFixed(2);
-		const currentAudioTime = currentTimeInString
-			.toString()
-			.split('')
-			.map((each) => (each === '.' ? ':' : each))
-			.join('');
+	currentTimeCalculation() {
+		let timeInMin = Math.floor(episodeAudio.currentTime / 60).toString();
+		let timeInSec = Math.floor(episodeAudio.currentTime % 60).toString();
+		if (timeInMin < 10) {
+			timeInMin = '0' + timeInMin;
+		}
+		if (timeInSec < 10) {
+			timeInSec = '0' + timeInSec;
+		}
+		let currentTimeInStr = timeInMin + ':' + timeInSec;
+		return currentTimeInStr;
+	}
 
+	render() {
+		console.log('AUDIOTIME ELAPSED', this.state.audioTimeElapsed);
+		const currentTimeInString = this.currentTimeCalculation();
 		const durationInMin = parseInt(episodeAudio.duration / 60, 10);
 		const durationInSec = parseInt(episodeAudio.duration % 60);
 
@@ -194,7 +195,6 @@ class AudioPlayer extends Component {
 						<VolumeOff onClick={this.handleMute} />
 					)}
 				</IconButton>
-
 				<SoundVolume handleVolumeChange={this.handleVolumeChange} audioVolume={this.state.audioVolume} />
 				<div style={{ display: 'flex' }}>
 					<div style={{ flexGrow: '35' }}>
@@ -210,7 +210,7 @@ class AudioPlayer extends Component {
 					</div>
 					{durationInMin && durationInSec ? (
 						<div style={{ float: 'right', flexGrow: '1' }}>
-							{currentAudioTime} | {durationInMin}:{durationInSec}
+							{currentTimeInString} | {durationInMin}:{durationInSec}
 						</div>
 					) : (
 						<div />

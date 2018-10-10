@@ -6,6 +6,9 @@ const ChannelEpisode = db.define("channelEpisode", {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true
+  },
+  liked: {
+    type: Sequelize.BOOLEAN
   }
 });
 

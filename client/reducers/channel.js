@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 
 // ACTION TYPES
-const SET_USER_CHANNELS = 'SET_USER_CHANNELS';
-const SET_USER_CHANNELS_ERROR_STATUS = 'SET_USER_CHANNELS_ERROR_STATUS';
-const SET_USER_CHANNELS_LOADING_STATUS = 'SET_USER_CHANNELS_LOADING_STATUS';
-const GOT_ACTIVE_CHANNEL = 'GOT_ACTIVE_CHANNEL';
-const UPDATED_ACTIVE_CHANNEL_TAGS = 'UPDATED_ACTIVE_CHANNEL_TAGS';
+const SET_USER_CHANNELS = "SET_USER_CHANNELS";
+const SET_USER_CHANNELS_ERROR_STATUS = "SET_USER_CHANNELS_ERROR_STATUS";
+const SET_USER_CHANNELS_LOADING_STATUS = "SET_USER_CHANNELS_LOADING_STATUS";
+const GOT_ACTIVE_CHANNEL = "GOT_ACTIVE_CHANNEL";
+const UPDATED_ACTIVE_CHANNEL_TAGS = "UPDATED_ACTIVE_CHANNEL_TAGS";
 
 //ACTION CREATORS
 const setUserChannels = userChannels => {
@@ -71,16 +71,21 @@ export const getActiveChannel = channelId => {
   };
 };
 
-export const updateActiveChannelTags = (channelId, method, epTags) => {
-  console.log('From reducers, channelId', channelId);
+export const updateActiveChannelTags = (channelId, method, epTags, episode) => {
+  console.log("From reducers, channelId", channelId);
   return async dispatch => {
     try {
+      console.log("title", episode.title);
+      const res = await axios.get(`/api/episode?title=${episode.title}`);
+      const currentEpisode = res.data[0];
+      console.log("EPISODE", currentEpisode);
       const { data: channel } = await axios.put(
         `/api/channel/${channelId}/tags`,
         {
           id: channelId,
           method: method,
-          tags: epTags
+          tags: epTags,
+          episode: currentEpisode
         }
       );
       dispatch(updatedActiveChannelTags(channel));

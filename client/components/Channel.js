@@ -1,13 +1,13 @@
-import React from 'react';
-import { withRouter } from 'react-router';
-import PodcastPlayer from './player/PodcastPlayer';
-import { connect } from 'react-redux';
-import axios from 'axios';
+import React from "react";
+import { withRouter } from "react-router";
+import PodcastPlayer from "./player/PodcastPlayer";
+import { connect } from "react-redux";
+import axios from "axios";
 import {
   getRandomIndex,
   convertPlayedEpisodesArrayToObject,
   getGenreIdFromGenreName
-} from '../utilities';
+} from "../utilities";
 import {
   setSinglePodcast,
   setPodcastList,
@@ -15,8 +15,9 @@ import {
   fetchPlayedEpisodes,
   addPlayedEpisode,
   fetchRecommendedEpisodes
-} from '../reducers/podcast';
-import genres from '../genreList';
+} from "../reducers/podcast";
+import genres from "../genreList";
+import Loading from "./Loading";
 
 class SingleChannel extends React.Component {
   constructor() {
@@ -77,7 +78,7 @@ class SingleChannel extends React.Component {
 
   setTags = async function(episode) {
     const description = episode.description;
-    const res = await axios.get('/api/keywords', {
+    const res = await axios.get("/api/keywords", {
       params: {
         input: description,
         channelId: this.props.match.params.channelId
@@ -107,7 +108,7 @@ class SingleChannel extends React.Component {
     });
 
     const newEpisode = this.getEpisodeFromQueue();
-    this.setTags(newEpisode)
+    this.setTags(newEpisode);
     this.setState({
       episode: newEpisode
     });
@@ -123,7 +124,9 @@ class SingleChannel extends React.Component {
       `/api/podcast?id=${genreId}`
     );
 
-    await this.props.fetchCategoryPodcastsEpisodeData(podcastsWithoutData.channels);
+    await this.props.fetchCategoryPodcastsEpisodeData(
+      podcastsWithoutData.channels
+    );
   }
 
   extractMostRecentlyPlayedEpisode() {
@@ -132,7 +135,8 @@ class SingleChannel extends React.Component {
     });
 
     let episodeDates = episodes.map(episode =>
-      new Date(episode.date).getTime());
+      new Date(episode.date).getTime()
+    );
 
     let currentEpisodeDate = Math.min(...episodeDates);
     let currentEpisode = episodes.find(
@@ -144,6 +148,7 @@ class SingleChannel extends React.Component {
   async getNewEpisodeFromRecommendedEpisodes() {
     const channelId = this.props.match.params.channelId;
     let episode = await this.props.fetchRecommendedEpisodes(channelId);
+    console.log("REC EP", episode);
     return episode;
   }
 
@@ -196,17 +201,17 @@ class SingleChannel extends React.Component {
   getEpisodeQueue(numDesiredEpisodes) {
     const queue = [];
 
-    let newEpisode
-    const mostRecentlyPlayedEpisode = this.state.mostRecentlyPlayedEpisode
+    let newEpisode;
+    const mostRecentlyPlayedEpisode = this.state.mostRecentlyPlayedEpisode;
 
     if (mostRecentlyPlayedEpisode) {
       queue.push(this.state.mostRecentlyPlayedEpisode);
     }
-    const hasSameTitle = episode => episode.title === newEpisode.title
+    const hasSameTitle = episode => episode.title === newEpisode.title;
 
     while (queue.length < numDesiredEpisodes) {
-      newEpisode = this.getNewEpisode()
-      let sameTitles = queue.filter(hasSameTitle)
+      newEpisode = this.getNewEpisode();
+      let sameTitles = queue.filter(hasSameTitle);
       if (sameTitles.length === 0) {
         queue.push(this.getNewEpisode());
       }
@@ -216,11 +221,10 @@ class SingleChannel extends React.Component {
   }
 
   addNewEpisodeToQueue() {
-
-    let newEpisode = this.getNewEpisode()
-    const hasSameTitle = episode => episode.title === newEpisode.title
+    let newEpisode = this.getNewEpisode();
+    const hasSameTitle = episode => episode.title === newEpisode.title;
     while (this.state.episodeQueue.filter(hasSameTitle).length > 0) {
-      newEpisode = this.getNewEpisode()
+      newEpisode = this.getNewEpisode();
     }
     this.setState({
       episodeQueue: [...this.state.episodeQueue, newEpisode]
@@ -244,7 +248,7 @@ class SingleChannel extends React.Component {
     //get new episode from queue
     const newEpisode = this.getEpisodeFromQueue();
     await this.props.addPlayedEpisode(newEpisode, channelId);
-    this.setTags(newEpisode)
+    this.setTags(newEpisode);
     this.setState({
       episode: newEpisode
     });
@@ -259,7 +263,7 @@ class SingleChannel extends React.Component {
     //get new episode
     const newEpisode = this.getEpisodeFromQueue();
     await this.props.addPlayedEpisode(newEpisode, channelId);
-    this.setTags(newEpisode)
+    this.setTags(newEpisode);
     this.setState({
       episode: newEpisode
     });

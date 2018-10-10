@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React, {Component} from 'react';
+import {withStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -8,31 +8,31 @@ import CardActions from '@material-ui/core/CardActions';
 import AudioPlayer from './AudioPlayer';
 import SoundVolume from './SoundVolume';
 
-const styles = (theme) => ({
-	card: {
-		display: 'flex',
-		flexDirection: 'column',
-		minwidth: '400px',
-		maxWidth: '60%',
-		height: '100%'
-	},
-	details: {
-		display: 'flex',
-		flexDirection: 'column'
-	},
-	content: {
-		flex: '1 0 auto'
-	},
-	cover: {
-		display: 'flex',
-		alignItems: 'center',
+const styles = theme => ({
+  card: {
+    display: 'flex',
+    flexDirection: 'column',
+    minwidth: '400px',
+    maxWidth: '60%',
+    height: '100%'
+  },
+  details: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  content: {
+    flex: '1 0 auto'
+  },
+  cover: {
+    display: 'flex',
+    alignItems: 'center',
 
-		height: 400,
-		maxWidth: '400px'
-	},
-	actions: {
-		display: 'block'
-	}
+    height: 400,
+    maxWidth: '400px'
+  },
+  actions: {
+    display: 'block'
+  }
 });
 
 class PodcastPlayer extends Component {
@@ -60,13 +60,11 @@ class PodcastPlayer extends Component {
     //     audioLength: episodeAudioCopy.duration
     //   });
     // })
-
     // episodeAudioCopy.addEventListener('timeupdate', () => {
     //   this.setState({
     //     currentTime: episodeAudioCopy.currentTime
     //   });
     // })
-
     // this.setState({
     //   episodeAudio: episodeAudioCopy
     // })
@@ -84,13 +82,11 @@ class PodcastPlayer extends Component {
     //       audioLength: episodeAudioCopy.duration
     //     });
     //   })
-
     //   episodeAudioCopy.addEventListener('timeupdate', () => {
     //     this.setState({
     //       currentTime: episodeAudioCopy.currentTime
     //     });
     //   })
-
     //   this.setState({
     //     episodeAudio: episodeAudioCopy
     //   })
@@ -125,7 +121,7 @@ class PodcastPlayer extends Component {
         <Card className={`${classes.card} `}>
           <CardMedia
             style={{
-              margin: "0px 0px 0px 0px"
+              margin: '0px 0px 0px 0px'
             }}
             className={classes.cover}
             image={
@@ -157,7 +153,6 @@ class PodcastPlayer extends Component {
       </div>
     );
   }
-
 }
 
-export default withStyles(styles, { withTheme: true })(PodcastPlayer);
+export default withStyles(styles, {withTheme: true})(PodcastPlayer);

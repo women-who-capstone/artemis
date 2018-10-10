@@ -44,7 +44,8 @@
 		"remove-punctuation": "0.0.4",
 		"sequelize": "^4.39.0",
 		"stopword": "^0.1.13",
-		"unirest": "^0.5.1"
+		"unirest": "^0.5.1",
+		"wordpos": "^1.2.0"
 	},
 	"scripts": {
 		"build-client": "webpack",

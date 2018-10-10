@@ -8,7 +8,7 @@ const ChannelTag = db.define("channelTag", {
     autoIncrement: true
   },
   score: {
-    type: Sequelize.INTEGER
+    type: Sequelize.DECIMAL
   }
 });
 module.exports = ChannelTag;

@@ -139,15 +139,29 @@ router.put("/:id/tags", async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     const method = req.body.method;
-    const tags = req.body.tags;
-    const tagNames = tags.map(tag => tag.name);
+    const tagNames = req.body.tags;
+    const episode = req.body.episode;
+    // console.log("TAGS", tags);
+    // const tagNames = tags.map(tag => tag.name);
     let chan = await Channel.findById(id);
-    // console.log("from PUT tags API");
+    let chanEp = await ChannelEpisode.find({
+      where: {
+        episodeId: episode.id,
+        channelId: id
+      }
+    });
+    // console.log("CHAN", chan);
     if (method === "like") {
       chan.incrementScore(tagNames);
+      await chanEp.update({
+        liked: true
+      });
     }
     if (method === "dislike") {
       chan.decrementScore(tagNames);
+      await chanEp.update({
+        liked: false
+      });
     }
 
     res.status(200).send();

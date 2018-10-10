@@ -139,6 +139,8 @@ class AudioPlayer extends Component {
 		this.props.handleSkip();
 		this.setState({
 			isBookmark: false,
+			liked: false,
+			disliked: false,
 			isPlaying: false
 		});
 

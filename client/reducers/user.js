@@ -6,11 +6,14 @@ import history from '../history';
  */
 const GOT_USER = 'GOT_USER';
 const LOGGED_OUT_USER = 'LOGGED_OUT_USER';
+const CLEAR_ERROR = 'CLEAR_ERROR';
 
 /**
  * INITIAL STATE
  */
-const defaultUser = {};
+const defaultUser = {
+	error: ''
+};
 
 /**
  * ACTION CREATORS
@@ -30,6 +33,8 @@ export const me = () => async (dispatch) => {
 	}
 };
 
+export const clearError = () => ({ type: CLEAR_ERROR, error: '' });
+
 export const auth = (email, password, method) => async (dispatch) => {
 	let res;
 	try {
@@ -39,12 +44,17 @@ export const auth = (email, password, method) => async (dispatch) => {
 	}
 
 	try {
-		console.log('AUTH USER', res.data);
 		dispatch(gotUser(res.data));
 		if (method === 'signup') {
 			history.push('/createchannel');
 		} else {
-			history.push('/allchannels');
+			let result = await axios.get('api/channel/user');
+			const userChannels = result.data;
+			if (!userChannels.length) {
+				history.push('/createchannel');
+			} else {
+				history.push('/allchannels');
+			}
 		}
 	} catch (dispatchOrHistoryErr) {
 		console.error(dispatchOrHistoryErr);
@@ -70,6 +80,8 @@ export default function(state = defaultUser, action) {
 			return action.user;
 		case LOGGED_OUT_USER:
 			return defaultUser;
+		case CLEAR_ERROR:
+			return { ...state, error: action.error };
 		default:
 			return state;
 	}

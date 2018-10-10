@@ -7,11 +7,11 @@ import ChannelList from './components/ChannelList';
 import PodcastPlayer from './components/player/PodcastPlayer';
 import CreateChannel from './components/CreateChannel';
 import Channel from './components/Channel';
-import { Login, Signup } from './components/AuthForm';
 import { me } from './reducers/user';
 import Keywords from './components/Keywords';
 import Bookmark from './components/Bookmark';
 import BookmarkPlayer from './components/BookmarkPlayer';
+import SignupPage from './components/SignupPage';
 
 class Routes extends Component {
 	componentDidMount() {
@@ -25,6 +25,7 @@ class Routes extends Component {
 			<Switch>
 				{/* Routes placed here are available to all visitors */}
 				<Route exact path="/" component={Home} />
+				<Route exact path="/signup" component={SignupPage} />
 				<Route path="/keywords" component={Keywords} />
 				{isLoggedIn && (
 					<Switch>

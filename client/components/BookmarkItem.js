@@ -43,16 +43,8 @@ class BookmarkItem extends React.Component {
 	render() {
 		const { classes } = this.props;
 		const singleEp = this.state.singleEpisode;
-		// let epTitle = singleEp.title;
-		// let tuty = '';
-		// if (epTitle.indexOf(':') > -1) {
-		// 	tuty = epTitle.slice(epTitle.indexOf(':') + 2);
-		// } else {
-		// 	tuty = epTitle;
-		// }
 
 		if (this.state.cliked) {
-			//return <PodcastPlayer episode={singleEp} />;
 			return (
 				<Redirect
 					to={{

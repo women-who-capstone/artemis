@@ -39,8 +39,62 @@ const styles = theme => ({
 class PodcastPlayer extends Component {
   constructor() {
     super()
+    let episodeAudio = new Audio()
+    episodeAudio.src = ''
+    episodeAudio.preload = 'metadata'
+
     this.state = {
-      episodeAudio: new Audio()
+      episodeAudio: episodeAudio,
+      currentTime: episodeAudio.currentTime,
+      audioLength: 0
+    }
+  }
+
+  componentDidMount() {
+    const { episode } = this.props;
+    let episodeAudioCopy = this.state.episodeAudio
+    console.log('episodeAudioCopy', episodeAudioCopy)
+    episodeAudioCopy.src = episode.audio ? episode.audio : episode.audioURL
+    episodeAudioCopy.load()
+    episodeAudioCopy.addEventListener('loadedmetadata', () => {
+      this.setState({
+        audioLength: episodeAudioCopy.duration
+      });
+    })
+
+    episodeAudioCopy.addEventListener('timeupdate', () => {
+      this.setState({
+        currentTime: episodeAudioCopy.currentTime
+      });
+    })
+
+    this.setState({
+      episodeAudio: episodeAudioCopy
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.episode !== prevProps.episode) {
+      const { episode } = this.props;
+      let episodeAudioCopy = this.state.episodeAudio
+      console.log('episodeAudioCopy', episodeAudioCopy)
+      episodeAudioCopy.src = episode.audio ? episode.audio : episode.audioURL
+      episodeAudioCopy.load()
+      episodeAudioCopy.addEventListener('loadedmetadata', () => {
+        this.setState({
+          audioLength: episodeAudioCopy.duration
+        });
+      })
+
+      episodeAudioCopy.addEventListener('timeupdate', () => {
+        this.setState({
+          currentTime: episodeAudioCopy.currentTime
+        });
+      })
+
+      this.setState({
+        episodeAudio: episodeAudioCopy
+      })
     }
   }
 
@@ -54,20 +108,18 @@ class PodcastPlayer extends Component {
       episode,
       channelId
     } = this.props;
-    let audioLength
-    let currentTime
 
-    this.state.episodeAudio.src = episode.audio ? episode.audio : episode.audioURL
-    this.state.episodeAudio.preload = 'auto';
-    this.state.episodeAudio.load()
+    // this.state.episodeAudio.src = episode.audio ? episode.audio : episode.audioURL
+    // this.state.episodeAudio.preload = 'auto';
+    // this.state.episodeAudio.load()
 
-    this.state.episodeAudio.addEventListener('loadedmetadata', () => {
-      audioLength = this.state.episodeAudio.duration
-    });
+    // this.state.episodeAudio.addEventListener('loadedmetadata', () => {
+    //   audioLength = this.state.episodeAudio.duration
+    // });
 
-    this.state.episodeAudio.addEventListener('timeupdate', () => {
-      currentTime = this.state.episodeAudio.currentTime
-    });
+    // this.state.episodeAudio.addEventListener('timeupdate', () => {
+    //   currentTime = this.state.episodeAudio.currentTime
+    // });
 
     return (
       <div>
@@ -98,8 +150,8 @@ class PodcastPlayer extends Component {
               handleEpisodeEnd={handleEpisodeEnd}
               tags={this.props.tags}
               episodeAudio={this.state.episodeAudio}
-              audioLength={audioLength}
-              currentTime={currentTime}
+              audioLength={this.state.audioLength}
+              currentTime={this.state.currentTime}
             />
           </CardActions>
         </Card>

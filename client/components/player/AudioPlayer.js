@@ -43,11 +43,11 @@ class AudioPlayer extends Component {
 	componentDidMount() {
 		try {
 
-			this.props.episodeAudio.addEventListener('loadedmetadata', () => {
-				this.setState({
-					audioLength: this.props.episodeAudio.duration
-				});
-			});
+			// this.props.episodeAudio.addEventListener('loadedmetadata', () => {
+			// 	this.setState({
+			// 		audioLength: this.props.episodeAudio.duration
+			// 	});
+			// });
 			this.props.episodeAudio.addEventListener('ended', () => {
 				console.log('episode ended')
         this.props.handleEpisodeEnd();
@@ -60,11 +60,11 @@ class AudioPlayer extends Component {
 				this.props.handleEpisodeEnd();
 			});
 
-			this.props.episodeAudio.addEventListener('timeupdate', () => {
-				this.setState({
-					audioTimeElapsed: this.props.episodeAudio.currentTime
-				});
-			});
+			// this.props.episodeAudio.addEventListener('timeupdate', () => {
+			// 	this.setState({
+			// 		audioTimeElapsed: this.props.episodeAudio.currentTime
+			// 	});
+			// });
 		} catch (error) {
 			throw new Error('There was an audio error');
 		}
@@ -208,7 +208,7 @@ class AudioPlayer extends Component {
 		const currentTimeInString = this.currentTimeCalculation();
 		const durationInMin = parseInt(this.props.episodeAudio.duration / 60, 10);
 		const durationInSec = parseInt(this.props.episodeAudio.duration % 60);
-    console.log('episodeAudio', this.props.episodeAudio)
+    //console.log('episodeAudio', this.props.episodeAudio)
      //episodeAudio.src = this.props.audio;
 
 		return (

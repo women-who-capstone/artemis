@@ -8,9 +8,6 @@ html {
   overflow: hidden;
 }
 
-#root {
-}
-
 /* @media (min-width: 576px) {
   body {
     background-size: ;
@@ -19,7 +16,4 @@ html {
 
 .material-icons.orange600 {
   color: #eb7c14;
-}
-
-main {
 }

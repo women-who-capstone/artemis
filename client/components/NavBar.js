@@ -22,10 +22,14 @@ const drawerWidth = 240;
 
 const styles = theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    height: '100vh',
+    backgroundColor: '#ffccbc',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover'
   },
   appFrame: {
-    height: 800,
+    height: '100vh',
     zIndex: 1,
     position: "relative",
     display: "flex",
@@ -79,7 +83,12 @@ const styles = theme => ({
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
-    })
+    }),
+    overflow: 'auto',
+    background:
+      'linear-gradient(to bottom, rgba(89, 155, 163, 0.65) 0%, rgba(89, 155, 163, 0.65) 30%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0) 100%)',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover'
   },
   "content-left": {
     marginLeft: -drawerWidth
@@ -102,12 +111,18 @@ const styles = theme => ({
 });
 
 class PersistentDrawer extends React.Component {
-  state = {
-    open: false,
-    anchor: "left",
-    pageSelected: "",
-    redirect: false
-  };
+  constructor(props) {
+    super();
+    this.state = {
+      open: false,
+      anchor: 'left',
+      pageSelected: '',
+      redirect: false,
+      bg: history.location.pathname.includes('channel/')
+        ? "url('/backgroundImage2.jpg')"
+        : "url('/backgroundImage.jpg')"
+    };
+  }
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -123,11 +138,21 @@ class PersistentDrawer extends React.Component {
     });
   };
 
+  changeBackground = () => {
+    history.listen((location, action) => {
+      this.setState({
+        bg: location.pathname.includes('channel/')
+          ? "url('/backgroundImage2.jpg')"
+          : "url('/backgroundImage.jpg')"
+      });
+    });
+  };
 
   render() {
     const { classes, theme } = this.props;
     const { anchor, open } = this.state;
-
+    console.log('NavBar history', history);
+    this.changeBackground();
     const drawer = (
       <Drawer
         style={{ height: "100%" }}
@@ -206,6 +231,7 @@ class PersistentDrawer extends React.Component {
                 [classes[`contentShift-${anchor}`]]: open
               }
             )}
+            style={{ backgroundImage: this.state.bg }}
           >
             <div className={classes.drawerHeader} />
             <Routes style={styles.drawerPaper} />

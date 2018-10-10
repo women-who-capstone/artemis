@@ -1,17 +1,24 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Redirect } from "react-router";
-import ChannelListItem from "./ChannelListItem";
-import List from "@material-ui/core/List";
-import { fetchUserChannels } from "../reducers/channel";
-import history from "../history";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
+import ChannelListItem from './ChannelListItem';
+import { List, Paper } from '@material-ui/core';
+import { fetchUserChannels } from '../reducers/channel';
+import history from '../history';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+  list: {
+    backgroundColor: 'rgba(255,255,255,0.5)'
+  }
+});
 
 class ChannelList extends Component {
   constructor() {
     super();
     this.state = {
       differentChannelSelected: false,
-      channelId: ""
+      channelId: ''
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -26,12 +33,12 @@ class ChannelList extends Component {
   }
 
   render() {
-    const { channels } = this.props;
+    const { channels, classes } = this.props;
     // return this.state.differentChannelSelected ? (
     //   <Redirect to={`/channel/${this.state.channelId}`} />
     // ) : (
     return (
-      <div>
+      <Paper className={classes.list}>
         <List>
           {channels.map(channel => (
             <ChannelListItem
@@ -41,7 +48,7 @@ class ChannelList extends Component {
             />
           ))}
         </List>
-      </div>
+      </Paper>
     );
   }
 }
@@ -59,7 +66,9 @@ const mapDispatch = dispatch => {
   };
 };
 
-export default connect(
-  mapState,
-  mapDispatch
-)(ChannelList);
+export default withStyles(styles)(
+  connect(
+    mapState,
+    mapDispatch
+  )(ChannelList)
+);

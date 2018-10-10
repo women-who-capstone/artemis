@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 import { updateActiveChannelTags } from "../../reducers/channel";
 import { connect } from "react-redux";
@@ -155,46 +156,31 @@ class AudioPlayer extends Component {
       isPlaying: false
     });
 
-    // this.props.episodeAudio.src = this.props.audio;
-    // this.props.episodeAudio.load()
-  }
+	like() {
+		let isLiked = this.state.liked;
+		let episode = this.props.episode;
+		let epTags = this.props.tags;
+		this.props.updatedActiveChannelTags(episode.channelId, 'like', epTags, episode);
+		this.setState({
+			liked: !isLiked,
+			disliked: false
+		});
+	}
 
-  like() {
-    let isLiked = this.state.liked;
-    let episode = this.props.episode;
-    let epTags = this.props.tags;
-    this.props.updatedActiveChannelTags(
-      episode.channelId,
-      "like",
-      epTags,
-      episode
-    );
-    this.setState({
-      liked: !isLiked,
-      disliked: false
-    });
-  }
-
-  dislike() {
-    let isDisliked = this.state.disliked;
-    let episode = this.props.episode;
-    let epTags = this.props.tags;
-    this.props.updatedActiveChannelTags(
-      episode.channelId,
-      "dislike",
-      epTags,
-      episode
-    );
-    this.setState({
-      disliked: !isDisliked,
-      liked: false
-    });
-  }
+	dislike() {
+		let isDisliked = this.state.disliked;
+		let episode = this.props.episode;
+		let epTags = this.props.tags;
+		this.props.updatedActiveChannelTags(episode.channelId, 'dislike', epTags, episode);
+		this.setState({
+			disliked: !isDisliked,
+			liked: false
+		});
+	}
 
   async bookmark() {
     let apiEpisode = this.props.episode;
     let databaseEpisode = this.props.databaseEpisodes[apiEpisode.title];
-    console.log("databaseEpisode sfdsfd", databaseEpisode);
     let bookMarked = this.state.isBookmark;
     await axios.post("/api/bookmarks", { episodeId: databaseEpisode.id }); //FIX use Redux
     this.setState({ isBookmark: !bookMarked });
@@ -305,20 +291,17 @@ class AudioPlayer extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    databaseEpisodes: state.podcast.playedEpisodes
-  };
-};
-//mapStateToProps()
-const mapDispatchToProps = dispatch => {
-  return {
-    updatedActiveChannelTags: (channelId, method, tags, episode) =>
-      dispatch(updateActiveChannelTags(channelId, method, tags, episode))
-  };
+const mapStateToProps = (state) => {
+	return {
+		databaseEpisodes: state.podcast.playedEpisodes
+	};
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AudioPlayer);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		updatedActiveChannelTags: (channelId, method, tags, episode) =>
+			dispatch(updateActiveChannelTags(channelId, method, tags, episode))
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AudioPlayer);

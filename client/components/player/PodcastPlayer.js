@@ -1,39 +1,38 @@
-import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
-import AudioPlayer from "./AudioPlayer";
-import SoundVolume from "./SoundVolume";
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
+import CardActions from '@material-ui/core/CardActions';
+import AudioPlayer from './AudioPlayer';
+import SoundVolume from './SoundVolume';
 
-const styles = theme => ({
-  card: {
-    display: "flex",
-    flexDirection: "column",
-    // alignItems: "center",
-    minwidth: "400px",
-    maxWidth: "60%",
-    height: "100%"
-  },
-  details: {
-    display: "flex",
-    flexDirection: "column"
-  },
-  content: {
-    flex: "1 0 auto"
-  },
-  cover: {
-    display: "flex",
-    alignItems: "center",
-    // width: "auto",
-    height: 400,
-    maxWidth: "400px"
-  },
-  actions: {
-    display: "block"
-  }
+const styles = (theme) => ({
+	card: {
+		display: 'flex',
+		flexDirection: 'column',
+		minwidth: '400px',
+		maxWidth: '60%',
+		height: '100%'
+	},
+	details: {
+		display: 'flex',
+		flexDirection: 'column'
+	},
+	content: {
+		flex: '1 0 auto'
+	},
+	cover: {
+		display: 'flex',
+		alignItems: 'center',
+
+		height: 400,
+		maxWidth: '400px'
+	},
+	actions: {
+		display: 'block'
+	}
 });
 
 class PodcastPlayer extends Component {
@@ -158,6 +157,7 @@ class PodcastPlayer extends Component {
       </div>
     );
   }
+
 }
 
 export default withStyles(styles, { withTheme: true })(PodcastPlayer);

@@ -11,7 +11,6 @@ const styles = (theme) => ({
 	card: {
 		display: 'flex',
 		flexDirection: 'column',
-		// alignItems: "center",
 		maxWidth: 'auto',
 		height: '80%'
 	},
@@ -38,7 +37,6 @@ class BookmarkPlayer extends Component {
 	render() {
 		const { classes } = this.props;
 		const episode = this.props.location.state.episode;
-		console.log('EPISODE IN BOOKMARK', episode);
 
 		return (
 			<div>

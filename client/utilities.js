@@ -4,7 +4,7 @@ export const getRandomIndex = length => {
   return Math.floor(Math.random() * length)
 }
 
-//keys in resulting object are episode ids
+
 export const convertPlayedEpisodesArrayToObject = playedEpisodesArr => {
   let playedEpisodes = {}
   playedEpisodesArr.forEach(episode => {

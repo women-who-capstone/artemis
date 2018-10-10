@@ -123,13 +123,6 @@ class PersistentDrawer extends React.Component {
     });
   };
 
-  //   handleDrawerSelect = event => {
-  //     console.log("handleDrawerSelect");
-  //     console.log(event.target.value);
-  //     this.setState({
-  //       pageSelected: event.target.value
-  //     });
-  //   };
 
   render() {
     const { classes, theme } = this.props;

@@ -12,7 +12,6 @@ import VolumeUp from '@material-ui/icons/VolumeUp';
 import VolumeOff from '@material-ui/icons/VolumeOff';
 import axios from 'axios';
 import SoundVolume from './SoundVolume';
-//let episodeAudio = document.createElement('audio');
 
 class AudioPlayer extends Component {
 	constructor() {
@@ -135,7 +134,6 @@ class AudioPlayer extends Component {
 	}
 
 	skip() {
-		//this.pause();
 		this.props.handleSkip();
 		this.setState({
 			isBookmark: false,
@@ -143,17 +141,13 @@ class AudioPlayer extends Component {
 			disliked: false,
 			isPlaying: false
 		});
-
-		// this.props.episodeAudio.src = this.props.audio;
-		// this.props.episodeAudio.load()
 	}
 
 	async bookmark() {
 		let apiEpisode = this.props.episode;
 		let databaseEpisode = this.props.databaseEpisodes[apiEpisode.title];
-		console.log('databaseEpisode sfdsfd', databaseEpisode);
 		let bookMarked = this.state.isBookmark;
-		await axios.post('/api/bookmarks', { id: databaseEpisode.id }); //FIX use Redux
+		await axios.post('/api/bookmarks', { id: databaseEpisode.id });
 		this.setState({ isBookmark: !bookMarked });
 	}
 
@@ -178,21 +172,6 @@ class AudioPlayer extends Component {
 			liked: false
 		});
 	}
-
-	// async bookmark() {
-	// 	let apiEpisode = this.props.episode;
-	// 	let databaseEpisode = this.props.databaseEpisodes[apiEpisode.title];
-	// 	let bookMarked = this.state.isBookmark;
-	// 	await axios.post('/api/bookmarks', { id: databaseEpisode.id }); //FIX use Redux
-	// 	this.setState({ isBookmark: !bookMarked });
-	// }
-
-	// async bookmark() {
-	//   let episode = this.props.episode;
-	//   let bookMarked = this.state.isBookmark;
-	//   await axios.post("/api/bookmarks", { episodeId: episode.id }); //FIX use Redux
-	//   this.setState({ isBookmark: !bookMarked });
-	// }
 
 	async next() {
 		let channelId = this.props.channelId;
@@ -222,8 +201,6 @@ class AudioPlayer extends Component {
 		const currentTimeInString = this.currentTimeCalculation();
 		const durationInMin = parseInt(this.props.episodeAudio.duration / 60, 10);
 		const durationInSec = parseInt(this.props.episodeAudio.duration % 60);
-		console.log('episodeAudio', this.props.episodeAudio);
-		//episodeAudio.src = this.props.audio;
 
 		return (
 			<div>
@@ -297,7 +274,7 @@ const mapStateToProps = (state) => {
 		databaseEpisodes: state.podcast.playedEpisodes
 	};
 };
-//mapStateToProps()
+
 const mapDispatchToProps = (dispatch) => {
 	return {
 		updatedActiveChannelTags: (channelId, method, tags, episode) =>

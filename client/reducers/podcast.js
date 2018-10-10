@@ -133,7 +133,6 @@ export const fetchRecommendedEpisodes = channelId => {
         }
       });
       let recommendedEpisode = res.data;
-      console.log("new episode id", recommendedEpisode);
       dispatch(setRecommendedEpisodes(recommendedEpisode));
     } catch (error) {
       console.error(error);

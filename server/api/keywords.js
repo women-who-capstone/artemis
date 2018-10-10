@@ -689,19 +689,29 @@ function exclude(text) {
   return text.filter(word => !myStopwords.includes(word));
 }
 
-console.log("length of des", descriptions.length);
-
 router.get("/", async (req, res, next) => {
   try {
-    // console.log(myStopwords);
     let channelId = req.query.channelId;
-    // console.log("CHANNELID", channelId);
-    // console.log("QUERY", req.query);
     let input = req.query.input.toLowerCase();
     let inputFiltered = await wordpos.getNouns(input, exclude);
-    // console.log("FILTERED", inputFiltered);
-    inputFiltered.forEach(async currentTag => {
-      //   console.log(currentTag.toLowerCase());
+    let descriptionsArr = descriptions.slice(0, 10);
+    descriptionsArr.forEach(each => {
+      tfidf.addDocument(each);
+    });
+    let tagArray = inputFiltered.filter(async each => {
+      let allDes = 0;
+      let currentTag;
+
+      tfidf.tfidfs(each, function(i, measure) {
+        currentTag = each;
+        allDes += measure;
+        // console.log(`document# ${currentTag} is ${measure}`);
+      });
+      let tagRating = allDes / descriptionsArr.length;
+      return tagRating > 0.2 || tagRating === 0;
+    });
+
+    tagArray.forEach(async currentTag => {
       let tagId;
       let tag = await Tag.findOrCreate({
         where: {
@@ -714,11 +724,12 @@ router.get("/", async (req, res, next) => {
         await ChannelTag.create({
           channelId: channelId,
           tagId: tagId,
-          score: 5
+          score: 0.5
         });
       }
     });
-    res.json("Tags added");
+    // console.log("TAG ARRAY", inputFiltered);
+    res.json(inputFiltered);
   } catch (err) {
     next(err);
   }

@@ -146,12 +146,20 @@ class AudioPlayer extends Component {
 		// this.props.episodeAudio.load()
 	}
 
+	async bookmark() {
+		let apiEpisode = this.props.episode;
+		let databaseEpisode = this.props.databaseEpisodes[apiEpisode.title];
+		console.log('databaseEpisode sfdsfd', databaseEpisode);
+		let bookMarked = this.state.isBookmark;
+		await axios.post('/api/bookmarks', { id: databaseEpisode.id }); //FIX use Redux
+		this.setState({ isBookmark: !bookMarked });
+	}
+
 	like() {
 		let isLiked = this.state.liked;
 		let episode = this.props.episode;
 		let epTags = this.props.tags;
-		console.log(episode, epTags);
-		this.props.updatedActiveChannelTags(episode.channelId, 'like', epTags);
+		this.props.updatedActiveChannelTags(episode.channelId, 'like', epTags, episode);
 		this.setState({
 			liked: !isLiked,
 			disliked: false
@@ -162,21 +170,27 @@ class AudioPlayer extends Component {
 		let isDisliked = this.state.disliked;
 		let episode = this.props.episode;
 		let epTags = this.props.tags;
-		this.props.updatedActiveChannelTags(episode.channelId, 'dislike', epTags);
+		this.props.updatedActiveChannelTags(episode.channelId, 'dislike', epTags, episode);
 		this.setState({
 			disliked: !isDisliked,
 			liked: false
 		});
 	}
 
-	async bookmark() {
-		let apiEpisode = this.props.episode;
-		let databaseEpisode = this.props.databaseEpisodes[apiEpisode.title];
-		console.log('databaseEpisode sfdsfd', databaseEpisode);
-		let bookMarked = this.state.isBookmark;
-		await axios.post('/api/bookmarks', { id: databaseEpisode.id }); //FIX use Redux
-		this.setState({ isBookmark: !bookMarked });
-	}
+	// async bookmark() {
+	// 	let apiEpisode = this.props.episode;
+	// 	let databaseEpisode = this.props.databaseEpisodes[apiEpisode.title];
+	// 	let bookMarked = this.state.isBookmark;
+	// 	await axios.post('/api/bookmarks', { id: databaseEpisode.id }); //FIX use Redux
+	// 	this.setState({ isBookmark: !bookMarked });
+	// }
+
+	// async bookmark() {
+	//   let episode = this.props.episode;
+	//   let bookMarked = this.state.isBookmark;
+	//   await axios.post("/api/bookmarks", { episodeId: episode.id }); //FIX use Redux
+	//   this.setState({ isBookmark: !bookMarked });
+	// }
 
 	async next() {
 		let channelId = this.props.channelId;
@@ -281,11 +295,11 @@ const mapStateToProps = (state) => {
 		databaseEpisodes: state.podcast.playedEpisodes
 	};
 };
-
+//mapStateToProps()
 const mapDispatchToProps = (dispatch) => {
 	return {
-		updatedActiveChannelTags: (channelId, method, tags) =>
-			dispatch(updateActiveChannelTags(channelId, method, tags))
+		updatedActiveChannelTags: (channelId, method, tags, episode) =>
+			dispatch(updateActiveChannelTags(channelId, method, tags, episode))
 	};
 };
 

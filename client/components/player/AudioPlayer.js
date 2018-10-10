@@ -12,7 +12,8 @@ import VolumeUp from '@material-ui/icons/VolumeUp';
 import VolumeOff from '@material-ui/icons/VolumeOff';
 import axios from 'axios';
 import SoundVolume from './SoundVolume';
-//let episodeAudio = document.createElement('audio');
+
+let episodeAudio = new Audio()
 
 class AudioPlayer extends Component {
 	constructor() {
@@ -23,6 +24,7 @@ class AudioPlayer extends Component {
 			audioLength: 0,
 			audioTimeElapsed: 0,
 			audioVolume: 0.5,
+      currentTime: 0,
 			isBookmark: false,
 			liked: false,
 			disliked: false
@@ -42,29 +44,20 @@ class AudioPlayer extends Component {
 
 	componentDidMount() {
 		try {
-
-			// this.props.episodeAudio.addEventListener('loadedmetadata', () => {
-			// 	this.setState({
-			// 		audioLength: this.props.episodeAudio.duration
-			// 	});
-			// });
-			this.props.episodeAudio.addEventListener('ended', () => {
-				console.log('episode ended')
-        this.props.handleEpisodeEnd();
+  		const { episode } = this.props;
+      episodeAudio.src = episode.audio ? episode.audio : episode.audioURL
+      episodeAudio.load()
+      episodeAudio.addEventListener('loadedmetadata', () => {
         this.setState({
-          isBookmark: false,
-          isPlaying: false
-        })
-			});
-			this.props.episodeAudio.addEventListener('error', () => {
-				this.props.handleEpisodeEnd();
-			});
+          audioLength: episodeAudio.duration
+        });
+      })
 
-			// this.props.episodeAudio.addEventListener('timeupdate', () => {
-			// 	this.setState({
-			// 		audioTimeElapsed: this.props.episodeAudio.currentTime
-			// 	});
-			// });
+      episodeAudio.addEventListener('timeupdate', () => {
+        this.setState({
+          currentTime: episodeAudio.currentTime
+        });
+      })
 		} catch (error) {
 			throw new Error('There was an audio error');
 		}
@@ -72,29 +65,37 @@ class AudioPlayer extends Component {
 
 	componentWillUnmount() {
 
-		this.props.episodeAudio.removeEventListener('loadedmetadata', () => {
+		episodeAudio.removeEventListener('loadedmetadata', () => {
 			this.setState({
 				audioLength: this.props.episodeAudio.duration
 			});
 		});
-		this.props.episodeAudio.removeEventListener('ended', () => {
+		episodeAudio.removeEventListener('ended', () => {
 			this.props.handleEpisodeEnd();
 		});
-		this.props.episodeAudio.removeEventListener('error', () => {
+		episodeAudio.removeEventListener('error', () => {
 			this.props.handleEpisodeEnd();
 		});
-    this.props.episodeAudio.removeEventListener('timeupdate', () => {
+    episodeAudio.removeEventListener('timeupdate', () => {
         this.setState({
-          audioTimeElapsed: this.props.episodeAudio.currentTime
+          audioTimeElapsed: episodeAudio.currentTime
         });
       });
 	}
 
+  componentDidUpdate(prevProps) {
+    if (this.props.episode !== prevProps.episode) {
+      const { episode } = this.props;
+      episodeAudio.src = episode.audio ? episode.audio : episode.audioURL
+      episodeAudio.load()
+    }
+  }
+
 	handleSliderChange(event) {
-		// this.setState({
-		// 	audioTimeElapsed: Number(event.target.value)
-		// });
-		this.props.episodeAudio.currentTime = Number(event.target.value)
+		this.setState({
+		 	currentTime: Number(event.target.value)
+		 });
+		episodeAudio.currentTime = Number(event.target.value)
 	}
 
 	handleVolumeChange(event) {
@@ -102,18 +103,18 @@ class AudioPlayer extends Component {
 			audioVolume: event.target.value
 		});
 
-		this.props.episodeAudio.volume = this.state.audioVolume;
+		episodeAudio.volume = this.state.audioVolume;
 	}
 
 	play() {
-		this.props.episodeAudio.play();
+		episodeAudio.play();
 		this.setState({
 			isPlaying: true
 		});
 	}
 
 	pause() {
-		this.props.episodeAudio.pause();
+		episodeAudio.pause();
 		this.setState({
 			isPlaying: false
 		});
@@ -126,13 +127,13 @@ class AudioPlayer extends Component {
 				audioVolume: 0,
 				unmute: !stateUnmute
 			});
-			this.props.episodeAudio.muted = true;
+			episodeAudio.muted = true;
 		} else {
 			this.setState({
 				audioVolume: 0.1,
 				unmute: !stateUnmute
 			});
-			this.props.episodeAudio.muted = false;
+			episodeAudio.muted = false;
 		}
 	}
 
@@ -192,8 +193,8 @@ class AudioPlayer extends Component {
 	}
 
 	currentTimeCalculation() {
-		let timeInMin = Math.floor(this.props.episodeAudio.currentTime / 60).toString();
-		let timeInSec = Math.floor(this.props.episodeAudio.currentTime % 60).toString();
+		let timeInMin = Math.floor(this.state.currentTime / 60).toString();
+		let timeInSec = Math.floor(this.state.currentTime % 60).toString();
 		if (timeInMin < 10) {
 			timeInMin = '0' + timeInMin;
 		}
@@ -206,8 +207,8 @@ class AudioPlayer extends Component {
 
 	render() {
 		const currentTimeInString = this.currentTimeCalculation();
-		const durationInMin = parseInt(this.props.episodeAudio.duration / 60, 10);
-		const durationInSec = parseInt(this.props.episodeAudio.duration % 60);
+		const durationInMin = parseInt(episodeAudio.duration / 60, 10);
+		const durationInSec = parseInt(episodeAudio.duration % 60);
     //console.log('episodeAudio', this.props.episodeAudio)
      //episodeAudio.src = this.props.audio;
 
@@ -257,11 +258,11 @@ class AudioPlayer extends Component {
 					<div style={{ flexGrow: '35' }}>
 						<input
 							type="range"
-							value={this.props.currentTime}
+							value={this.state.currentTime}
 							aria-labelledby="label"
 							onChange={this.handleSliderChange}
 							min={0}
-							max={this.props.audioLength}
+							max={this.state.audioLength}
 							step="any"
 						/>
 					</div>

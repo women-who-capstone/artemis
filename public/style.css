@@ -1,6 +1,5 @@
 body {
   margin: 0;
-  /* background-size: cover; */
   padding: 0;
 }
 
@@ -8,12 +7,6 @@ html {
   overflow: hidden;
 }
 
-/* @media (min-width: 576px) {
-  body {
-    background-size: ;
-  }
-} */
-
 .material-icons.orange600 {
-  color: #eb7c14;
+	color: #eb7c14;
 }

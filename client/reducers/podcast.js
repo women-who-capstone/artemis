@@ -117,6 +117,7 @@ export const addPlayedEpisode = (episode, channelId) => {
       let playedEpisodeObj = {};
       playedEpisodeObj[newEpisode.title] = newEpisode;
       dispatch(setAddedPlayedEpisode(playedEpisodeObj));
+
     } catch (error) {
       console.error(error);
     }
@@ -132,7 +133,6 @@ export const fetchRecommendedEpisodes = channelId => {
         }
       });
       let recommendedEpisode = res.data;
-      console.log("new episode id", recommendedEpisode);
       dispatch(setRecommendedEpisodes(recommendedEpisode));
     } catch (error) {
       console.error(error);

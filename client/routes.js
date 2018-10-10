@@ -7,10 +7,11 @@ import ChannelList from './components/ChannelList';
 import PodcastPlayer from './components/player/PodcastPlayer';
 import CreateChannel from './components/CreateChannel';
 import Channel from './components/Channel';
-import { Login, Signup } from './components/AuthForm';
 import { me } from './reducers/user';
 import Keywords from './components/Keywords';
 import Bookmark from './components/Bookmark';
+import BookmarkPlayer from './components/BookmarkPlayer';
+import SignupPage from './components/SignupPage';
 
 class Routes extends Component {
 	componentDidMount() {
@@ -24,11 +25,13 @@ class Routes extends Component {
 			<Switch>
 				{/* Routes placed here are available to all visitors */}
 				<Route exact path="/" component={Home} />
+				<Route exact path="/signup" component={SignupPage} />
 				<Route path="/keywords" component={Keywords} />
 				{isLoggedIn && (
 					<Switch>
 						<Route exact path="/allchannels" component={ChannelList} />
 						<Route exact path="/podcastplayer" component={PodcastPlayer} />
+						<Route exact path="/bookmarkplayer" component={BookmarkPlayer} />
 						<Route exact path="/createchannel" component={CreateChannel} />
 						<Route exact path="/channel/:channelId" component={Channel} />
 						<Route exact path="/bookmarks" component={Bookmark} />

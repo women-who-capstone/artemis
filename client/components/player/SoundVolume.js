@@ -2,23 +2,17 @@ import React, { Component } from 'react';
 
 const styles = {
 	container: {
-		width: '15%',
+		width: '130px',
 		font: '10px',
-		position: 'absolute',
-		left: '25%',
-		bottom: '35%',
-
-		display: 'table-cell',
-		verticalAlign: 'middle'
-	},
-	inputy: { verticalAlign: 'baseline' }
+		display: 'inline-flex'
+	}
 };
 
 class SoundVolume extends Component {
 	render() {
 		const handleVolumeChange = this.props.handleVolumeChange;
 		const audioVolume = this.props.audioVolume;
-		console.log('audioVol', audioVolume);
+
 		return (
 			<div style={styles.container}>
 				<input

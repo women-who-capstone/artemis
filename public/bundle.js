@@ -213,13 +213,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 
 
@@ -278,28 +278,15 @@ function (_Component) {
   _inherits(AuthForm, _Component);
 
   function AuthForm() {
-    var _this;
-
     _classCallCheck(this, AuthForm);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(AuthForm).call(this));
-    _this.state = {
-      isError: false
-    };
-    _this.changingError = _this.changingError.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    return _this;
+    return _possibleConstructorReturn(this, _getPrototypeOf(AuthForm).apply(this, arguments));
   }
 
   _createClass(AuthForm, [{
-    key: "changingError",
-    value: function changingError(event) {
-      event.preventDefault();
-      this.props.error = '';
-    }
-  }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this = this;
 
       var _this$props = this.props,
           name = _this$props.name,
@@ -344,12 +331,12 @@ function (_Component) {
       }, displayName), error && error.response && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, " ", error.response.data, " ")), name === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/signup",
         onClick: function onClick() {
-          return _this2.props.removingError();
+          return _this.props.removingError();
         }
       }, "Create a new account") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/",
         onClick: function onClick() {
-          return _this2.props.removingError();
+          return _this.props.removingError();
         }
       }, "Login here"));
     }
@@ -384,7 +371,7 @@ var mapDispatch = function mapDispatch(dispatch) {
       dispatch(Object(_reducers_user__WEBPACK_IMPORTED_MODULE_8__["auth"])(email, password, formName));
     },
     removingError: function removingError() {
-      dispatch(Object(_reducers_user__WEBPACK_IMPORTED_MODULE_8__["deleteError"])());
+      dispatch(Object(_reducers_user__WEBPACK_IMPORTED_MODULE_8__["clearError"])());
     }
   };
 };
@@ -4312,13 +4299,13 @@ var fetchRecommendedEpisodes = function fetchRecommendedEpisodes(channelId) {
 /*!*********************************!*\
   !*** ./client/reducers/user.js ***!
   \*********************************/
-/*! exports provided: me, deleteError, auth, logout, default */
+/*! exports provided: me, clearError, auth, logout, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "me", function() { return me; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteError", function() { return deleteError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearError", function() { return clearError; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "auth", function() { return auth; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logout", function() { return logout; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
@@ -4362,13 +4349,6 @@ var gotUser = function gotUser(user) {
 var loggedOutUser = function loggedOutUser() {
   return {
     type: LOGGED_OUT_USER
-  };
-};
-
-var removeError = function removeError(err) {
-  return {
-    type: CLEAR_ERROR,
-    err: err
   };
 };
 /**
@@ -4417,10 +4397,11 @@ var me = function me() {
     }()
   );
 };
-var deleteError = function deleteError(dispatch) {
-  dispatch(removeError({
+var clearError = function clearError() {
+  return {
+    type: CLEAR_ERROR,
     error: ''
-  }));
+  };
 };
 var auth = function auth(email, password, method) {
   return (
@@ -4560,7 +4541,7 @@ var logout = function logout() {
 
     case CLEAR_ERROR:
       return _objectSpread({}, state, {
-        error: action.type
+        error: action.error
       });
 
     default:

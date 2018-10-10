@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import { auth, deleteError } from '../reducers/user';
+import { auth, clearError } from '../reducers/user';
 import { Typography, FormGroup } from '@material-ui/core';
 
 const styles = (theme) => ({
@@ -48,18 +48,6 @@ const styles = (theme) => ({
 });
 
 class AuthForm extends Component {
-	constructor() {
-		super();
-		this.state = {
-			isError: false
-		};
-		this.changingError = this.changingError.bind(this);
-	}
-
-	changingError(event) {
-		event.preventDefault();
-		this.props.error = '';
-	}
 	render() {
 		let { name, displayName, handleSubmit, error, classes } = this.props;
 
@@ -134,7 +122,7 @@ const mapDispatch = (dispatch) => {
 			dispatch(auth(email, password, formName));
 		},
 		removingError: () => {
-			dispatch(deleteError());
+			dispatch(clearError());
 		}
 	};
 };

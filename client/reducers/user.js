@@ -20,7 +20,6 @@ const defaultUser = {
  */
 const gotUser = (user) => ({ type: GOT_USER, user });
 const loggedOutUser = () => ({ type: LOGGED_OUT_USER });
-const removeError = (err) => ({ type: CLEAR_ERROR, err });
 
 /**
  * THUNK CREATORS
@@ -34,9 +33,7 @@ export const me = () => async (dispatch) => {
 	}
 };
 
-export const deleteError = (dispatch) => {
-	dispatch(removeError({ error: '' }));
-};
+export const clearError = () => ({ type: CLEAR_ERROR, error: '' });
 
 export const auth = (email, password, method) => async (dispatch) => {
 	let res;
@@ -84,7 +81,7 @@ export default function(state = defaultUser, action) {
 		case LOGGED_OUT_USER:
 			return defaultUser;
 		case CLEAR_ERROR:
-			return { ...state, error: action.type };
+			return { ...state, error: action.error };
 		default:
 			return state;
 	}

@@ -12,15 +12,28 @@ module.exports = router;
 
 router.get("/", async (req, res, next) => {
   try {
-    const episodes = await Episode.findAll({
-      include: [
-        {
-          model: Channel,
-          through: ChannelEpisode
-        }
-      ]
-    });
-    res.status(200).send(episodes);
+    if (req.query) {
+      const episodes = await Episode.findAll({
+        where: req.query,
+        include: [
+          {
+            model: Channel,
+            through: ChannelEpisode
+          }
+        ]
+      });
+      res.status(200).send(episodes);
+    } else {
+      const episodes = await Episode.findAll({
+        include: [
+          {
+            model: Channel,
+            through: ChannelEpisode
+          }
+        ]
+      });
+      res.status(200).send(episodes);
+    }
   } catch (err) {
     next(err);
   }

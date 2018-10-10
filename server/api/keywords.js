@@ -694,7 +694,7 @@ router.get("/", async (req, res, next) => {
     let channelId = req.query.channelId;
     let input = req.query.input.toLowerCase();
     let inputFiltered = await wordpos.getNouns(input, exclude);
-    let descriptionsArr = descriptions.slice(0, 100);
+    let descriptionsArr = descriptions.slice(0, 10);
     descriptionsArr.forEach(each => {
       tfidf.addDocument(each);
     });
@@ -705,7 +705,7 @@ router.get("/", async (req, res, next) => {
       tfidf.tfidfs(each, function(i, measure) {
         currentTag = each;
         allDes += measure;
-        console.log(`document# ${currentTag} is ${measure}`);
+        // console.log(`document# ${currentTag} is ${measure}`);
       });
       let tagRating = allDes / descriptionsArr.length;
       return tagRating > 0.2 || tagRating === 0;
@@ -724,11 +724,11 @@ router.get("/", async (req, res, next) => {
         await ChannelTag.create({
           channelId: channelId,
           tagId: tagId,
-          score: 5
+          score: 0.5
         });
       }
     });
-    console.log("TAG ARRAY", inputFiltered);
+    // console.log("TAG ARRAY", inputFiltered);
     res.json(inputFiltered);
   } catch (err) {
     next(err);

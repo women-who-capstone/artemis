@@ -20,9 +20,15 @@ const styles = theme => ({
   root: {
     flexGrow: 1
   },
+  container: {
+		display: 'flex',
+		flexWrap: 'no-wrap',
+		alignItems: 'baseline'
+	},
   textField: {
     marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing.unit,
+    backgroundColor: 'transparent'
   },
   dense: {
     marginTop: 16
@@ -52,6 +58,7 @@ const AuthForm = props => {
       <FormGroup row={true} className={classes.authGroup}>
         <TextField
           required
+          id="outlined-email-input"
           label="Email"
           className={classes.textField}
           type="email"
@@ -62,6 +69,7 @@ const AuthForm = props => {
         />
         <TextField
           required
+          id="outlined-password-input"
           label="Password"
           className={classes.textField}
           type="password"

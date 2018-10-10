@@ -147,6 +147,7 @@ class SingleChannel extends React.Component {
   async getNewEpisodeFromRecommendedEpisodes() {
     const channelId = this.props.match.params.channelId;
     let episode = await this.props.fetchRecommendedEpisodes(channelId);
+    console.log("REC EP", episode);
     return episode;
   }
 

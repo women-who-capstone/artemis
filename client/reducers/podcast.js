@@ -117,6 +117,7 @@ export const addPlayedEpisode = (episode, channelId) => {
       let playedEpisodeObj = {};
       playedEpisodeObj[newEpisode.title] = newEpisode;
       dispatch(setAddedPlayedEpisode(playedEpisodeObj));
+
     } catch (error) {
       console.error(error);
     }

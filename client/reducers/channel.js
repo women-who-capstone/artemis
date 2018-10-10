@@ -75,13 +75,17 @@ export const updateActiveChannelTags = (channelId, method, epTags, episode) => {
   console.log("From reducers, channelId", channelId);
   return async dispatch => {
     try {
+      console.log("title", episode.title);
+      const res = await axios.get(`/api/episode?title=${episode.title}`);
+      const currentEpisode = res.data[0];
+      console.log("EPISODE", currentEpisode);
       const { data: channel } = await axios.put(
         `/api/channel/${channelId}/tags`,
         {
           id: channelId,
           method: method,
           tags: epTags,
-          episode: episode
+          episode: currentEpisode
         }
       );
       dispatch(updatedActiveChannelTags(channel));

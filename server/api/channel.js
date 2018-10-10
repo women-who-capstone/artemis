@@ -150,7 +150,7 @@ router.put("/:id/tags", async (req, res, next) => {
         channelId: id
       }
     });
-    console.log("CHAN", chan);
+    // console.log("CHAN", chan);
     if (method === "like") {
       chan.incrementScore(tagNames);
       await chanEp.update({

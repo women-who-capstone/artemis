@@ -42,19 +42,18 @@ class AudioPlayer extends Component {
 
 	componentDidMount() {
 		try {
-
 			this.props.episodeAudio.addEventListener('loadedmetadata', () => {
 				this.setState({
 					audioLength: this.props.episodeAudio.duration
 				});
 			});
 			this.props.episodeAudio.addEventListener('ended', () => {
-				console.log('episode ended')
-        this.props.handleEpisodeEnd();
-        this.setState({
-          isBookmark: false,
-          isPlaying: false
-        })
+				console.log('episode ended');
+				this.props.handleEpisodeEnd();
+				this.setState({
+					isBookmark: false,
+					isPlaying: false
+				});
 			});
 			this.props.episodeAudio.addEventListener('error', () => {
 				this.props.handleEpisodeEnd();
@@ -71,7 +70,6 @@ class AudioPlayer extends Component {
 	}
 
 	componentWillUnmount() {
-
 		this.props.episodeAudio.removeEventListener('loadedmetadata', () => {
 			this.setState({
 				audioLength: this.props.episodeAudio.duration
@@ -83,18 +81,18 @@ class AudioPlayer extends Component {
 		this.props.episodeAudio.removeEventListener('error', () => {
 			this.props.handleEpisodeEnd();
 		});
-    this.props.episodeAudio.removeEventListener('timeupdate', () => {
-        this.setState({
-          audioTimeElapsed: this.props.episodeAudio.currentTime
-        });
-      });
+		this.props.episodeAudio.removeEventListener('timeupdate', () => {
+			this.setState({
+				audioTimeElapsed: this.props.episodeAudio.currentTime
+			});
+		});
 	}
 
 	handleSliderChange(event) {
 		// this.setState({
 		// 	audioTimeElapsed: Number(event.target.value)
 		// });
-		this.props.episodeAudio.currentTime = Number(event.target.value)
+		this.props.episodeAudio.currentTime = Number(event.target.value);
 	}
 
 	handleVolumeChange(event) {
@@ -139,13 +137,13 @@ class AudioPlayer extends Component {
 	skip() {
 		//this.pause();
 		this.props.handleSkip();
-    this.setState({
-      isBookmark: false,
-      isPlaying: false
-    });
+		this.setState({
+			isBookmark: false,
+			isPlaying: false
+		});
 
-    // this.props.episodeAudio.src = this.props.audio;
-    // this.props.episodeAudio.load()
+		// this.props.episodeAudio.src = this.props.audio;
+		// this.props.episodeAudio.load()
 	}
 
 	like() {
@@ -172,9 +170,9 @@ class AudioPlayer extends Component {
 	}
 
 	async bookmark() {
-    let apiEpisode = this.props.episode
+		let apiEpisode = this.props.episode;
 		let databaseEpisode = this.props.databaseEpisodes[apiEpisode.title];
-    console.log('databaseEpisode sfdsfd', databaseEpisode)
+		console.log('databaseEpisode sfdsfd', databaseEpisode);
 		let bookMarked = this.state.isBookmark;
 		await axios.post('/api/bookmarks', { id: databaseEpisode.id }); //FIX use Redux
 		this.setState({ isBookmark: !bookMarked });
@@ -208,8 +206,8 @@ class AudioPlayer extends Component {
 		const currentTimeInString = this.currentTimeCalculation();
 		const durationInMin = parseInt(this.props.episodeAudio.duration / 60, 10);
 		const durationInSec = parseInt(this.props.episodeAudio.duration % 60);
-    console.log('episodeAudio', this.props.episodeAudio)
-     //episodeAudio.src = this.props.audio;
+		console.log('episodeAudio', this.props.episodeAudio);
+		//episodeAudio.src = this.props.audio;
 
 		return (
 			<div>
@@ -278,11 +276,11 @@ class AudioPlayer extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-  return {
-    databaseEpisodes: state.podcast.playedEpisodes
-  }
-}
+const mapStateToProps = (state) => {
+	return {
+		databaseEpisodes: state.podcast.playedEpisodes
+	};
+};
 
 const mapDispatchToProps = (dispatch) => {
 	return {

@@ -22,7 +22,6 @@ class AudioPlayer extends Component {
 			isPlaying: false,
 			unmute: true,
 			audioLength: 0,
-			audioTimeElapsed: 0,
 			audioVolume: 0.5,
       currentTime: 0,
 			isBookmark: false,
@@ -78,7 +77,7 @@ class AudioPlayer extends Component {
 		});
     episodeAudio.removeEventListener('timeupdate', () => {
         this.setState({
-          audioTimeElapsed: episodeAudio.currentTime
+          currentTime: episodeAudio.currentTime
         });
       });
 	}
@@ -93,7 +92,7 @@ class AudioPlayer extends Component {
 
 	handleSliderChange(event) {
 		this.setState({
-		 	currentTime: Number(event.target.value)
+      currentTime: Number(event.target.value)
 		 });
 		episodeAudio.currentTime = Number(event.target.value)
 	}

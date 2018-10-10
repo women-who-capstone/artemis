@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow: hidden;
+}
+
+.material-icons.orange600 {
+	color: #eb7c14;
+}

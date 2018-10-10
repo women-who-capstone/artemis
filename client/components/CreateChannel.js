@@ -12,7 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import Channel from "./Channel";
 import { withStyles } from "@material-ui/core/styles";
-import { setSinglePodcast, setPodcastList } from "../reducers/podcast";
+import { setSinglePodcast, setPodcastList, fetchCategoryPodcastsEpisodeData } from "../reducers/podcast";
 import { connect } from "react-redux";
 
 let suggestions = [];
@@ -153,22 +153,33 @@ class IntegrationAutosuggest extends React.Component {
 
   createAndRenderChannel = () => async event => {
     event.preventDefault();
-    let searchInput = this.state.single;
-    let matchingId = suggestions.filter(sugg => sugg.label === searchInput);
-    let genreId = matchingId[0].id;
-    let res = await axios.get(`/api/podcast?id=${genreId}`);
-    let channelList = res.data;
-    let randomPodcast =
-      channelList.channels[Math.floor(Math.random() * 20 + 1)];
-    this.props.setSinglePodcast(randomPodcast);
-    this.props.setPodcastList(channelList.channels);
-    const createdChannel = await axios.post("/api/channel", {
-      name: searchInput
-    });
-    this.setState({
-      id: createdChannel.data.id,
-      reDirect: true
-    });
+    try {
+      let searchInput = this.state.single;
+      let matchingId = suggestions.filter(sugg => sugg.label === searchInput);
+      let genreId = matchingId[0].id;
+      let res = await axios.get(`/api/podcast?id=${genreId}`);
+      let channelList = res.data;
+
+      if (channelList.channels === undefined) throw new Error('channelList is undefined')
+
+      this.props.fetchCategoryPodcastsEpisodeData(channelList.channels)
+
+      // let randomPodcast =
+      //   channelList.channels[Math.floor(Math.random() * channelList.channels.length + 1)];
+      // if (randomPodcast === undefined) throw new Error('randomPodcast is undefined')
+      // this.props.setSinglePodcast(randomPodcast);
+      // this.props.setPodcastList(channelList.channels);
+
+      const createdChannel = await axios.post("/api/channel", {
+        name: searchInput
+      });
+      this.setState({
+        id: createdChannel.data.id,
+        reDirect: true
+      });
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   render() {
@@ -220,8 +231,9 @@ class IntegrationAutosuggest extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSinglePodcast: episode => dispatch(setSinglePodcast(episode)),
-    setPodcastList: episodes => dispatch(setPodcastList(episodes))
+    // setSinglePodcast: podcast => dispatch(setSinglePodcast(podcast)),
+    // setPodcastList: podcasts => dispatch(setPodcastList(podcasts)),
+    fetchCategoryPodcastsEpisodeData: podcasts => dispatch(fetchCategoryPodcastsEpisodeData(podcasts))
   };
 };
 

@@ -1,22 +1,22 @@
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Logout from "./Logout";
-import Routes from "../routes";
-import history from "../history";
+import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Logout from './Logout';
+import Routes from '../routes';
+import history from '../history';
 
 const drawerWidth = 240;
 
@@ -31,14 +31,14 @@ const styles = theme => ({
   appFrame: {
     height: '100vh',
     zIndex: 1,
-    position: "relative",
-    display: "flex",
-    width: "100%",
-    justifyContent: "center"
+    position: 'relative',
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'center'
   },
   appBar: {
-    position: "absolute",
-    transition: theme.transitions.create(["margin", "width"], {
+    position: 'absolute',
+    transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     })
@@ -48,15 +48,15 @@ const styles = theme => ({
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["margin", "width"], {
+    transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen
     })
   },
-  "appBarShift-left": {
+  'appBarShift-left': {
     marginLeft: drawerWidth
   },
-  "appBarShift-right": {
+  'appBarShift-right': {
     marginRight: drawerWidth
   },
   menuButton: {
@@ -64,48 +64,46 @@ const styles = theme => ({
     marginRight: 20
   },
   hide: {
-    display: "none"
+    display: 'none'
   },
   drawerPaper: {
-    position: "relative",
+    position: 'relative',
     width: drawerWidth
   },
   drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: "0 8px",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
     ...theme.mixins.toolbar
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
-    transition: theme.transitions.create("margin", {
+    transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
     overflow: 'auto',
-    background:
-      'linear-gradient(to bottom, rgba(89, 155, 163, 0.65) 0%, rgba(89, 155, 163, 0.65) 30%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0) 100%)',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover'
   },
-  "content-left": {
+  'content-left': {
     marginLeft: -drawerWidth
   },
-  "content-right": {
+  'content-right': {
     marginRight: -drawerWidth
   },
   contentShift: {
-    transition: theme.transitions.create("margin", {
+    transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen
     })
   },
-  "contentShift-left": {
+  'contentShift-left': {
     marginLeft: 0
   },
-  "contentShift-right": {
+  'contentShift-right': {
     marginRight: 0
   }
 });
@@ -155,7 +153,7 @@ class PersistentDrawer extends React.Component {
     this.changeBackground();
     const drawer = (
       <Drawer
-        style={{ height: "100%" }}
+        style={{ height: '100%' }}
         variant="persistent"
         anchor={anchor}
         open={open}
@@ -165,7 +163,7 @@ class PersistentDrawer extends React.Component {
       >
         <div className={classes.drawerHeader}>
           <IconButton onClick={this.handleDrawerClose}>
-            {theme.direction === "rtl" ? (
+            {theme.direction === 'rtl' ? (
               <ChevronRightIcon />
             ) : (
               <ChevronLeftIcon />
@@ -174,13 +172,13 @@ class PersistentDrawer extends React.Component {
         </div>
         <Divider />
         <List>
-          <ListItem button onClick={() => history.push("/allchannels")}>
+          <ListItem button onClick={() => history.push('/allchannels')}>
             <ListItemText primary="Channels" />
           </ListItem>
-          <ListItem button onClick={() => history.push("/createchannel")}>
+          <ListItem button onClick={() => history.push('/createchannel')}>
             <ListItemText primary="Create Channel" />
           </ListItem>
-          <ListItem button onClick={() => history.push("/bookmarks")}>
+          <ListItem button onClick={() => history.push('/bookmarks')}>
             <ListItemText primary="Bookmarks" />
           </ListItem>
         </List>
@@ -190,7 +188,7 @@ class PersistentDrawer extends React.Component {
     let before = null;
     let after = null;
 
-    if (anchor === "left") {
+    if (anchor === 'left') {
       before = drawer;
     } else {
       after = drawer;
@@ -231,7 +229,12 @@ class PersistentDrawer extends React.Component {
                 [classes[`contentShift-${anchor}`]]: open
               }
             )}
-            style={{ backgroundImage: this.state.bg }}
+            style={{
+              backgroundImage: `
+            linear-gradient(to bottom, rgba(89, 155, 163, 0.65) 0%, rgba(89, 155, 163, 0.65) 30%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0) 100%), ${
+              this.state.bg
+            }`
+            }}
           >
             <div className={classes.drawerHeader} />
             <Routes style={styles.drawerPaper} />

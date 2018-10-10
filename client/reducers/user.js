@@ -6,17 +6,21 @@ import history from '../history';
  */
 const GOT_USER = 'GOT_USER';
 const LOGGED_OUT_USER = 'LOGGED_OUT_USER';
+const CLEAR_ERROR = 'CLEAR_ERROR';
 
 /**
  * INITIAL STATE
  */
-const defaultUser = {};
+const defaultUser = {
+	error: ''
+};
 
 /**
  * ACTION CREATORS
  */
 const gotUser = (user) => ({ type: GOT_USER, user });
 const loggedOutUser = () => ({ type: LOGGED_OUT_USER });
+const removeError = (err) => ({ type: CLEAR_ERROR, err });
 
 /**
  * THUNK CREATORS
@@ -30,6 +34,10 @@ export const me = () => async (dispatch) => {
 	}
 };
 
+export const deleteError = (dispatch) => {
+	dispatch(removeError({ error: '' }));
+};
+
 export const auth = (email, password, method) => async (dispatch) => {
 	let res;
 	try {
@@ -39,12 +47,17 @@ export const auth = (email, password, method) => async (dispatch) => {
 	}
 
 	try {
-		console.log('AUTH USER', res.data);
 		dispatch(gotUser(res.data));
 		if (method === 'signup') {
 			history.push('/createchannel');
 		} else {
-			history.push('/allchannels');
+			let result = await axios.get('api/channel/user');
+			const userChannels = result.data;
+			if (!userChannels.length) {
+				history.push('/createchannel');
+			} else {
+				history.push('/allchannels');
+			}
 		}
 	} catch (dispatchOrHistoryErr) {
 		console.error(dispatchOrHistoryErr);
@@ -70,6 +83,8 @@ export default function(state = defaultUser, action) {
 			return action.user;
 		case LOGGED_OUT_USER:
 			return defaultUser;
+		case CLEAR_ERROR:
+			return { ...state, error: action.type };
 		default:
 			return state;
 	}

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 
-import { Login } from './AuthForm';
+import { Signup } from './AuthForm';
 
-class Home extends Component {
+class SignupPage extends Component {
 	render() {
 		return (
 			<div className="homeDiv">
-				<Login />
+				<Signup />
 			</div>
 		);
 	}
 }
 
-export default Home;
+export default SignupPage;

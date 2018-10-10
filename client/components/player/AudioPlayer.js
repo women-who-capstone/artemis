@@ -155,6 +155,7 @@ class AudioPlayer extends Component {
       isBookmark: false,
       isPlaying: false
     });
+  }
 
 	like() {
 		let isLiked = this.state.liked;

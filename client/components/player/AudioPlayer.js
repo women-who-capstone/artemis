@@ -57,6 +57,22 @@ class AudioPlayer extends Component {
         currentTime: episodeAudio.currentTime
       });
     });
+
+    episodeAudio.addEventListener("ended", () => {
+      this.props.handleEpisodeEnd();
+      this.setState({
+        liked: false,
+        disliked: false
+      })
+    });
+
+    episodeAudio.addEventListener("error", () => {
+      this.props.handleEpisodeEnd();
+      this.setState({
+        liked: false,
+        disliked: false
+      })
+    });
   }
 
   componentWillUnmount() {
@@ -153,7 +169,9 @@ class AudioPlayer extends Component {
     this.props.handleSkip();
     this.setState({
       isBookmark: false,
-      isPlaying: false
+      isPlaying: false,
+      liked: false,
+      disliked: false
     });
   }
 

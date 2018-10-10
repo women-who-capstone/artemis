@@ -36,65 +36,128 @@ const styles = (theme) => ({
 });
 
 class PodcastPlayer extends Component {
-	constructor() {
-		super();
-		this.state = {
-			episodeAudio: new Audio()
-		};
-	}
+  // constructor() {
+  //   super()
+  //   let episodeAudio = new Audio()
+  //   episodeAudio.src = ''
+  //   episodeAudio.preload = 'metadata'
 
-	render() {
-		const { classes, handleEpisodeEnd, episodeQueue, handleSkip, episode, channelId } = this.props;
-		let audioLength;
-		let currentTime;
+  //   this.state = {
+  //     episodeAudio: episodeAudio,
+  //     currentTime: episodeAudio.currentTime,
+  //     audioLength: 0
+  //   }
+  // }
 
-		// this.state.episodeAudio.src = episode.audio ? episode.audio : episode.audioURL;
-		// this.state.episodeAudio.preload = 'auto';
-		// this.state.episodeAudio.load();
+  componentDidMount() {
+    // const { episode } = this.props;
+    // let episodeAudioCopy = this.state.episodeAudio
+    // console.log('episodeAudioCopy', episodeAudioCopy)
+    // episodeAudioCopy.src = episode.audio ? episode.audio : episode.audioURL
+    // episodeAudioCopy.load()
+    // episodeAudioCopy.addEventListener('loadedmetadata', () => {
+    //   this.setState({
+    //     audioLength: episodeAudioCopy.duration
+    //   });
+    // })
 
-		this.state.episodeAudio.addEventListener('loadedmetadata', () => {
-			audioLength = this.state.episodeAudio.duration;
-		});
+    // episodeAudioCopy.addEventListener('timeupdate', () => {
+    //   this.setState({
+    //     currentTime: episodeAudioCopy.currentTime
+    //   });
+    // })
 
-		this.state.episodeAudio.addEventListener('timeupdate', () => {
-			currentTime = this.state.episodeAudio.currentTime;
-		});
+    // this.setState({
+    //   episodeAudio: episodeAudioCopy
+    // })
+  }
 
-		return (
-			<div>
-				<Card className={`${classes.card} `}>
-					<CardMedia
-						style={{
-							margin: '0px 0px 0px 0px'
-						}}
-						className={classes.cover}
-						image={episode.imageURL ? episode.imageURL : episode.podcastImageURL}
-						title={episode.title}
-					/>
-					<CardContent className={classes.content}>
-						<Typography variant="headline">{episode.title}</Typography>
-						<Typography variant="subheading" color="textSecondary">
-							{episode.podcastTitle}
-						</Typography>
-					</CardContent>
-					<CardActions className={classes.actions}>
-						<AudioPlayer
-							audio={episode.audio ? episode.audio : episode.audioURL}
-							episode={episode}
-							channelId={channelId}
-							episodeQueue={episodeQueue}
-							handleSkip={handleSkip}
-							handleEpisodeEnd={handleEpisodeEnd}
-							tags={this.props.tags}
-							episodeAudio={this.state.episodeAudio}
-							audioLength={audioLength}
-							currentTime={currentTime}
-						/>
-					</CardActions>
-				</Card>
-			</div>
-		);
-	}
+  componentDidUpdate(prevProps) {
+    // if (this.props.episode !== prevProps.episode) {
+    //   const { episode } = this.props;
+    //   let episodeAudioCopy = this.state.episodeAudio
+    //   console.log('episodeAudioCopy', episodeAudioCopy)
+    //   episodeAudioCopy.src = episode.audio ? episode.audio : episode.audioURL
+    //   episodeAudioCopy.load()
+    //   episodeAudioCopy.addEventListener('loadedmetadata', () => {
+    //     this.setState({
+    //       audioLength: episodeAudioCopy.duration
+    //     });
+    //   })
+
+    //   episodeAudioCopy.addEventListener('timeupdate', () => {
+    //     this.setState({
+    //       currentTime: episodeAudioCopy.currentTime
+    //     });
+    //   })
+
+    //   this.setState({
+    //     episodeAudio: episodeAudioCopy
+    //   })
+    // }
+  }
+
+  render() {
+    // const { value } = this.state
+    const {
+      classes,
+      handleEpisodeEnd,
+      episodeQueue,
+      handleSkip,
+      episode,
+      channelId
+    } = this.props;
+
+    // this.state.episodeAudio.src = episode.audio ? episode.audio : episode.audioURL
+    // this.state.episodeAudio.preload = 'auto';
+    // this.state.episodeAudio.load()
+
+    // this.state.episodeAudio.addEventListener('loadedmetadata', () => {
+    //   audioLength = this.state.episodeAudio.duration
+    // });
+
+    // this.state.episodeAudio.addEventListener('timeupdate', () => {
+    //   currentTime = this.state.episodeAudio.currentTime
+    // });
+
+    return (
+      <div>
+        <Card className={`${classes.card} `}>
+          <CardMedia
+            style={{
+              margin: "0px 0px 0px 0px"
+            }}
+            className={classes.cover}
+            image={
+              episode.imageURL ? episode.imageURL : episode.podcastImageURL
+            }
+            title={episode.title}
+          />
+          <CardContent className={classes.content}>
+            <Typography variant="headline">{episode.title}</Typography>
+            <Typography variant="subheading" color="textSecondary">
+              {episode.podcastTitle}
+            </Typography>
+          </CardContent>
+          <CardActions className={classes.actions}>
+            <AudioPlayer
+              audio={episode.audio ? episode.audio : episode.audioURL}
+              episode={episode}
+              channelId={channelId}
+              episodeQueue={episodeQueue}
+              handleSkip={handleSkip}
+              handleEpisodeEnd={handleEpisodeEnd}
+              tags={this.props.tags}
+              /*episodeAudio={this.state.episodeAudio}
+              audioLength={this.state.audioLength}
+              currentTime={this.state.currentTime}*/
+            />
+          </CardActions>
+        </Card>
+      </div>
+    );
+  }
+
 }
 
 export default withStyles(styles, { withTheme: true })(PodcastPlayer);

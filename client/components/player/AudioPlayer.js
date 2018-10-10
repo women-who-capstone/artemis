@@ -1,155 +1,160 @@
-import React, { Component } from 'react';
-import { updateActiveChannelTags } from '../../reducers/channel';
-import { connect } from 'react-redux';
-import IconButton from '@material-ui/core/IconButton';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import Bookmark from '@material-ui/icons/Bookmark';
-import VolumeUp from '@material-ui/icons/VolumeUp';
-import VolumeOff from '@material-ui/icons/VolumeOff';
-import axios from 'axios';
-import SoundVolume from './SoundVolume';
+
+import React, { Component } from "react";
+import { updateActiveChannelTags } from "../../reducers/channel";
+import { connect } from "react-redux";
+import IconButton from "@material-ui/core/IconButton";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import PauseIcon from "@material-ui/icons/Pause";
+import SkipNextIcon from "@material-ui/icons/SkipNext";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import ThumbDownIcon from "@material-ui/icons/ThumbDown";
+import Bookmark from "@material-ui/icons/Bookmark";
+import VolumeUp from "@material-ui/icons/VolumeUp";
+import VolumeOff from "@material-ui/icons/VolumeOff";
+import axios from "axios";
+import SoundVolume from "./SoundVolume";
+
+let episodeAudio = new Audio();
 
 class AudioPlayer extends Component {
-	constructor() {
-		super();
-		this.state = {
-			isPlaying: false,
-			unmute: true,
-			audioLength: 0,
-			audioTimeElapsed: 0,
-			audioVolume: 0.5,
-			isBookmark: false,
-			liked: false,
-			disliked: false
-		};
+  constructor() {
+    super();
+    this.state = {
+      isPlaying: false,
+      unmute: true,
+      audioLength: 0,
+      audioVolume: 0.5,
+      currentTime: 0,
+      isBookmark: false,
+      liked: false,
+      disliked: false
+    };
 
-		this.play = this.play.bind(this);
-		this.pause = this.pause.bind(this);
-		this.like = this.like.bind(this);
-		this.dislike = this.dislike.bind(this);
-		this.handleMute = this.handleMute.bind(this);
-		this.skip = this.skip.bind(this);
-		this.handleSliderChange = this.handleSliderChange.bind(this);
-		this.bookmark = this.bookmark.bind(this);
-		this.handleVolumeChange = this.handleVolumeChange.bind(this);
-		this.next = this.next.bind(this);
-	}
+    this.play = this.play.bind(this);
+    this.pause = this.pause.bind(this);
+    this.like = this.like.bind(this);
+    this.dislike = this.dislike.bind(this);
+    this.handleMute = this.handleMute.bind(this);
+    this.skip = this.skip.bind(this);
+    this.handleSliderChange = this.handleSliderChange.bind(this);
+    this.bookmark = this.bookmark.bind(this);
+    this.handleVolumeChange = this.handleVolumeChange.bind(this);
+    //this.next = this.next.bind(this);
+  }
 
-	componentDidMount() {
-		try {
-			this.props.episodeAudio.addEventListener('loadedmetadata', () => {
-				this.setState({
-					audioLength: this.props.episodeAudio.duration
-				});
-			});
-			this.props.episodeAudio.addEventListener('ended', () => {
-				console.log('episode ended');
-				this.props.handleEpisodeEnd();
-				this.setState({
-					isBookmark: false,
-					isPlaying: false
-				});
-			});
-			this.props.episodeAudio.addEventListener('error', () => {
-				this.props.handleEpisodeEnd();
-			});
+  componentDidMount() {
+    const { episode } = this.props;
+    episodeAudio.src = episode.audio ? episode.audio : episode.audioURL;
+    episodeAudio.load();
+    episodeAudio.addEventListener("loadedmetadata", () => {
+      this.setState({
+        audioLength: episodeAudio.duration
+      });
+    });
 
-			this.props.episodeAudio.addEventListener('timeupdate', () => {
-				this.setState({
-					audioTimeElapsed: this.props.episodeAudio.currentTime
-				});
-			});
-		} catch (error) {
-			throw new Error('There was an audio error');
-		}
-	}
+    episodeAudio.addEventListener("timeupdate", () => {
+      this.setState({
+        currentTime: episodeAudio.currentTime
+      });
+    });
+  }
 
-	componentWillUnmount() {
-		this.props.episodeAudio.removeEventListener('loadedmetadata', () => {
-			this.setState({
-				audioLength: this.props.episodeAudio.duration
-			});
-		});
-		this.props.episodeAudio.removeEventListener('ended', () => {
-			this.props.handleEpisodeEnd();
-		});
-		this.props.episodeAudio.removeEventListener('error', () => {
-			this.props.handleEpisodeEnd();
-		});
-		this.props.episodeAudio.removeEventListener('timeupdate', () => {
-			this.setState({
-				audioTimeElapsed: this.props.episodeAudio.currentTime
-			});
-		});
-	}
+  componentWillUnmount() {
+    episodeAudio.removeEventListener("loadedmetadata", () => {
+      this.setState({
+        audioLength: this.props.episodeAudio.duration
+      });
+    });
+    episodeAudio.removeEventListener("ended", () => {
+      this.props.handleEpisodeEnd();
+    });
+    episodeAudio.removeEventListener("error", () => {
+      this.props.handleEpisodeEnd();
+    });
+    episodeAudio.removeEventListener("timeupdate", () => {
+      this.setState({
+        currentTime: episodeAudio.currentTime
+      });
+    });
+  }
 
-	handleSliderChange(event) {
-		// this.setState({
-		// 	audioTimeElapsed: Number(event.target.value)
-		// });
-		this.props.episodeAudio.currentTime = Number(event.target.value);
-	}
+  componentDidUpdate(prevProps) {
+    if (this.props.episode !== prevProps.episode) {
+      const { episode } = this.props;
+      episodeAudio.src = episode.audio ? episode.audio : episode.audioURL;
+      episodeAudio.load();
+    }
+  }
 
-	handleVolumeChange(event) {
-		this.setState({
-			audioVolume: event.target.value
-		});
+  handleSliderChange(event) {
+    this.setState({
+      currentTime: Number(event.target.value)
+    });
+    episodeAudio.currentTime = Number(event.target.value);
+  }
 
-		this.props.episodeAudio.volume = this.state.audioVolume;
-	}
+  handleVolumeChange(event) {
+    this.setState({
+      audioVolume: event.target.value
+    });
+    episodeAudio.volume = this.state.audioVolume;
+  }
 
-	play() {
-		this.props.episodeAudio.play();
-		this.setState({
-			isPlaying: true
-		});
-	}
+  play() {
+    episodeAudio.play();
+    this.setState({
+      isPlaying: true
+    });
+  }
 
-	pause() {
-		this.props.episodeAudio.pause();
-		this.setState({
-			isPlaying: false
-		});
-	}
+  pause() {
+    episodeAudio.pause();
+    this.setState({
+      isPlaying: false
+    });
+  }
 
-	handleMute() {
-		var stateUnmute = this.state.unmute;
-		if (stateUnmute) {
-			this.setState({
-				audioVolume: 0,
-				unmute: !stateUnmute
-			});
-			this.props.episodeAudio.muted = true;
-		} else {
-			this.setState({
-				audioVolume: 0.1,
-				unmute: !stateUnmute
-			});
-			this.props.episodeAudio.muted = false;
-		}
-	}
+  handleMute() {
+    var stateUnmute = this.state.unmute;
+    if (stateUnmute) {
+      this.setState({
+        audioVolume: 0,
+        unmute: !stateUnmute
+      });
+      episodeAudio.muted = true;
+    } else {
+      this.setState({
+        audioVolume: 0.1,
+        unmute: !stateUnmute
+      });
+      episodeAudio.muted = false;
+    }
+  }
 
-	skip() {
-		this.props.handleSkip();
-		this.setState({
-			isBookmark: false,
-			liked: false,
-			disliked: false,
-			isPlaying: false
-		});
-	}
+  // handleMute() {
+  //   var stateUnmute = this.state.unmute;
+  //   if (stateUnmute) {
+  //     this.setState({
+  //       audioVolume: 0,
+  //       unmute: !stateUnmute
+  //     });
+  //     this.props.episodeAudio.muted = true;
+  //   } else {
+  //     this.setState({
+  //       audioVolume: 0.1,
+  //       unmute: !stateUnmute
+  //     });
+  //     this.props.episodeAudio.muted = false;
+  //   }
+  // }
 
-	async bookmark() {
-		let apiEpisode = this.props.episode;
-		let databaseEpisode = this.props.databaseEpisodes[apiEpisode.title];
-		let bookMarked = this.state.isBookmark;
-		await axios.post('/api/bookmarks', { id: databaseEpisode.id });
-		this.setState({ isBookmark: !bookMarked });
-	}
+  skip() {
+    //this.pause();
+    this.props.handleSkip();
+    this.setState({
+      isBookmark: false,
+      isPlaying: false
+    });
 
 	like() {
 		let isLiked = this.state.liked;
@@ -173,100 +178,117 @@ class AudioPlayer extends Component {
 		});
 	}
 
-	async next() {
-		let channelId = this.props.channelId;
-		let res = await axios.get('/api/episode/next', {
-			params: {
-				channelId: channelId
-			}
-		});
-		let nextEpisode = res.data;
-		this.props.setNewEpisode(nextEpisode);
-	}
+  async bookmark() {
+    let apiEpisode = this.props.episode;
+    let databaseEpisode = this.props.databaseEpisodes[apiEpisode.title];
+    let bookMarked = this.state.isBookmark;
+    await axios.post("/api/bookmarks", { episodeId: databaseEpisode.id }); //FIX use Redux
+    this.setState({ isBookmark: !bookMarked });
+  }
 
-	currentTimeCalculation() {
-		let timeInMin = Math.floor(this.props.episodeAudio.currentTime / 60).toString();
-		let timeInSec = Math.floor(this.props.episodeAudio.currentTime % 60).toString();
-		if (timeInMin < 10) {
-			timeInMin = '0' + timeInMin;
-		}
-		if (timeInSec < 10) {
-			timeInSec = '0' + timeInSec;
-		}
-		let currentTimeInStr = timeInMin + ':' + timeInSec;
-		return currentTimeInStr;
-	}
+  // async next() {
+  //   let channelId = this.props.channelId;
+  //   let res = await axios.get("/api/episode/next", {
+  //     params: {
+  //       channelId: channelId
+  //     }
+  //   });
+  //   let nextEpisode = res.data;
+  //   this.props.setNewEpisode(nextEpisode);
+  // }
 
-	render() {
-		const currentTimeInString = this.currentTimeCalculation();
-		const durationInMin = parseInt(this.props.episodeAudio.duration / 60, 10);
-		const durationInSec = parseInt(this.props.episodeAudio.duration % 60);
+  currentTimeCalculation() {
+    let timeInMin = Math.floor(this.state.currentTime / 60).toString();
+    let timeInSec = Math.floor(this.state.currentTime % 60).toString();
+    if (timeInMin < 10) {
+      timeInMin = "0" + timeInMin;
+    }
+    if (timeInSec < 10) {
+      timeInSec = "0" + timeInSec;
+    }
+    let currentTimeInStr = timeInMin + ":" + timeInSec;
+    return currentTimeInStr;
+  }
 
-		return (
-			<div>
-				{this.state.isPlaying ? (
-					<IconButton>
-						<PauseIcon onClick={this.pause} />
-					</IconButton>
-				) : (
-					<IconButton>
-						<PlayArrowIcon onClick={this.play} />
-					</IconButton>
-				)}
-				<IconButton onClick={this.skip}>
-					<SkipNextIcon />
-				</IconButton>
-				<IconButton>
-					<ThumbUpIcon
-						onClick={this.like}
-						className={this.state.liked ? 'material-icons orange600' : 'empty'}
-					/>
-				</IconButton>
-				<IconButton>
-					<ThumbDownIcon
-						onClick={this.dislike}
-						className={this.state.disliked ? 'material-icons orange600' : 'empty'}
-					/>
-				</IconButton>
-				<IconButton>
-					<Bookmark
-						onClick={this.bookmark}
-						className={this.state.isBookmark ? 'material-icons orange600' : 'empty'}
-					/>
-				</IconButton>
-				<IconButton>
-					{this.state.unmute ? (
-						<VolumeUp onClick={this.handleMute} />
-					) : (
-						<VolumeOff onClick={this.handleMute} />
-					)}
-				</IconButton>
+  render() {
+    const currentTimeInString = this.currentTimeCalculation();
+    const durationInMin = parseInt(episodeAudio.duration / 60, 10);
+    const durationInSec = parseInt(episodeAudio.duration % 60);
+    //console.log('episodeAudio', this.props.episodeAudio)
+    //episodeAudio.src = this.props.audio;
 
-				<SoundVolume handleVolumeChange={this.handleVolumeChange} audioVolume={this.state.audioVolume} />
+    return (
+      <div>
+        {this.state.isPlaying ? (
+          <IconButton>
+            <PauseIcon onClick={this.pause} />
+          </IconButton>
+        ) : (
+          <IconButton>
+            <PlayArrowIcon onClick={this.play} />
+          </IconButton>
+        )}
+        <IconButton onClick={this.skip}>
+          <SkipNextIcon />
+        </IconButton>
+        <IconButton>
+          <ThumbUpIcon
+            onClick={this.like}
+            className={this.state.liked ? "material-icons orange600" : "empty"}
+          />
+        </IconButton>
+        <IconButton>
+          <ThumbDownIcon
+            onClick={this.dislike}
+            className={
+              this.state.disliked ? "material-icons orange600" : "empty"
+            }
+          />
+        </IconButton>
+        <IconButton>
+          <Bookmark
+            onClick={this.bookmark}
+            className={
+              this.state.isBookmark ? "material-icons orange600" : "empty"
+            }
+          />
+        </IconButton>
+        <IconButton>
+          {this.state.unmute ? (
+            <VolumeUp onClick={this.handleMute} />
+          ) : (
+            <VolumeOff onClick={this.handleMute} />
+          )}
+        </IconButton>
 
-				<div style={{ display: 'flex' }}>
-					<div style={{ flexGrow: '35' }}>
-						<input
-							type="range"
-							value={this.props.currentTime}
-							aria-labelledby="label"
-							onChange={this.handleSliderChange}
-							min={0}
-							max={this.props.audioLength}
-							step="any"
-						/>
-					</div>
-					{durationInMin && durationInSec ? (
-						<div style={{ float: 'right', flexGrow: '1' }}>
-							{currentTimeInString} | {durationInMin}:{durationInSec}
-						</div>
-					) : (
-						<div />
-					)}
-				</div>
-			</div>
-		);
-	}
+        <SoundVolume
+          handleVolumeChange={this.handleVolumeChange}
+          audioVolume={this.state.audioVolume}
+        />
+
+        <div style={{ display: "flex" }}>
+          <div style={{ flexGrow: "35" }}>
+            <input
+              type="range"
+              value={this.state.currentTime}
+              aria-labelledby="label"
+              onChange={this.handleSliderChange}
+              min={0}
+              max={this.state.audioLength}
+              step="any"
+            />
+          </div>
+          {durationInMin && durationInSec ? (
+            <div style={{ float: "right", flexGrow: "1" }}>
+              {currentTimeInString} | {durationInMin}:{durationInSec}
+            </div>
+          ) : (
+            <div />
+          )}
+        </div>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {

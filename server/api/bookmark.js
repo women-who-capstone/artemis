@@ -10,6 +10,7 @@ router.get("/", async (req, res, next) => {
         userId: user.id
       }
     });
+    console.log('.........................................BOOKMARKS', bookmarks)
     res.status(200).send(bookmarks);
   } catch (err) {
     next(err);

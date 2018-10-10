@@ -904,43 +904,34 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(SingleChannel).call(this));
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "setEpisode",
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "setTags",
     /*#__PURE__*/
     function () {
       var _ref = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee(episodeId) {
-        var channelId, res, podcastTitle, podcastImage, episode, req, newEpisode;
+      regeneratorRuntime.mark(function _callee(episode) {
+        var description, res, tags;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                channelId = this.props.match.params.channelId;
+                description = episode.description;
                 _context.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_4___default.a.get("/api/episode/apiEpisode?id=".concat(episodeId));
+                return axios__WEBPACK_IMPORTED_MODULE_4___default.a.get('/api/keywords', {
+                  params: {
+                    input: description,
+                    channelId: this.props.match.params.channelId
+                  }
+                });
 
               case 3:
                 res = _context.sent;
-                podcastTitle = res.data.title;
-                podcastImage = res.data.image;
-                episode = res.data.episodes[0];
-                episode.channelId = channelId;
-                episode.podcastTitle = podcastTitle;
-                episode.podcastImageURL = podcastImage;
-                console.log('EPISODE from setEpisode', episode);
-                _context.next = 13;
-                return axios__WEBPACK_IMPORTED_MODULE_4___default.a.post('/api/episode', episode);
-
-              case 13:
-                req = _context.sent;
-                newEpisode = req.data;
+                tags = res.data;
                 this.setState({
-                  episode: newEpisode
+                  tags: tags
                 });
-                this.setTags(newEpisode);
-                this.props.setSinglePodcast({});
 
-              case 18:
+              case 6:
               case "end":
                 return _context.stop();
             }
@@ -953,130 +944,78 @@ function (_React$Component) {
       };
     }());
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "setNewEpisode",
-    /*#__PURE__*/
-    function () {
-      var _ref2 = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee2(episode) {
-        var episodeId, channelId;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                episodeId = episode.id;
-                channelId = this.props.match.params.channelId; // await axios.post("/api/episode/nextEpisode", {
-                //   episodeId,
-                //   channelId
-                // });
-
-                this.setState({
-                  episode: episode
-                });
-                _context2.next = 5;
-                return axios__WEBPACK_IMPORTED_MODULE_4___default.a.post('/api/episode/nextEpisode', {
-                  episodeId: episodeId,
-                  channelId: channelId
-                });
-
-              case 5:
-                this.setTags(episode);
-                this.props.setSinglePodcast({});
-
-              case 7:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      return function (_x2) {
-        return _ref2.apply(this, arguments);
-      };
-    }());
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "setTags",
-    /*#__PURE__*/
-    function () {
-      var _ref3 = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3(episode) {
-        var description, res, tags;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                description = episode.description;
-                _context3.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_4___default.a.get('/api/keywords', {
-                  params: {
-                    input: description,
-                    channelId: this.props.match.params.channelId
-                  }
-                });
-
-              case 3:
-                res = _context3.sent;
-                tags = res.data;
-                this.setState({
-                  tags: tags
-                });
-
-              case 6:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this);
-      }));
-
-      return function (_x3) {
-        return _ref3.apply(this, arguments);
-      };
-    }());
-
     _this.state = {
       episode: {},
       unfinishedEpisode: {},
       episodeQueue: [],
       tags: [],
-      vector: [] // recommendedEpisode: {}
-
-    }; //this.setEpisode = this.setEpisode.bind(this);
-
+      vector: []
+    };
     _this.getEpisodeFromQueue = _this.getEpisodeFromQueue.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleSkip = _this.handleSkip.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleEpisodeEnd = _this.handleEpisodeEnd.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.addNewEpisodeToQueue = _this.addNewEpisodeToQueue.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.setEpisode = _this.setEpisode.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.setTags = _this.setTags.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.setNewEpisode = _this.setNewEpisode.bind(_assertThisInitialized(_assertThisInitialized(_this))); // this.updateVector = this.updateVector.bind(this);
+    _this.addNewEpisodeToQueue = _this.addNewEpisodeToQueue.bind(_assertThisInitialized(_assertThisInitialized(_this))); //this.setEpisode = this.setEpisode.bind(this);
+
+    _this.setTags = _this.setTags.bind(_assertThisInitialized(_assertThisInitialized(_this))); //this.setNewEpisode = this.setNewEpisode.bind(this);
 
     return _this;
-  }
+  } // setEpisode = async function(episodeId) {
+  //   const channelId = this.props.match.params.channelId;
+  //   const res = await axios.get(`/api/episode/apiEpisode?id=${episodeId}`);
+  //   const podcastTitle = res.data.title;
+  //   const podcastImage = res.data.image;
+  //   const episode = res.data.episodes[0];
+  //   episode.channelId = channelId;
+  //   episode.podcastTitle = podcastTitle;
+  //   episode.podcastImageURL = podcastImage;
+  //   let req = await axios.post('/api/episode', episode);
+  //   let newEpisode = req.data;
+  //   this.setState({
+  //     episode: newEpisode
+  //   });
+  //   this.setTags(newEpisode);
+  //   this.props.setSinglePodcast({});
+  // };
+  // setNewEpisode = async function(episode) {
+  //   let episodeId = episode.id;
+  //   let channelId = this.props.match.params.channelId;
+  //   // await axios.post("/api/episode/nextEpisode", {
+  //   //   episodeId,
+  //   //   channelId
+  //   // });
+  //   this.setState({
+  //     episode
+  //   });
+  //   await axios.post('/api/episode/nextEpisode', {
+  //     episodeId,
+  //     channelId
+  //   });
+  //   this.setTags(episode);
+  //   this.props.setSinglePodcast({});
+  // };
+
 
   _createClass(SingleChannel, [{
     key: "componentDidMount",
     value: function () {
       var _componentDidMount = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee4() {
+      regeneratorRuntime.mark(function _callee2() {
         var channelId, mostRecentlyPlayedEpisode, episodeQueue, newEpisode;
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 channelId = this.props.match.params.channelId;
-                _context4.next = 3;
+                _context2.next = 3;
                 return this.getGenrePodcasts();
 
               case 3:
-                _context4.next = 5;
+                _context2.next = 5;
                 return this.props.fetchPlayedEpisodes(channelId);
 
               case 5:
-                _context4.next = 7;
+                _context2.next = 7;
                 return this.props.fetchRecommendedEpisodes(channelId);
 
               case 7:
@@ -1089,19 +1028,19 @@ function (_React$Component) {
                   episodeQueue: episodeQueue
                 });
                 newEpisode = this.getEpisodeFromQueue();
+                this.setTags(newEpisode);
                 this.setState({
-                  episode: newEpisode,
-                  unfinishedEpisode: newEpisode
+                  episode: newEpisode
                 });
-                _context4.next = 15;
+                _context2.next = 16;
                 return this.props.addPlayedEpisode(newEpisode, channelId);
 
-              case 15:
+              case 16:
               case "end":
-                return _context4.stop();
+                return _context2.stop();
             }
           }
-        }, _callee4, this);
+        }, _callee2, this);
       }));
 
       return function componentDidMount() {
@@ -1113,33 +1052,35 @@ function (_React$Component) {
     value: function () {
       var _getGenrePodcasts = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee5() {
-        var _ref4, channel, genreId, _ref5, podcastsWithoutData;
+      regeneratorRuntime.mark(function _callee3() {
+        var _ref2, channel, genreId, _ref3, podcastsWithoutData;
 
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                _context5.next = 2;
+                _context3.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_4___default.a.get("/api/channel/".concat(this.props.match.params.channelId));
 
               case 2:
-                _ref4 = _context5.sent;
-                channel = _ref4.data;
+                _ref2 = _context3.sent;
+                channel = _ref2.data;
                 genreId = Object(_utilities__WEBPACK_IMPORTED_MODULE_5__["getGenreIdFromGenreName"])(channel.name, _genreList__WEBPACK_IMPORTED_MODULE_7__["default"]);
-                _context5.next = 7;
+                _context3.next = 7;
                 return axios__WEBPACK_IMPORTED_MODULE_4___default.a.get("/api/podcast?id=".concat(genreId));
 
               case 7:
-                _ref5 = _context5.sent;
-                podcastsWithoutData = _ref5.data;
+                _ref3 = _context3.sent;
+                podcastsWithoutData = _ref3.data;
+                _context3.next = 11;
+                return this.props.fetchCategoryPodcastsEpisodeData(podcastsWithoutData.channels);
 
-              case 9:
+              case 11:
               case "end":
-                return _context5.stop();
+                return _context3.stop();
             }
           }
-        }, _callee5, this);
+        }, _callee3, this);
       }));
 
       return function getGenrePodcasts() {
@@ -1168,26 +1109,26 @@ function (_React$Component) {
     value: function () {
       var _getNewEpisodeFromRecommendedEpisodes = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee6() {
+      regeneratorRuntime.mark(function _callee4() {
         var channelId, episode;
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
                 channelId = this.props.match.params.channelId;
-                _context6.next = 3;
+                _context4.next = 3;
                 return this.props.fetchRecommendedEpisodes(channelId);
 
               case 3:
-                episode = _context6.sent;
-                return _context6.abrupt("return", episode);
+                episode = _context4.sent;
+                return _context4.abrupt("return", episode);
 
               case 5:
               case "end":
-                return _context6.stop();
+                return _context4.stop();
             }
           }
-        }, _callee6, this);
+        }, _callee4, this);
       }));
 
       return function getNewEpisodeFromRecommendedEpisodes() {
@@ -1211,7 +1152,6 @@ function (_React$Component) {
         counter++;
 
         if (counter > 50) {
-          console.log('counter', counter);
           this.getGenrePodcasts();
           return episode;
         }
@@ -1304,21 +1244,22 @@ function (_React$Component) {
     value: function () {
       var _handleEpisodeEnd = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee7() {
-        var episodeThatJustEnded, channelId, newEpisode;
-        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+      regeneratorRuntime.mark(function _callee5() {
+        var channelId, newEpisode;
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context7.prev = _context7.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
                 //add episode that just ended to played episodes
-                episodeThatJustEnded = this.state.episode;
+                //const episodeThatJustEnded = this.state.episode;
                 channelId = this.props.match.params.channelId; //get new episode from queue
 
                 newEpisode = this.getEpisodeFromQueue();
-                _context7.next = 5;
+                _context5.next = 4;
                 return this.props.addPlayedEpisode(newEpisode, channelId);
 
-              case 5:
+              case 4:
+                this.setTags(newEpisode);
                 this.setState({
                   episode: newEpisode
                 });
@@ -1326,10 +1267,10 @@ function (_React$Component) {
 
               case 7:
               case "end":
-                return _context7.stop();
+                return _context5.stop();
             }
           }
-        }, _callee7, this);
+        }, _callee5, this);
       }));
 
       return function handleEpisodeEnd() {
@@ -1341,21 +1282,22 @@ function (_React$Component) {
     value: function () {
       var _handleSkip = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee8() {
-        var episodeSkipped, channelId, newEpisode;
-        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+      regeneratorRuntime.mark(function _callee6() {
+        var channelId, newEpisode;
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context8.prev = _context8.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 //add episode that was playing before skip to played episodes
-                episodeSkipped = this.state.episode;
+                //const episodeSkipped = this.state.episode;
                 channelId = this.props.match.params.channelId; //get new episode
 
                 newEpisode = this.getEpisodeFromQueue();
-                _context8.next = 5;
+                _context6.next = 4;
                 return this.props.addPlayedEpisode(newEpisode, channelId);
 
-              case 5:
+              case 4:
+                this.setTags(newEpisode);
                 this.setState({
                   episode: newEpisode
                 });
@@ -1381,10 +1323,10 @@ function (_React$Component) {
 
               case 7:
               case "end":
-                return _context8.stop();
+                return _context6.stop();
             }
           }
-        }, _callee8, this);
+        }, _callee6, this);
       }));
 
       return function handleSkip() {
@@ -1394,8 +1336,6 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      console.log('EPISODE from Channel', this.state.episode);
-
       if (this.state.episode.audio || this.state.episode.audioURL) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_player_PodcastPlayer__WEBPACK_IMPORTED_MODULE_2__["default"], {
           episode: this.state.episode,
@@ -2694,8 +2634,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
-
-var episodeAudio = document.createElement('audio');
+ //let episodeAudio = document.createElement('audio');
 
 var AudioPlayer =
 /*#__PURE__*/
@@ -2733,88 +2672,66 @@ function (_Component) {
 
   _createClass(AudioPlayer, [{
     key: "componentDidMount",
-    value: function () {
-      var _componentDidMount = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee() {
-        var _this2 = this;
+    value: function componentDidMount() {
+      var _this2 = this;
 
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.prev = 0;
-                _context.next = 3;
-                return this.props.audio;
+      try {
+        this.props.episodeAudio.addEventListener('loadedmetadata', function () {
+          _this2.setState({
+            audioLength: _this2.props.episodeAudio.duration
+          });
+        });
+        this.props.episodeAudio.addEventListener('ended', function () {
+          console.log('episode ended');
 
-              case 3:
-                episodeAudio.src = _context.sent;
-                episodeAudio.preload = 'metadata';
-                episodeAudio.addEventListener('timeupdate', function () {
-                  _this2.setState({
-                    audioTimeElapsed: episodeAudio.currentTime
-                  });
-                });
-                episodeAudio.addEventListener('loadedmetadata', function () {
-                  _this2.setState({
-                    audioLength: episodeAudio.duration
-                  });
-                });
-                episodeAudio.addEventListener('ended', function () {
-                  _this2.props.handleEpisodeEnd();
-                });
-                episodeAudio.addEventListener('error', function () {
-                  _this2.props.handleEpisodeEnd();
-                });
-                episodeAudio.addEventListener('timeupdate', function () {
-                  _this2.setState({
-                    audioTimeElapsed: episodeAudio.currentTime
-                  });
-                });
-                _context.next = 15;
-                break;
+          _this2.props.handleEpisodeEnd();
 
-              case 12:
-                _context.prev = 12;
-                _context.t0 = _context["catch"](0);
-                throw new Error('There was an audio error');
-
-              case 15:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this, [[0, 12]]);
-      }));
-
-      return function componentDidMount() {
-        return _componentDidMount.apply(this, arguments);
-      };
-    }()
+          _this2.setState({
+            isBookmark: false,
+            isPlaying: false
+          });
+        });
+        this.props.episodeAudio.addEventListener('error', function () {
+          _this2.props.handleEpisodeEnd();
+        });
+        this.props.episodeAudio.addEventListener('timeupdate', function () {
+          _this2.setState({
+            audioTimeElapsed: _this2.props.episodeAudio.currentTime
+          });
+        });
+      } catch (error) {
+        throw new Error('There was an audio error');
+      }
+    }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
       var _this3 = this;
 
-      episodeAudio.removeEventListener('loadedmetadata', function () {
+      this.props.episodeAudio.removeEventListener('loadedmetadata', function () {
         _this3.setState({
-          audioLength: episodeAudio.duration
+          audioLength: _this3.props.episodeAudio.duration
         });
       });
-      episodeAudio.removeEventListener('ended', function () {
+      this.props.episodeAudio.removeEventListener('ended', function () {
         _this3.props.handleEpisodeEnd();
       });
-      episodeAudio.removeEventListener('error', function () {
+      this.props.episodeAudio.removeEventListener('error', function () {
         _this3.props.handleEpisodeEnd();
+      });
+      this.props.episodeAudio.removeEventListener('timeupdate', function () {
+        _this3.setState({
+          audioTimeElapsed: _this3.props.episodeAudio.currentTime
+        });
       });
     }
   }, {
     key: "handleSliderChange",
     value: function handleSliderChange(event) {
-      this.setState({
-        audioTimeElapsed: Number(event.target.value)
-      });
-      episodeAudio.currentTime = this.state.audioTimeElapsed;
+      // this.setState({
+      // 	audioTimeElapsed: Number(event.target.value)
+      // });
+      this.props.episodeAudio.currentTime = Number(event.target.value);
     }
   }, {
     key: "handleVolumeChange",
@@ -2822,12 +2739,12 @@ function (_Component) {
       this.setState({
         audioVolume: event.target.value
       });
-      episodeAudio.volume = this.state.audioVolume;
+      this.props.episodeAudio.volume = this.state.audioVolume;
     }
   }, {
     key: "play",
     value: function play() {
-      episodeAudio.play();
+      this.props.episodeAudio.play();
       this.setState({
         isPlaying: true
       });
@@ -2835,7 +2752,7 @@ function (_Component) {
   }, {
     key: "pause",
     value: function pause() {
-      episodeAudio.pause();
+      this.props.episodeAudio.pause();
       this.setState({
         isPlaying: false
       });
@@ -2850,20 +2767,25 @@ function (_Component) {
           audioVolume: 0,
           unmute: !stateUnmute
         });
-        episodeAudio.muted = true;
+        this.props.episodeAudio.muted = true;
       } else {
         this.setState({
           audioVolume: 0.1,
           unmute: !stateUnmute
         });
-        episodeAudio.muted = false;
+        this.props.episodeAudio.muted = false;
       }
     }
   }, {
     key: "skip",
     value: function skip() {
-      this.pause();
+      //this.pause();
       this.props.handleSkip();
+      this.setState({
+        isBookmark: false,
+        isPlaying: false
+      }); // this.props.episodeAudio.src = this.props.audio;
+      // this.props.episodeAudio.load()
     }
   }, {
     key: "like",
@@ -2895,31 +2817,33 @@ function (_Component) {
     value: function () {
       var _bookmark = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee2() {
-        var episode, bookMarked;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      regeneratorRuntime.mark(function _callee() {
+        var apiEpisode, databaseEpisode, bookMarked;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context.prev = _context.next) {
               case 0:
-                episode = this.props.episode;
+                apiEpisode = this.props.episode;
+                databaseEpisode = this.props.databaseEpisodes[apiEpisode.title];
+                console.log('databaseEpisode sfdsfd', databaseEpisode);
                 bookMarked = this.state.isBookmark;
-                _context2.next = 4;
+                _context.next = 6;
                 return axios__WEBPACK_IMPORTED_MODULE_12___default.a.post('/api/bookmarks', {
-                  episodeId: episode.id
+                  id: databaseEpisode.id
                 });
 
-              case 4:
+              case 6:
                 //FIX use Redux
                 this.setState({
                   isBookmark: !bookMarked
                 });
 
-              case 5:
+              case 7:
               case "end":
-                return _context2.stop();
+                return _context.stop();
             }
           }
-        }, _callee2, this);
+        }, _callee, this);
       }));
 
       return function bookmark() {
@@ -2931,14 +2855,14 @@ function (_Component) {
     value: function () {
       var _next2 = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3() {
+      regeneratorRuntime.mark(function _callee2() {
         var channelId, res, nextEpisode;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 channelId = this.props.channelId;
-                _context3.next = 3;
+                _context2.next = 3;
                 return axios__WEBPACK_IMPORTED_MODULE_12___default.a.get('/api/episode/next', {
                   params: {
                     channelId: channelId
@@ -2946,16 +2870,16 @@ function (_Component) {
                 });
 
               case 3:
-                res = _context3.sent;
+                res = _context2.sent;
                 nextEpisode = res.data;
                 this.props.setNewEpisode(nextEpisode);
 
               case 6:
               case "end":
-                return _context3.stop();
+                return _context2.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee2, this);
       }));
 
       return function next() {
@@ -2965,8 +2889,8 @@ function (_Component) {
   }, {
     key: "currentTimeCalculation",
     value: function currentTimeCalculation() {
-      var timeInMin = Math.floor(episodeAudio.currentTime / 60).toString();
-      var timeInSec = Math.floor(episodeAudio.currentTime % 60).toString();
+      var timeInMin = Math.floor(this.props.episodeAudio.currentTime / 60).toString();
+      var timeInSec = Math.floor(this.props.episodeAudio.currentTime % 60).toString();
 
       if (timeInMin < 10) {
         timeInMin = '0' + timeInMin;
@@ -2983,8 +2907,10 @@ function (_Component) {
     key: "render",
     value: function render() {
       var currentTimeInString = this.currentTimeCalculation();
-      var durationInMin = parseInt(episodeAudio.duration / 60, 10);
-      var durationInSec = parseInt(episodeAudio.duration % 60);
+      var durationInMin = parseInt(this.props.episodeAudio.duration / 60, 10);
+      var durationInSec = parseInt(this.props.episodeAudio.duration % 60);
+      console.log('episodeAudio', this.props.episodeAudio); //episodeAudio.src = this.props.audio;
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.isPlaying ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_IconButton__WEBPACK_IMPORTED_MODULE_3___default.a, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Pause__WEBPACK_IMPORTED_MODULE_5___default.a, {
         onClick: this.pause
       })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_IconButton__WEBPACK_IMPORTED_MODULE_3___default.a, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_PlayArrow__WEBPACK_IMPORTED_MODULE_4___default.a, {
@@ -3017,11 +2943,11 @@ function (_Component) {
         }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "range",
-        value: this.state.audioTimeElapsed,
+        value: this.props.currentTime,
         "aria-labelledby": "label",
         onChange: this.handleSliderChange,
         min: 0,
-        max: this.state.audioLength,
+        max: this.props.audioLength,
         step: "any"
       })), durationInMin && durationInSec ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         style: {
@@ -3033,8 +2959,13 @@ function (_Component) {
   }]);
 
   return AudioPlayer;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]); //mapStateToProps()
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    databaseEpisodes: state.podcast.playedEpisodes
+  };
+};
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
@@ -3044,7 +2975,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(null, mapDispatchToProps)(AudioPlayer));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(AudioPlayer));
 
 /***/ }),
 
@@ -3137,14 +3068,22 @@ function (_Component) {
   _inherits(PodcastPlayer, _Component);
 
   function PodcastPlayer() {
+    var _this;
+
     _classCallCheck(this, PodcastPlayer);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(PodcastPlayer).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(PodcastPlayer).call(this));
+    _this.state = {
+      episodeAudio: new Audio()
+    };
+    return _this;
   }
 
   _createClass(PodcastPlayer, [{
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       // const { value } = this.state
       var _this$props = this.props,
           classes = _this$props.classes,
@@ -3153,6 +3092,17 @@ function (_Component) {
           handleSkip = _this$props.handleSkip,
           episode = _this$props.episode,
           channelId = _this$props.channelId;
+      var audioLength;
+      var currentTime;
+      this.state.episodeAudio.src = episode.audio ? episode.audio : episode.audioURL;
+      this.state.episodeAudio.preload = 'auto';
+      this.state.episodeAudio.load();
+      this.state.episodeAudio.addEventListener('loadedmetadata', function () {
+        audioLength = _this2.state.episodeAudio.duration;
+      });
+      this.state.episodeAudio.addEventListener('timeupdate', function () {
+        currentTime = _this2.state.episodeAudio.currentTime;
+      });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Card__WEBPACK_IMPORTED_MODULE_2___default.a, {
         className: "".concat(classes.card, " ")
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_CardMedia__WEBPACK_IMPORTED_MODULE_4___default.a, {
@@ -3178,7 +3128,10 @@ function (_Component) {
         episodeQueue: episodeQueue,
         handleSkip: handleSkip,
         handleEpisodeEnd: handleEpisodeEnd,
-        tags: this.props.tags
+        tags: this.props.tags,
+        episodeAudio: this.state.episodeAudio,
+        audioLength: audioLength,
+        currentTime: currentTime
       }))));
     }
   }]);
@@ -3246,7 +3199,6 @@ function (_Component) {
     value: function render() {
       var handleVolumeChange = this.props.handleVolumeChange;
       var audioVolume = this.props.audioVolume;
-      console.log('audioVol', audioVolume);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         style: styles.container
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {

@@ -12,7 +12,7 @@ class SoundVolume extends Component {
 	render() {
 		const handleVolumeChange = this.props.handleVolumeChange;
 		const audioVolume = this.props.audioVolume;
-		console.log('audioVol', audioVolume);
+
 		return (
 			<div style={styles.container}>
 				<input

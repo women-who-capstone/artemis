@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React, {Component} from 'react';
+import {withStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -12,8 +12,9 @@ const styles = theme => ({
   card: {
     display: 'flex',
     flexDirection: 'column',
-    // alignItems: "center",
-    minHeight: 450
+    minwidth: '400px',
+    maxWidth: '60%',
+    height: '100%'
   },
   details: {
     display: 'flex',
@@ -25,9 +26,9 @@ const styles = theme => ({
   cover: {
     display: 'flex',
     alignItems: 'center',
-    width: 'auto',
-    height: 150,
-    maxWidth: 150
+
+    height: 400,
+    maxWidth: '400px'
   },
   actions: {
     display: 'block'
@@ -35,16 +36,85 @@ const styles = theme => ({
 });
 
 class PodcastPlayer extends Component {
+  // constructor() {
+  //   super()
+  //   let episodeAudio = new Audio()
+  //   episodeAudio.src = ''
+  //   episodeAudio.preload = 'metadata'
+
+  //   this.state = {
+  //     episodeAudio: episodeAudio,
+  //     currentTime: episodeAudio.currentTime,
+  //     audioLength: 0
+  //   }
+  // }
+
+  componentDidMount() {
+    // const { episode } = this.props;
+    // let episodeAudioCopy = this.state.episodeAudio
+    // console.log('episodeAudioCopy', episodeAudioCopy)
+    // episodeAudioCopy.src = episode.audio ? episode.audio : episode.audioURL
+    // episodeAudioCopy.load()
+    // episodeAudioCopy.addEventListener('loadedmetadata', () => {
+    //   this.setState({
+    //     audioLength: episodeAudioCopy.duration
+    //   });
+    // })
+    // episodeAudioCopy.addEventListener('timeupdate', () => {
+    //   this.setState({
+    //     currentTime: episodeAudioCopy.currentTime
+    //   });
+    // })
+    // this.setState({
+    //   episodeAudio: episodeAudioCopy
+    // })
+  }
+
+  componentDidUpdate(prevProps) {
+    // if (this.props.episode !== prevProps.episode) {
+    //   const { episode } = this.props;
+    //   let episodeAudioCopy = this.state.episodeAudio
+    //   console.log('episodeAudioCopy', episodeAudioCopy)
+    //   episodeAudioCopy.src = episode.audio ? episode.audio : episode.audioURL
+    //   episodeAudioCopy.load()
+    //   episodeAudioCopy.addEventListener('loadedmetadata', () => {
+    //     this.setState({
+    //       audioLength: episodeAudioCopy.duration
+    //     });
+    //   })
+    //   episodeAudioCopy.addEventListener('timeupdate', () => {
+    //     this.setState({
+    //       currentTime: episodeAudioCopy.currentTime
+    //     });
+    //   })
+    //   this.setState({
+    //     episodeAudio: episodeAudioCopy
+    //   })
+    // }
+  }
+
   render() {
     // const { value } = this.state
-
     const {
       classes,
       handleEpisodeEnd,
       episodeQueue,
       handleSkip,
-      episode
+      episode,
+      channelId
     } = this.props;
+
+    // this.state.episodeAudio.src = episode.audio ? episode.audio : episode.audioURL
+    // this.state.episodeAudio.preload = 'auto';
+    // this.state.episodeAudio.load()
+
+    // this.state.episodeAudio.addEventListener('loadedmetadata', () => {
+    //   audioLength = this.state.episodeAudio.duration
+    // });
+
+    // this.state.episodeAudio.addEventListener('timeupdate', () => {
+    //   currentTime = this.state.episodeAudio.currentTime
+    // });
 
     return (
       <div>
@@ -69,10 +139,14 @@ class PodcastPlayer extends Component {
             <AudioPlayer
               audio={episode.audio ? episode.audio : episode.audioURL}
               episode={episode}
+              channelId={channelId}
               episodeQueue={episodeQueue}
               handleSkip={handleSkip}
               handleEpisodeEnd={handleEpisodeEnd}
               tags={this.props.tags}
+              /*episodeAudio={this.state.episodeAudio}
+              audioLength={this.state.audioLength}
+              currentTime={this.state.currentTime}*/
             />
           </CardActions>
         </Card>
@@ -81,4 +155,4 @@ class PodcastPlayer extends Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(PodcastPlayer);
+export default withStyles(styles, {withTheme: true})(PodcastPlayer);

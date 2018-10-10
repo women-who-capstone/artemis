@@ -1,13 +1,22 @@
 import React from 'react';
-import {
-  GridListTile,
-  GridListTileBar,
-  IconButton,
-  ButtonBase,
-  withStyles
-} from '@material-ui/core/';
-
+import {Redirect} from 'react-router';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import axios from 'axios';
+import {withStyles} from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    padding: theme.spacing.unit * 2,
+    textAlign: 'center',
+    color: theme.palette.text.secondary
+  }
+});
 
 const styles = theme => ({
   bookmarkTitle: {
@@ -22,41 +31,57 @@ class BookmarkItem extends React.Component {
   constructor() {
     super();
     this.state = {
-      singleEpisode: {}
+      singleEpisode: {},
+      cliked: false
     };
+    this.playBookmark = this.playBookmark.bind(this);
   }
   async componentDidMount() {
     let res = await axios.get(`/api/episode/${this.props.episode.episodeId}`);
     let singleEpisode = res.data;
     this.setState({
-      singleEpisode
+      singleEpisode: singleEpisode
+    });
+  }
+
+  playBookmark() {
+    this.setState({
+      cliked: true
     });
   }
   render() {
-    const episode = this.props.episode;
+    const {classes} = this.props;
     const singleEp = this.state.singleEpisode;
-    const { classes } = this.props;
-    return (
-      <ButtonBase focusRipple className={classes.bookmark}>
-        <GridListTile>
-          <img
-            src={
-              singleEp.imageURL ? singleEp.imageURL : singleEp.podcastImageURL
+
+    if (this.state.cliked) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/bookmarkplayer',
+            state: {
+              episode: singleEp
             }
-            alt={singleEp.title}
-          />
-          <GridListTileBar
-            className={classes.bookmarkTitle}
-            title={singleEp.title}
-            subtitle={<span>{singleEp.podcastTitle}</span>}
-          />
-        </GridListTile>
-      </ButtonBase>
-      // <ListItem>
-      //   <img src={singleEp.imageURL} style={{ alignSelf: 'center' }} />
-      //   <ListItemText>{singleEp.title}</ListItemText>
-      // </ListItem>
-    );
+          }}
+        />
+      );
+    } else {
+      return (
+        <div onClick={this.playBookmark}>
+          <div className={classes.root}>
+            <Grid container spacing={8}>
+              <Grid item xs={4}>
+                <Paper className={classes.paper}>
+                  <ListItem>
+                    <ListItemText>{singleEp.title}</ListItemText>
+                  </ListItem>
+                  <img src={singleEp.imageURL} style={{alignSelf: 'center'}} />
+                </Paper>
+              </Grid>
+            </Grid>
+          </div>
+        </div>
+      );
+    }
   }
 }
 

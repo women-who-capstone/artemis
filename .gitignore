@@ -10,11 +10,7 @@
 /build
 /public/bundle.js
 /public/bundle.js.map
-<<<<<<< HEAD
-
-=======
 /public/manifest.json
->>>>>>> 1e5a3828fad950cf5499e64c1a47e8ea0dc49e9d
 
 # misc
 .DS_Store

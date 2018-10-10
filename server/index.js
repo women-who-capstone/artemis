@@ -90,10 +90,6 @@ const startListening = () => {
 		console.log(`Go to: http://localhost:${PORT}`);
 		console.log('---------------------------------');
 	});
-
-	// set up our socket control center
-	// const io = socketio(server)
-	// require('./socket')(io)
 };
 
 const syncDb = () => db.sync();

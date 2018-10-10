@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import { auth } from '../reducers/user';
+import { auth, clearError } from '../reducers/user';
 import { Typography, FormGroup } from '@material-ui/core';
 
 const styles = theme => ({
@@ -20,9 +21,15 @@ const styles = theme => ({
   root: {
     flexGrow: 1
   },
+  container: {
+    display: 'flex',
+    flexWrap: 'no-wrap',
+    alignItems: 'baseline'
+  },
   textField: {
     marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing.unit,
+    backgroundColor: 'transparent'
   },
   dense: {
     marginTop: 16
@@ -37,62 +44,103 @@ const styles = theme => ({
   },
   authGroup: {
     alignItems: 'baseline'
+  },
+  link: {
+    color: theme.palette.secondary.main,
+    textDecoration: 'none',
+    '&:hover': {
+      textDecoration: 'underline'
+    },
+    '&visited': {
+      color: theme.palette.secondary.main
+    },
+    '&active': {
+      color: theme.palette.secondary.main
+    },
+    '&focus': {
+      color: theme.palette.secondary.main
+    }
   }
 });
 
-const AuthForm = props => {
-  const { name, displayName, handleSubmit, error, classes } = props;
-  return (
-    <form
-      className={classes.container}
-      autoComplete="off"
-      onSubmit={handleSubmit}
-      name={name}
-    >
-      <FormGroup row={true} className={classes.authGroup}>
-        <TextField
-          required
-          label="Email"
-          className={classes.textField}
-          type="email"
-          name="email"
-          autoComplete="email"
-          margin="normal"
-          size="small"
-        />
-        <TextField
-          required
-          label="Password"
-          className={classes.textField}
-          type="password"
-          name="password"
-          autoComplete="current-password"
-          margin="normal"
-          size="small"
-        />
-        <Button
-          className={classes.button}
-          type="submit"
-          name=""
-          variant="outlined"
-          color="secondary"
+class AuthForm extends Component {
+  render() {
+    let { name, displayName, handleSubmit, error, classes } = this.props;
+
+    return (
+      <div>
+        <div>
+          <Typography variant="display1">
+            {name === 'login' ? 'Log in' : 'Create an account'}
+          </Typography>
+          <Typography variant="subheading">
+            or{' '}
+            {name === 'login' ? (
+              <Link
+                className={classes.link}
+                to="/signup"
+                onClick={() => this.props.removingError()}
+              >
+                create an account
+              </Link>
+            ) : (
+              <Link
+                to="/"
+                className={classes.link}
+                onClick={() => this.props.removingError()}
+              >
+                log in
+              </Link>
+            )}
+          </Typography>
+        </div>
+        <form
+          className={classes.container}
+          autoComplete="off"
+          onSubmit={handleSubmit}
+          name={name}
         >
-          {props.displayName}
-        </Button>
-        {error && error.response && <div> {error.response.data} </div>}
-      </FormGroup>
-      {name === 'login' ? (
-        <Typography className={classes.authLabel}>
-          Already signed up? Log in here.
+          <FormGroup row={true} className={classes.authGroup}>
+            <TextField
+              required
+              id="outlined-email-input"
+              label="Email"
+              className={classes.textField}
+              type="email"
+              name="email"
+              autoComplete="email"
+              margin="normal"
+              size="small"
+            />
+            <TextField
+              required
+              id="outlined-password-input"
+              label="Password"
+              className={classes.textField}
+              type="password"
+              name="password"
+              autoComplete="current-password"
+              margin="normal"
+              size="small"
+            />
+            <Button
+              className={classes.button}
+              type="submit"
+              name=""
+              variant="outlined"
+              color="secondary"
+            >
+              {displayName}
+            </Button>
+          </FormGroup>
+        </form>
+        <Typography variant="caption" color="secondary">
+          {error && error.response && <div> {error.response.data} </div>}
         </Typography>
-      ) : (
-        <Typography className={classes.authLabel}>
-          Sign up to start getting podcast recommendations.
-        </Typography>
-      )}
-    </form>
-  );
-};
+      </div>
+    );
+  }
+}
 
 const mapLogin = state => {
   return {
@@ -112,12 +160,15 @@ const mapSignup = state => {
 
 const mapDispatch = dispatch => {
   return {
-    handleSubmit(evt) {
+    handleSubmit: evt => {
       evt.preventDefault();
       const formName = evt.target.name;
       const email = evt.target.email.value;
       const password = evt.target.password.value;
       dispatch(auth(email, password, formName));
+    },
+    removingError: () => {
+      dispatch(clearError());
     }
   };
 };

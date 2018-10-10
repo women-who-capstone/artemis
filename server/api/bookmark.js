@@ -10,6 +10,7 @@ router.get("/", async (req, res, next) => {
         userId: user.id
       }
     });
+    console.log('.........................................BOOKMARKS', bookmarks)
     res.status(200).send(bookmarks);
   } catch (err) {
     next(err);
@@ -17,10 +18,13 @@ router.get("/", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
+
   try {
     let bookmarkObj = req.body;
     bookmarkObj.userId = req.user.id;
-    const newBookmark = await Bookmark.create(bookmarkObj);
+    const newBookmark = await Bookmark.findOrCreate({
+      where: bookmarkObj
+    });
     res.status(200).send(newBookmark);
   } catch (error) {
     next(error);

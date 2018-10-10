@@ -176,7 +176,7 @@ class AudioPlayer extends Component {
 		let databaseEpisode = this.props.databaseEpisodes[apiEpisode.title];
     console.log('databaseEpisode sfdsfd', databaseEpisode)
 		let bookMarked = this.state.isBookmark;
-		await axios.post('/api/bookmarks', { id: databaseEpisode.id }); //FIX use Redux
+		await axios.post('/api/bookmarks', { episodeId: databaseEpisode.id }); //FIX use Redux
 		this.setState({ isBookmark: !bookMarked });
 	}
 

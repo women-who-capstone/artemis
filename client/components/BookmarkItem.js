@@ -1,29 +1,20 @@
 import React from 'react';
 import {Redirect} from 'react-router';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import axios from 'axios';
 import {withStyles} from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1
-  },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary
-  }
-});
+import {GridListTile, GridListTileBar, ButtonBase} from '@material-ui/core';
 
 const styles = theme => ({
   bookmarkTitle: {
-    backgroundColor: 'rgba(115, 153, 158, 0.8)'
+    backgroundColor: 'rgba(115, 153, 158, 0.8)',
+    height: '40%'
   },
   bookmark: {
     margin: 8
+  },
+  tile: {
+    width: 300,
+    height: 300
   }
 });
 
@@ -52,7 +43,7 @@ class BookmarkItem extends React.Component {
   render() {
     const {classes} = this.props;
     const singleEp = this.state.singleEpisode;
-
+    console.log(singleEp);
     if (this.state.cliked) {
       return (
         <Redirect
@@ -66,20 +57,25 @@ class BookmarkItem extends React.Component {
       );
     } else {
       return (
-        <div onClick={this.playBookmark}>
-          <div className={classes.root}>
-            <Grid container spacing={8}>
-              <Grid item xs={4}>
-                <Paper className={classes.paper}>
-                  <ListItem>
-                    <ListItemText>{singleEp.title}</ListItemText>
-                  </ListItem>
-                  <img src={singleEp.imageURL} style={{alignSelf: 'center'}} />
-                </Paper>
-              </Grid>
-            </Grid>
-          </div>
-        </div>
+        <ButtonBase
+          focusRipple
+          className={classes.bookmark}
+          onClick={this.playBookmark}
+        >
+          <GridListTile className={classes.tile}>
+            <img
+              src={
+                singleEp.imageURL ? singleEp.imageURL : singleEp.podcastImageURL
+              }
+              alt={singleEp.title}
+            />
+            <GridListTileBar
+              className={classes.bookmarkTitle}
+              title={singleEp.title}
+              subtitle={<span>{singleEp.podcastTitle}</span>}
+            />
+          </GridListTile>
+        </ButtonBase>
       );
     }
   }

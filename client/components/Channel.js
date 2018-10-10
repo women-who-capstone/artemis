@@ -17,6 +17,7 @@ import {
   fetchRecommendedEpisodes
 } from "../reducers/podcast";
 import genres from "../genreList";
+import Loading from "./Loading";
 
 class SingleChannel extends React.Component {
   constructor() {

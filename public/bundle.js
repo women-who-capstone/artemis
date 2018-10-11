@@ -934,7 +934,7 @@ function (_React$Component) {
               case 0:
                 description = episode.description;
                 _context.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_4___default.a.get('/api/keywords', {
+                return axios__WEBPACK_IMPORTED_MODULE_4___default.a.get("/api/keywords", {
                   params: {
                     input: description,
                     channelId: this.props.match.params.channelId
@@ -1138,7 +1138,7 @@ function (_React$Component) {
 
               case 3:
                 episode = _context4.sent;
-                console.log('REC EP', episode);
+                console.log("REC EP", episode);
                 return _context4.abrupt("return", episode);
 
               case 6:
@@ -1354,6 +1354,10 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      if (this.props.loading) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Loading__WEBPACK_IMPORTED_MODULE_8__["default"], null);
+      }
+
       if (this.state.episode.audio || this.state.episode.audioURL) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_player_PodcastPlayer__WEBPACK_IMPORTED_MODULE_2__["default"], {
           episode: this.state.episode,
@@ -1378,7 +1382,8 @@ var mapStateToProps = function mapStateToProps(state) {
     bestCategoryPodcasts: state.podcast.bestCategoryPodcasts,
     recommendedEpisodes: state.podcast.recommendedEpisodes,
     playedEpisodes: state.podcast.playedEpisodes,
-    episodeId: state.podcast.podcast.id
+    episodeId: state.podcast.podcast.id,
+    loading: state.podcast.loading
   };
 };
 
@@ -2178,7 +2183,8 @@ __webpack_require__.r(__webpack_exports__);
 var styles = function styles(theme) {
   return {
     progress: {
-      margin: theme.spacing.unit * 2
+      margin: theme.spacing.unit * 2,
+      height: "200px"
     }
   };
 };
@@ -4118,7 +4124,7 @@ var reducer = Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
 /*!************************************!*\
   !*** ./client/reducers/podcast.js ***!
   \************************************/
-/*! exports provided: setSinglePodcast, setBestCategoryPodcasts, setPlayedEpisodes, setAddedPlayedEpisode, setRecommendedEpisodes, fetchCategoryPodcastsEpisodeData, fetchPlayedEpisodes, addPlayedEpisode, fetchRecommendedEpisodes, default */
+/*! exports provided: setSinglePodcast, setBestCategoryPodcasts, setPlayedEpisodes, setAddedPlayedEpisode, setRecommendedEpisodes, setEpisodeLoadingStatus, fetchCategoryPodcastsEpisodeData, fetchPlayedEpisodes, addPlayedEpisode, fetchRecommendedEpisodes, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4128,6 +4134,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setPlayedEpisodes", function() { return setPlayedEpisodes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setAddedPlayedEpisode", function() { return setAddedPlayedEpisode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRecommendedEpisodes", function() { return setRecommendedEpisodes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setEpisodeLoadingStatus", function() { return setEpisodeLoadingStatus; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchCategoryPodcastsEpisodeData", function() { return fetchCategoryPodcastsEpisodeData; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchPlayedEpisodes", function() { return fetchPlayedEpisodes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addPlayedEpisode", function() { return addPlayedEpisode; });
@@ -4145,13 +4152,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
-var SET_PODCAST = 'SET_PODCAST';
-var SET_PODCAST_LIST = 'SET_PODCAST_LIST';
-var SET_BEST_CATEGORY_PODCASTS = 'SET_BEST_CATEGORY_PODCASTS';
-var SET_CURRENT_EPISODE = 'SET_CURRENT_EPISODE';
-var SET_PLAYED_EPISODES = 'SET_PLAYED_EPISODES';
-var SET_ADDED_PLAYED_EPISODE = 'SET_ADDED_PLAYED_EPISODE';
-var SET_RECOMMENDED_EPISODES = 'SET_RECOMMENDED_EPISODES'; // if (localStorage.getItem('podcastState') === null) {
+var SET_PODCAST = "SET_PODCAST";
+var SET_PODCAST_LIST = "SET_PODCAST_LIST";
+var SET_BEST_CATEGORY_PODCASTS = "SET_BEST_CATEGORY_PODCASTS";
+var SET_CURRENT_EPISODE = "SET_CURRENT_EPISODE";
+var SET_PLAYED_EPISODES = "SET_PLAYED_EPISODES";
+var SET_ADDED_PLAYED_EPISODE = "SET_ADDED_PLAYED_EPISODE";
+var SET_RECOMMENDED_EPISODES = "SET_RECOMMENDED_EPISODES";
+var SET_EPISODE_LOADING_STATUS = "SET_EPISODE_LOADING_STATUS"; // if (localStorage.getItem('podcastState') === null) {
 //     localStorage.setItem('podcastState', JSON.stringify({
 //     podcast: {},
 //     podcastList: [],
@@ -4197,6 +4205,12 @@ var setRecommendedEpisodes = function setRecommendedEpisodes(episodes) {
     type: SET_RECOMMENDED_EPISODES,
     episodes: episodes
   };
+};
+var setEpisodeLoadingStatus = function setEpisodeLoadingStatus(status) {
+  return {
+    type: SET_EPISODE_LOADING_STATUS,
+    status: status
+  };
 }; // THUNK CREATORS
 
 var fetchCategoryPodcastsEpisodeData = function fetchCategoryPodcastsEpisodeData(podcastsWithoutEpisodeData) {
@@ -4211,9 +4225,10 @@ var fetchCategoryPodcastsEpisodeData = function fetchCategoryPodcastsEpisodeData
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                dispatch(setEpisodeLoadingStatus(true));
                 numEpisodesDesired = podcastsWithoutEpisodeData.length >= 5 ? 5 : podcastsWithoutEpisodeData.length;
                 indices = Object(_utilities__WEBPACK_IMPORTED_MODULE_1__["getRandomNonRepeatingIndices"])(numEpisodesDesired, podcastsWithoutEpisodeData.length);
-                _context.prev = 2;
+                _context.prev = 3;
                 podcastPromises = [];
 
                 for (i = 0; i < indices.length; i++) {
@@ -4225,38 +4240,39 @@ var fetchCategoryPodcastsEpisodeData = function fetchCategoryPodcastsEpisodeData
                   }
                 }
 
-                _context.next = 7;
+                _context.next = 8;
                 return Promise.all(podcastPromises);
 
-              case 7:
+              case 8:
                 resolvedPodcastPromises = _context.sent;
                 podcastsWithEpisodeData = resolvedPodcastPromises.map(function (elem) {
                   return elem.data;
                 });
 
                 if (!(podcastsWithEpisodeData.length === 0)) {
-                  _context.next = 11;
+                  _context.next = 12;
                   break;
                 }
 
-                throw new Error('podcastsWithEpisodeData is empty.');
+                throw new Error("podcastsWithEpisodeData is empty.");
 
-              case 11:
+              case 12:
                 dispatch(setBestCategoryPodcasts(podcastsWithEpisodeData));
-                _context.next = 17;
+                dispatch(setEpisodeLoadingStatus(false));
+                _context.next = 19;
                 break;
 
-              case 14:
-                _context.prev = 14;
-                _context.t0 = _context["catch"](2);
+              case 16:
+                _context.prev = 16;
+                _context.t0 = _context["catch"](3);
                 console.error(_context.t0);
 
-              case 17:
+              case 19:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[2, 14]]);
+        }, _callee, this, [[3, 16]]);
       }));
 
       return function (_x) {
@@ -4277,16 +4293,18 @@ var fetchPlayedEpisodes = function fetchPlayedEpisodes(channelId) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
+                dispatch(setEpisodeLoadingStatus(true));
+                _context2.next = 3;
                 return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/channel?id=".concat(channelId));
 
-              case 2:
+              case 3:
                 res = _context2.sent;
                 playedEpisodes = res.data[0].episodes;
                 episodesObject = Object(_utilities__WEBPACK_IMPORTED_MODULE_1__["convertPlayedEpisodesArrayToObject"])(playedEpisodes);
                 dispatch(setPlayedEpisodes(episodesObject));
+                dispatch(setEpisodeLoadingStatus(false));
 
-              case 6:
+              case 8:
               case "end":
                 return _context2.stop();
             }
@@ -4312,31 +4330,33 @@ var addPlayedEpisode = function addPlayedEpisode(episode, channelId) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
+                dispatch(setEpisodeLoadingStatus(true));
                 episode.channelId = channelId;
-                _context3.prev = 1;
-                _context3.next = 4;
-                return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/episode', episode);
+                _context3.prev = 2;
+                _context3.next = 5;
+                return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/episode", episode);
 
-              case 4:
+              case 5:
                 req = _context3.sent;
                 newEpisode = req.data;
                 playedEpisodeObj = {};
                 playedEpisodeObj[newEpisode.title] = newEpisode;
                 dispatch(setAddedPlayedEpisode(playedEpisodeObj));
-                _context3.next = 14;
+                dispatch(setEpisodeLoadingStatus(false));
+                _context3.next = 16;
                 break;
 
-              case 11:
-                _context3.prev = 11;
-                _context3.t0 = _context3["catch"](1);
+              case 13:
+                _context3.prev = 13;
+                _context3.t0 = _context3["catch"](2);
                 console.error(_context3.t0);
 
-              case 14:
+              case 16:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, this, [[1, 11]]);
+        }, _callee3, this, [[2, 13]]);
       }));
 
       return function (_x3) {
@@ -4357,32 +4377,34 @@ var fetchRecommendedEpisodes = function fetchRecommendedEpisodes(channelId) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _context4.prev = 0;
-                _context4.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/episode/next', {
+                dispatch(setEpisodeLoadingStatus(true));
+                _context4.prev = 1;
+                _context4.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/episode/next", {
                   params: {
                     channelId: channelId
                   }
                 });
 
-              case 3:
+              case 4:
                 res = _context4.sent;
                 recommendedEpisode = res.data;
                 dispatch(setRecommendedEpisodes(recommendedEpisode));
-                _context4.next = 11;
+                dispatch(setEpisodeLoadingStatus(false));
+                _context4.next = 13;
                 break;
 
-              case 8:
-                _context4.prev = 8;
-                _context4.t0 = _context4["catch"](0);
+              case 10:
+                _context4.prev = 10;
+                _context4.t0 = _context4["catch"](1);
                 console.error(_context4.t0);
 
-              case 11:
+              case 13:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, this, [[0, 8]]);
+        }, _callee4, this, [[1, 10]]);
       }));
 
       return function (_x4) {
@@ -4426,6 +4448,11 @@ var fetchRecommendedEpisodes = function fetchRecommendedEpisodes(channelId) {
     case SET_RECOMMENDED_EPISODES:
       return _objectSpread({}, state, {
         recommendedEpisodes: action.episodes
+      });
+
+    case SET_EPISODE_LOADING_STATUS:
+      return _objectSpread({}, state, {
+        loading: action.status
       });
 
     default:

@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import BookmarkItem from './BookmarkItem';
 import {withStyles} from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
+import {GridList, Paper, Typography} from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -15,8 +15,17 @@ const styles = theme => ({
     width: 500,
     height: 450
   },
-  icon: {
-    color: 'rgba(255, 255, 255, 0.54)'
+  message: {
+    ...theme.mixins.gutters(),
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
+    width: '100%'
+  },
+  type: {
+    fontSize: '1rem',
+    padding: '4px 0',
+    margin: 0
   }
 });
 class Bookmark extends React.Component {
@@ -40,13 +49,19 @@ class Bookmark extends React.Component {
     const {classes} = this.props;
     return (
       <div className={classes.root}>
-        <GridList>
-          {bookmarks.length
-            ? bookmarks.map(bookmark => (
-                <BookmarkItem key={bookmark.id} episode={bookmark} />
-              ))
-            : ''}
-        </GridList>
+        {bookmarks.length > 0 ? (
+          <GridList>
+            bookmarks.map(bookmark => (
+            <BookmarkItem key={bookmark.id} episode={bookmark} />
+            ))
+          </GridList>
+        ) : (
+          <Paper className={classes.message}>
+            <Typography variant="body1" className={classes.type}>
+              You don't have any bookmarks.
+            </Typography>
+          </Paper>
+        )}
       </div>
     );
   }

@@ -51,9 +51,9 @@ class Bookmark extends React.Component {
       <div className={classes.root}>
         {bookmarks.length > 0 ? (
           <GridList>
-            bookmarks.map(bookmark => (
-            <BookmarkItem key={bookmark.id} episode={bookmark} />
-            ))
+            {bookmarks.map(bookmark => (
+              <BookmarkItem key={bookmark.id} episode={bookmark} />
+            ))}
           </GridList>
         ) : (
           <Paper className={classes.message}>

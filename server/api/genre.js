@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const unirest = require('unirest');
-const { Channel, Tag, Genre } = require('../db/models');
+const { Genre } = require('../db/models');
 
 router.get('/', async (req, res, next) => {
 	try {

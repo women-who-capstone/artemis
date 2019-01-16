@@ -120,7 +120,6 @@ router.post('/', async (req, res, next) => {
 			res.status(200).send(episode);
 		}
 	} catch (err) {
-		console.log(req.body);
 		next(err);
 	}
 });

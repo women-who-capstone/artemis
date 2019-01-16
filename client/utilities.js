@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 
 export const getRandomIndex = length => {
   return Math.floor(Math.random() * length)

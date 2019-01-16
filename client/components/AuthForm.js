@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 import { auth, clearError } from '../reducers/user';
 import { Typography, FormGroup } from '@material-ui/core';
 

@@ -147,25 +147,8 @@ class AudioPlayer extends Component {
     }
   }
 
-  // handleMute() {
-  //   var stateUnmute = this.state.unmute;
-  //   if (stateUnmute) {
-  //     this.setState({
-  //       audioVolume: 0,
-  //       unmute: !stateUnmute
-  //     });
-  //     this.props.episodeAudio.muted = true;
-  //   } else {
-  //     this.setState({
-  //       audioVolume: 0.1,
-  //       unmute: !stateUnmute
-  //     });
-  //     this.props.episodeAudio.muted = false;
-  //   }
-  // }
 
   skip() {
-    //this.pause();
     this.props.handleSkip();
     this.setState({
       isBookmark: false,
@@ -205,16 +188,6 @@ class AudioPlayer extends Component {
     this.setState({ isBookmark: !bookMarked });
   }
 
-  // async next() {
-  //   let channelId = this.props.channelId;
-  //   let res = await axios.get("/api/episode/next", {
-  //     params: {
-  //       channelId: channelId
-  //     }
-  //   });
-  //   let nextEpisode = res.data;
-  //   this.props.setNewEpisode(nextEpisode);
-  // }
 
   currentTimeCalculation() {
     let timeInMin = Math.floor(this.state.currentTime / 60).toString();
@@ -233,8 +206,6 @@ class AudioPlayer extends Component {
     const currentTimeInString = this.currentTimeCalculation();
     const durationInMin = parseInt(episodeAudio.duration / 60, 10);
     const durationInSec = parseInt(episodeAudio.duration % 60);
-    //console.log('episodeAudio', this.props.episodeAudio)
-    //episodeAudio.src = this.props.audio;
 
     return (
       <div>

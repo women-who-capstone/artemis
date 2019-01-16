@@ -4,7 +4,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
 const ChannelListItem = props => {
-  const { id, name } = props.channel;
+  const { name } = props.channel;
   const { handleClick } = props
   return (
     <div>

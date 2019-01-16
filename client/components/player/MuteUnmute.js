@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { withMediaProps } from 'react-media-player'
 import VolumeDown from '@material-ui/icons/VolumeDown'
 import VolumeUp from '@material-ui/icons/VolumeUp'
 import VolumeOff from '@material-ui/icons/VolumeOff'
 import IconButton from '@material-ui/core/IconButton'
-import Fade from '@material-ui/core/Fade'
+
 
 class MuteUnmute extends Component {
   _handleMuteUnmute = () => {

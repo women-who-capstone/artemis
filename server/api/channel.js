@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { ChannelVector } = require('../../recommendations/utilities');
-// const channelVector = new ChannelVector();
+
 
 const { Channel, Tag, Genre, Episode, ChannelEpisode, ChannelTag } = require('../db/models');
 

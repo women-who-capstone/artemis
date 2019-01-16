@@ -43,7 +43,6 @@ class BookmarkItem extends React.Component {
   render() {
     const {classes} = this.props;
     const singleEp = this.state.singleEpisode;
-    console.log(singleEp);
     if (this.state.cliked) {
       return (
         <Redirect
